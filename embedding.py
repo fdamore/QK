@@ -6,9 +6,10 @@ from qiskit.circuit import Parameter
 from sklearn.gaussian_process.kernels import RBF, DotProduct
 
 from qiskit.quantum_info import SparsePauliOp
-from qiskit_aer.primitives import EstimatorV2 as Estimator
-#from qiskit.primitives import StatevectorEstimator as Estimator
-#from qiskit.primitives import Estimator as Estimator
+from qiskit_aer.primitives import EstimatorV2 as AerEstimator
+from qiskit.primitives import Estimator as PrimitiveEstimator 
+from qiskit.primitives import StatevectorEstimator
+
 
 from functools import wraps
 
@@ -120,10 +121,12 @@ def qfKernel(x1, x2, qc):
 
     x1_qc = qEncoding(qc, x1)
 
-    f_x1 = evalObs(x1_qc, observables=obs, nshots=10)
+    f_x1 = evalObsAer(x1_qc, observables=obs)
+    #f_x1 = evalObsStateVector(x1_qc, observables=obs)
 
     x2_qc = qEncoding(qc, x2)
-    f_x2 = evalObs(x2_qc, observables=obs, nshots=10)
+    f_x2 = evalObsAer(x2_qc, observables=obs)
+    #f_x2 = evalObsStateVector(x2_qc, observables=obs)
 
     #compute kernel
     k_computed = np.dot(f_x1, f_x2)
@@ -135,16 +138,10 @@ def qfKernel(x1, x2, qc):
 #define qquantum feature kernel
 def qfSVCKernel(x1, x2):     
 
-    n_qubit = len(x1)
-
-    #CODE WITHOUT TEMPLATE MANAGER
-    #qc_template = QEmbedding.createQuantumEmbedding(n_wire=n_qubit)
-    #qc_template = createQuantumEmbedding(len(x1))        
+    n_qubit = len(x1)           
     
     circuit_container = CircuitContainer(n_qubit)    
-    qc_template = circuit_container.get_circuit()    
-    
-    
+    qc_template = circuit_container.get_circuit()   
 
     return qfKernel(x1, x2, qc_template)    
 
@@ -155,34 +152,58 @@ def kernel_matrix(A, B):
 
 
 #measure on quantum circuits
-def evalObs(qc, observables, nshots = 100):
+def evalObsAer(qc, observables):    
 
     obs = [SparsePauliOp(label) for label in observables]
     
-    estimator = Estimator()
+    estimator = AerEstimator() 
+    estimator.options.default_precision = 0  
 
-    #estimator.options.resilience_level = 1
-    estimator.options.default_shots = nshots
-
-    
     obs = [
         observable.apply_layout(qc.layout) for observable in obs
     ]
     
-    # One pub, with one circuit to run against five different observables.
+    # One pub, with one circuit to run against observables.
     job = estimator.run([(qc, obs)])
     
     # This is the result of the entire submission.  We submitted one Pub,
     # so this contains one inner result (and some metadata of its own).
     job_result = job.result()
     
-    # This is the result from our single pub, which had five observables,
-    # so contains information on all five.
-    pub_result = job.result()[0]
+     
 
     return job_result[0].data.evs
+
+
+    
+#measure on quantum circuits
+def evalObsPrimitive(qc, observables):         
+    
+    estimator = PrimitiveEstimator(options={'shots':100}) 
     
 
+    l = []         
+
+    for itm in observables:
+        job = estimator.run(qc, itm)
+        job_result = job.result()
+        l.append(job_result.values[0])   
+
+    #return job_result[0].data.evs
+    return np.array(l)
+
+#measure on quantum circuits
+def evalObsStateVector(qc, observables):         
+    
+    estimator = StatevectorEstimator(default_precision=0)     
+
+    obs = [SparsePauliOp(label) for label in observables]
+
+    pub = (qc, obs)
+    job = estimator.run([pub])
+    result = job.result()[0]
+    return result.data.evs
+    
 
 
 if __name__ == "__main__":
