@@ -99,7 +99,11 @@ class CircuitContainer:
     #list of observables
     obs = None
 
+    #store computed feature map
+    fm_dict = {}
+
     def __init__(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
+        print('*** Create a Container ***')
         self.build(nwire=nwire, obs=obs, f_embedding=f_embedding)
     
     def build(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
@@ -111,10 +115,23 @@ class CircuitContainer:
         print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
         self.circuit = self.f_embedding(self.nwire)
         print(self.circuit.draw())
-        print(f'*** Required observables: {obs}')
+        print(f'*** Required observables: {self.obs}')
 
-        if len(obs) == 0:
-            print('WARNING: provide observables')   
+        if len(self.obs) == 0:
+            print('WARNING: provide observables')
+        
+        #clear the cache
+        self.fm_dict.clear()
+
+
+    def metadata(self):
+        print(f'*** Quantum template for feature map using {str(self.nwire)} qubit ***')                
+        print(self.circuit.draw())
+        print(f'*** Required observables: {self.obs}')
+    
+    
+
+
 
 
     
@@ -128,22 +145,35 @@ def qEncoding(qc, data):
 #define qquantum feature kernel
 def qfKernel(x1, x2):
 
-    n_qubit = len(x1)           
-    
     #get info about obs and circuits
     circuit_container = CircuitContainer()  
     qc_template = circuit_container.circuit
     obs = circuit_container.obs
 
-    x1_qc = qEncoding(qc_template, x1)
-    f_x1 = evalObsAer(x1_qc, observables=obs)
-    
-    x2_qc = qEncoding(qc_template, x2)
-    f_x2 = evalObsAer(x2_qc, observables=obs)
-    
+    #define the key
+    k_x1 = str(x1)
+    k_x2 = str(x2)
+
+    #check the k1 and get feature map
+    x1_fm = None
+    if k_x1 in circuit_container.fm_dict:
+        x1_fm = circuit_container.fm_dict[k_x1]
+    else:
+        x1_qc = qEncoding(qc_template, x1)
+        x1_fm = evalObsAer(x1_qc, observables=obs)
+        circuit_container.fm_dict[k_x1] = x1_fm
+
+    #check the k2 and get feature map
+    x2_fm = None
+    if k_x2 in circuit_container.fm_dict:
+        x2_fm = circuit_container.fm_dict[k_x2]
+    else:
+        x2_qc = qEncoding(qc_template, x2)
+        x2_fm = evalObsAer(x2_qc, observables=obs)
+        circuit_container.fm_dict[k_x2] = x2_fm    
 
     #compute kernel
-    k_computed = np.dot(f_x1, f_x2)
+    k_computed = np.dot(x1_fm, x2_fm)
     return k_computed
  
 
