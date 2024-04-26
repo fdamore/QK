@@ -22,7 +22,7 @@ def singleton(cls):
     return _wrap
 
 
-
+#embeddings
 class QEmbedding:
 
     #cascade embedding
@@ -87,20 +87,34 @@ class QEmbedding:
 @singleton
 class CircuitContainer:
 
-    circuit = None;
-    nwire = None;
-    f_embedding = None     
+    #quantum circuit used to define feature map
+    circuit = None
 
-    def __init__(self, nwire, f_embedding = QEmbedding.createQuantumEmbedding):
+    #quantum template for the circuit
+    f_embedding = None    
+
+    #number of qubit
+    nwire = None
+
+    #list of observables
+    obs = None
+
+    def __init__(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
+        self.build(nwire=nwire, obs=obs, f_embedding=f_embedding)
+    
+    def build(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
+        #define parameters
+        self.obs = obs
         self.nwire = nwire 
-        self.f_embedding = f_embedding 
-    
-    def get_circuit(self):        
-        if not self.circuit:
-            print(f'Create template with  {str(self.nwire)} qubit')            
-            self.circuit = self.f_embedding(self.nwire)
-        return self.circuit
-    
+        self.f_embedding = f_embedding
+
+        print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
+        self.circuit = self.f_embedding(self.nwire)
+        print(self.circuit.draw())
+        print(f'*** Required observables: {obs}')
+
+        if len(obs) == 0:
+            print('WARNING: provide observables')   
 
 
     
@@ -112,43 +126,31 @@ def qEncoding(qc, data):
     
 
 #define qquantum feature kernel
-def qfKernel(x1, x2, qc):
-    obs=["ZIIIII","IZIIII", "IIZIII", "IIIZII","IIIIZI",'IIIIIZ']  
-    #obs=["ZIIIII","IZIIII"]#, "IIZIII", "IIIZII","IIIIZI",'IIIIIZ']  
-    #obs=["ZZIIII","IZIIII", "IIZZII", "IIIZII","IIIIZI",'ZIIIIZ'] 
-
-    
-
-    x1_qc = qEncoding(qc, x1)
-
-    f_x1 = evalObsAer(x1_qc, observables=obs)
-    #f_x1 = evalObsStateVector(x1_qc, observables=obs)
-
-    x2_qc = qEncoding(qc, x2)
-    f_x2 = evalObsAer(x2_qc, observables=obs)
-    #f_x2 = evalObsStateVector(x2_qc, observables=obs)
-
-    #compute kernel
-    k_computed = np.dot(f_x1, f_x2)
-    return k_computed;
-
-
-
-
-#define qquantum feature kernel
-def qfSVCKernel(x1, x2):     
+def qfKernel(x1, x2):
 
     n_qubit = len(x1)           
     
-    circuit_container = CircuitContainer(n_qubit)    
-    qc_template = circuit_container.get_circuit()   
+    #get info about obs and circuits
+    circuit_container = CircuitContainer()  
+    qc_template = circuit_container.circuit
+    obs = circuit_container.obs
 
-    return qfKernel(x1, x2, qc_template)    
+    x1_qc = qEncoding(qc_template, x1)
+    f_x1 = evalObsAer(x1_qc, observables=obs)
+    
+    x2_qc = qEncoding(qc_template, x2)
+    f_x2 = evalObsAer(x2_qc, observables=obs)
+    
+
+    #compute kernel
+    k_computed = np.dot(f_x1, f_x2)
+    return k_computed
+ 
 
 def kernel_matrix(A, B):
     """Compute the matrix whose entries are the kernel
        evaluated on pairwise data from sets A and B."""
-    return np.array([[qfSVCKernel(a, b) for b in B] for a in A])
+    return np.array([[qfKernel(a, b) for b in B] for a in A])
 
 
 #measure on quantum circuits
@@ -207,5 +209,10 @@ def evalObsStateVector(qc, observables):
 
 
 if __name__ == "__main__":
-    pass   
+    pass
+    
+
+
+
+    
     
