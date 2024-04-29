@@ -3,7 +3,6 @@ import numpy as np
 import pandas as pd
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter
-from sklearn.gaussian_process.kernels import RBF, DotProduct
 
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_aer.primitives import EstimatorV2 as AerEstimator
@@ -23,11 +22,11 @@ def singleton(cls):
 
 
 #embeddings
-class QEmbedding:
+class Circuits:
 
     #cascade embedding
     @staticmethod
-    def createCascadeQuantumEmbedding(n_wire):
+    def cascade(n_wire):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -51,7 +50,7 @@ class QEmbedding:
 
     #embedding
     @staticmethod
-    def createQuantumEmbedding(n_wire):
+    def circularEnt(n_wire):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -91,7 +90,7 @@ class CircuitContainer:
     circuit = None
 
     #quantum template for the circuit
-    f_embedding = None    
+    template = None    
 
     #number of qubit
     nwire = None
@@ -102,18 +101,18 @@ class CircuitContainer:
     #store computed feature map
     fm_dict = {}
 
-    def __init__(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
+    def __init__(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.circularEnt):
         print('*** Create a Container ***')
-        self.build(nwire=nwire, obs=obs, f_embedding=f_embedding)
+        self.build(nwire=nwire, obs=obs, qtemplate=qtemplate)
     
-    def build(self, nwire = 1, obs = ['Z'], f_embedding = QEmbedding.createQuantumEmbedding):
+    def build(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.circularEnt):
         #define parameters
         self.obs = obs
         self.nwire = nwire 
-        self.f_embedding = f_embedding
+        self.template = qtemplate
 
         print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
-        self.circuit = self.f_embedding(self.nwire)
+        self.circuit = self.template(self.nwire)
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
 
@@ -205,8 +204,6 @@ def evalObsAer(qc, observables):
      
 
     return job_result[0].data.evs
-
-
     
 #measure on quantum circuits
 def evalObsPrimitive(qc, observables):         
