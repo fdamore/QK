@@ -1,6 +1,7 @@
 #Create a cotainer
 from qproc import CircuitContainer
 from qproc import Circuits
+import time
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
@@ -48,28 +49,46 @@ print(f'Label for test {y_test_np.shape}')
 K = 1000
 print(f'USING {K} data point for training')
 
+#get time
+t_start = time.time()
+
 svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np[:K], y_train_np[:K]);
+
+#get time training
+t_training = time.time()
+
 #result...
 predictions = svm_quantum.predict(X_test_np)
 score = accuracy_score(predictions, y_test)
+
+#final time (trainign + predict)
+t_final = time.time()
+
 print(f'*******SCORE: {score}')
+print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 
 #LAST RESULT:
-##USING 1000 data point for training
-##*******SCORE: 0.8222384784198976
-#CIRCUIT
+
+#*** Create a Container ***
 #*** Created quantum template for feature map using 6 qubit ***
-#     ┌───┐┌───────────┐
-#q_0: ┤ H ├┤ Rz(phi_0) ├
-#     ├───┤├───────────┤
-#q_1: ┤ H ├┤ Rz(phi_1) ├
-#     ├───┤├───────────┤
-#q_2: ┤ H ├┤ Rz(phi_2) ├
-#     ├───┤├───────────┤
-#q_3: ┤ H ├┤ Rz(phi_3) ├
-#     ├───┤├───────────┤
-#q_4: ┤ H ├┤ Rz(phi_4) ├
-#     ├───┤├───────────┤
-#q_5: ┤ H ├┤ Rz(phi_5) ├
-#     └───┘└───────────┘
-#*** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+#      ┌───┐┌───────────┐
+# q_0: ┤ H ├┤ Rz(phi_0) ├
+#      ├───┤├───────────┤
+# q_1: ┤ H ├┤ Rz(phi_1) ├
+#      ├───┤├───────────┤
+# q_2: ┤ H ├┤ Rz(phi_2) ├
+#      ├───┤├───────────┤
+# q_3: ┤ H ├┤ Rz(phi_3) ├
+#      ├───┤├───────────┤
+# q_4: ┤ H ├┤ Rz(phi_4) ├
+#      ├───┤├───────────┤
+# q_5: ┤ H ├┤ Rz(phi_5) ├
+#      └───┘└───────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Training shape dataset (8200, 6)
+# Label for traing (8200,)
+# Test shape dataset (2734, 6)
+# Label for test (2734,)
+# USING 1000 data point for training
+# *******SCORE: 0.6521580102414045
+# Time training: 72.02024245262146 seconds. Final time 260.61522245407104 seconds
