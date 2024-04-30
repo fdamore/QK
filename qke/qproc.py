@@ -1,9 +1,8 @@
 
 import numpy as np
-import pandas as pd
+
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter
-
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_aer.primitives import EstimatorV2 as AerEstimator
 from qiskit.primitives import Estimator as PrimitiveEstimator 
@@ -79,6 +78,25 @@ class Circuits:
 
             #add hadamrd
             qc.h(i)
+        
+        return qc;
+
+    @staticmethod
+    def encodedOnly(n_wire):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)
+        
+        for i in range(n_wire):
+                    
+            #add hadamrd
+            qc.h(i)
+
+        for i in range(n_wire):
+            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.rz(phi, i)        
         
         return qc;
 
