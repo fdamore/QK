@@ -53,6 +53,7 @@ print(f'USING {K} data point for training')
 t_start = time.time()
 
 svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np[:K], y_train_np[:K]);
+print(f'Sanity check. Dict len after training: {len(c.fm_dict)}')
 
 #get time training
 t_training = time.time()
@@ -66,11 +67,12 @@ t_final = time.time()
 
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
+print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 #LAST RESULT:
 
-#*** Create a Container ***
-#*** Created quantum template for feature map using 6 qubit ***
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
 #      ┌───┐┌───────────┐
 # q_0: ┤ H ├┤ Rz(phi_0) ├
 #      ├───┤├───────────┤
@@ -90,5 +92,8 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 # Test shape dataset (2734, 6)
 # Label for test (2734,)
 # USING 1000 data point for training
+# Sanity check. Dict len after training: 810
 # *******SCORE: 0.6521580102414045
-# Time training: 72.02024245262146 seconds. Final time 260.61522245407104 seconds
+# Time training: 70.5514988899231 seconds. Final time 260.92666482925415 seconds
+# Sanity check. Dict len after prediction: 1929
+

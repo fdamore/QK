@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from qproc import kernel_matrix
 import numpy as np
+import time
 
 
 #set the seed
@@ -48,29 +49,49 @@ print(f'Label for test {y_test_np.shape}')
 K = 1000
 print(f'USING {K} data point for training')
 
+#get time
+t_start = time.time()
+
 svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np[:K], y_train_np[:K]);
+print(f'Sanity check. Dict len after training: {len(c.fm_dict)}')
+
+#get time training
+t_training = time.time()
+
 #result...
 predictions = svm_quantum.predict(X_test_np)
 score = accuracy_score(predictions, y_test)
+
+
+#final time (trainign + predict)
+t_final = time.time()
+
 print(f'*******SCORE: {score}')
-
+print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
+print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 #LAST RESULT:
-##USING 1000 data point for training
-##*******SCORE: 0.8222384784198976
-
-#CIRCUIT
-#*** Created quantum template for feature map using 6 qubit ***
-#     ┌───┐┌───────────┐                         ┌───┐ ░ ┌───┐
-#q_0: ┤ H ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├─░─┤ H ├
-#     ├───┤├───────────┤┌─┴─┐                    └─┬─┘ ░ ├───┤
-#q_1: ┤ H ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼───░─┤ H ├
-#     ├───┤├───────────┤└───┘┌─┴─┐                 │   ░ ├───┤
-#q_2: ┤ H ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼───░─┤ H ├
-#     ├───┤├───────────┤     └───┘┌─┴─┐            │   ░ ├───┤
-#q_3: ┤ H ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼───░─┤ H ├
-#     ├───┤├───────────┤          └───┘┌─┴─┐       │   ░ ├───┤
-#q_4: ┤ H ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼───░─┤ H ├
-#     ├───┤├───────────┤               └───┘┌─┴─┐  │   ░ ├───┤
-#q_5: ┤ H ├┤ Rz(phi_5) ├────────────────────┤ X ├──■───░─┤ H ├
-#     └───┘└───────────┘                    └───┘      ░ └───┘
-#*** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌───┐┌───────────┐                         ┌───┐ ░ ┌───┐
+# q_0: ┤ H ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├─░─┤ H ├
+#      ├───┤├───────────┤┌─┴─┐                    └─┬─┘ ░ ├───┤
+# q_1: ┤ H ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼───░─┤ H ├
+#      ├───┤├───────────┤└───┘┌─┴─┐                 │   ░ ├───┤
+# q_2: ┤ H ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼───░─┤ H ├
+#      ├───┤├───────────┤     └───┘┌─┴─┐            │   ░ ├───┤
+# q_3: ┤ H ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼───░─┤ H ├
+#      ├───┤├───────────┤          └───┘┌─┴─┐       │   ░ ├───┤
+# q_4: ┤ H ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼───░─┤ H ├
+#      ├───┤├───────────┤               └───┘┌─┴─┐  │   ░ ├───┤
+# q_5: ┤ H ├┤ Rz(phi_5) ├────────────────────┤ X ├──■───░─┤ H ├
+#      └───┘└───────────┘                    └───┘      ░ └───┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Training shape dataset (8200, 6)
+# Label for traing (8200,)
+# Test shape dataset (2734, 6)
+# Label for test (2734,)
+# USING 1000 data point for training
+# Sanity check. Dict len after training: 810
+# *******SCORE: 0.8222384784198976
+# Time training: 72.47627925872803 seconds. Final time 268.1919403076172 seconds
+# Sanity check. Dict len after prediction: 1929

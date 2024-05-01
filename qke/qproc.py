@@ -102,7 +102,7 @@ class Circuits:
 
 #singleton container for circuit
 @singleton
-class CircuitContainer:
+class CircuitContainer:   
 
     #quantum circuit used to define feature map
     circuit = None
@@ -157,6 +157,16 @@ class CircuitContainer:
 def qEncoding(qc, data):               
     qc_assigned = qc.assign_parameters(data, inplace = False)
     return qc_assigned;
+
+
+def get_key(x):
+    x_r = x.round(2)
+    l = []
+    for itm in x_r:
+        l.append(str(itm))
+    return '@'.join(l)
+
+
     
 
 #define qquantum feature kernel
@@ -177,7 +187,7 @@ def qfKernel(x1, x2):
         x1_fm = circuit_container.fm_dict[k_x1]
     else:
         x1_qc = qEncoding(qc_template, x1)
-        x1_fm = evalObsAer(x1_qc, observables=obs)
+        x1_fm = evalObsAer(x1_qc, observables=obs)        
         circuit_container.fm_dict[k_x1] = x1_fm
 
     #check the k2 and get feature map
@@ -186,7 +196,7 @@ def qfKernel(x1, x2):
         x2_fm = circuit_container.fm_dict[k_x2]
     else:
         x2_qc = qEncoding(qc_template, x2)
-        x2_fm = evalObsAer(x2_qc, observables=obs)
+        x2_fm = evalObsAer(x2_qc, observables=obs)        
         circuit_container.fm_dict[k_x2] = x2_fm    
 
     #compute kernel
