@@ -80,6 +80,30 @@ class Circuits:
             qc.h(i)
         
         return qc;
+    
+    
+    @staticmethod
+    def encodingY(n_wire):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+
+        for i in range(n_wire):
+            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.ry(((phi + 1)/2) * np.pi, i)
+
+        for i in range(n_wire):
+            #entagled? Why not
+            qc.cx(i%n_wire, (i+1)%n_wire)        
+      
+        
+        return qc
+
+
+
 
     @staticmethod
     def encodedOnly(n_wire):
