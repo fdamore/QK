@@ -12,12 +12,11 @@ np.random.seed(123)
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel2.scaled.csv')  
+env = pd.read_csv('data/env.sel3.scaled.csv')  
 
 
 #DEFINE design matrix
 Y = env['occupancy']
-#X = env[['illuminance', 'blinds','lamps','co', 'rh', 'co2', 'temp']]
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 #split design matrix (25% of the design matrix used for test)
@@ -32,6 +31,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
 
@@ -39,14 +39,16 @@ print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
 
 #reduce data for trainingdefine data for training
-K = 1000
+K = len(X_train_np)
 print(f'USING {K} data point for training')
 
 #get time
 t_start = time.time()
 
+kernel_type = 'linear'
+
 #try SVM using RBF kernel
-svm = SVC(kernel='rbf').fit(X_train_np[:K], y_train_np[:K]);
+svm = SVC(kernel=kernel_type).fit(X_train_np[:K], y_train_np[:K]);
 
 #get time training
 t_training = time.time()
@@ -58,9 +60,28 @@ score = accuracy_score(predictions, y_test)
 #final time (trainign + predict)
 t_final = time.time()
 
-
+print(f'Using kernel type: {kernel_type}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 
+#RUN WITH KERNEL = LINEAR
+# Shape of dataset: (3233, 7)
+# Training shape dataset (2424, 6)
+# Label for traing (2424,)
+# Test shape dataset (809, 6)
+# Label for test (809,)
+# USING 2424 data point for training
+# Using kernel type: linear
+# *******SCORE: 0.7391841779975278
+# Time training: 0.09719133377075195 seconds. Final time 0.10743522644042969 seconds
 
-
+#RUN WITH KERNEL = RBF
+# Shape of dataset: (3233, 7)
+# Training shape dataset (2424, 6)
+# Label for traing (2424,)
+# Test shape dataset (809, 6)
+# Label for test (809,)
+# USING 2424 data point for training
+# Using kernel type: rbf
+# *******SCORE: 0.765142150803461
+# Time training: 0.05849957466125488 seconds. Final time 0.07966256141662598 seconds
