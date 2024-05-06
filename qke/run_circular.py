@@ -14,6 +14,7 @@ import time
 np.random.seed(123)
 
 
+
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 c = CircuitContainer(qtemplate=Circuits.circularEnt, nwire=6, obs=my_obs)
@@ -45,14 +46,11 @@ print(f'Label for traing {y_train_np.shape}')
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
 
-#reduce data for trainingdefine data for training
-K = len(X_train_np) #K = 1000
-print(f'USING {K} data point for training')
 
 #get time
 t_start = time.time()
 
-svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np[:K], y_train_np[:K]);
+svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np, y_train_np);
 print(f'Sanity check. Dict len after training: {len(c.fm_dict)}')
 
 #get time training
@@ -69,6 +67,34 @@ t_final = time.time()
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
+
+#LAST RESULT: SEL3 - NO DUPLICATED
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌───┐┌───────────┐                         ┌───┐ ░ ┌───┐
+# q_0: ┤ H ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├─░─┤ H ├
+#      ├───┤├───────────┤┌─┴─┐                    └─┬─┘ ░ ├───┤
+# q_1: ┤ H ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼───░─┤ H ├
+#      ├───┤├───────────┤└───┘┌─┴─┐                 │   ░ ├───┤
+# q_2: ┤ H ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼───░─┤ H ├
+#      ├───┤├───────────┤     └───┘┌─┴─┐            │   ░ ├───┤
+# q_3: ┤ H ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼───░─┤ H ├
+#      ├───┤├───────────┤          └───┘┌─┴─┐       │   ░ ├───┤
+# q_4: ┤ H ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼───░─┤ H ├
+#      ├───┤├───────────┤               └───┘┌─┴─┐  │   ░ ├───┤
+# q_5: ┤ H ├┤ Rz(phi_5) ├────────────────────┤ X ├──■───░─┤ H ├
+#      └───┘└───────────┘                    └───┘      ░ └───┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7796373779637378
+# Time training: 34.19785833358765 seconds. Final time 44.86307430267334 seconds
+# Sanity check. Dict len after prediction: 2865
+
 
 #LAST RESULT: SEL3
 # *** Create a Container *** 

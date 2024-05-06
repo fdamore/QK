@@ -10,6 +10,7 @@ import numpy as np
 #set the seed
 np.random.seed(123)
 
+
 #load dataset with panda
 #data are scaled outside the notebook
 env = pd.read_csv('data/env.sel3.scaled.csv')  
@@ -38,9 +39,6 @@ print(f'Label for traing {y_train_np.shape}')
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
 
-#reduce data for trainingdefine data for training
-K = len(X_train_np)
-print(f'USING {K} data point for training')
 
 #get time
 t_start = time.time()
@@ -48,7 +46,7 @@ t_start = time.time()
 kernel_type = 'linear'
 
 #try SVM using RBF kernel
-svm = SVC(kernel=kernel_type).fit(X_train_np[:K], y_train_np[:K]);
+svm = SVC(kernel=kernel_type).fit(X_train_np, y_train_np);
 
 #get time training
 t_training = time.time()
@@ -63,6 +61,17 @@ t_final = time.time()
 print(f'Using kernel type: {kernel_type}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
+
+#LAST RESULT: SEL3 - NO DUPLICATED
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# USING 2148 data point for training
+# Using kernel type: linear
+# *******SCORE: 0.7796373779637378
+# Time training: 0.06213259696960449 seconds. Final time 0.06864118576049805 seconds
 
 #RUN WITH KERNEL = LINEAR
 # Shape of dataset: (3233, 7)

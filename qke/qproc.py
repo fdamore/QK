@@ -184,7 +184,7 @@ def qEncoding(qc, data):
 
 
 def get_key(x):
-    x_r = x.round(2)
+    x_r = x
     l = []
     for itm in x_r:
         l.append(str(itm))
@@ -202,8 +202,8 @@ def qfKernel(x1, x2):
     obs = circuit_container.obs
 
     #define the key
-    k_x1 = str(x1)
-    k_x2 = str(x2)
+    k_x1 = get_key(x1) #str(x1)
+    k_x2 = get_key(x2) #str(x2)
 
     #check the k1 and get feature map
     x1_fm = None

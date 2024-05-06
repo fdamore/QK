@@ -65,6 +65,34 @@ print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
+#LAST RESULT: SEL3 - NO DUPLICATED
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌───┐┌───────────┐
+# q_0: ┤ H ├┤ Rz(phi_0) ├
+#      ├───┤├───────────┤
+# q_1: ┤ H ├┤ Rz(phi_1) ├
+#      ├───┤├───────────┤
+# q_2: ┤ H ├┤ Rz(phi_2) ├
+#      ├───┤├───────────┤
+# q_3: ┤ H ├┤ Rz(phi_3) ├
+#      ├───┤├───────────┤
+# q_4: ┤ H ├┤ Rz(phi_4) ├
+#      ├───┤├───────────┤
+# q_5: ┤ H ├┤ Rz(phi_5) ├
+#      └───┘└───────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.5467224546722455
+# Time training: 33.90371775627136 seconds. Final time 44.66127347946167 seconds
+# Sanity check. Dict len after prediction: 2865
+
+
 #LAST RESULT: SEL 3
 # *** Create a Container ***
 # *** Created quantum template for feature map using 6 qubit ***
