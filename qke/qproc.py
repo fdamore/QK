@@ -83,6 +83,24 @@ class Circuits:
     
     
     @staticmethod
+    def encodingX(n_wire):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+
+        for i in range(n_wire):
+            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.rx(phi, i)          
+      
+        
+        return qc
+
+
+
+    @staticmethod
     def encodingY(n_wire):
 
         # Create a new circuit with two qubits
