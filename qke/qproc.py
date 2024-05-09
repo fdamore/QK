@@ -82,6 +82,27 @@ class Circuits:
         return qc;
     
     
+
+    @staticmethod
+    def encodingX_ent(n_wire):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+
+        for i in range(n_wire):            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.rx(phi, i)      
+
+        for i in range(n_wire):
+            qc.cx(i%n_wire, (i+1)%n_wire)    
+      
+        
+        return qc
+
+     
+
     @staticmethod
     def encodingX(n_wire):
 
@@ -89,15 +110,37 @@ class Circuits:
         qc = QuantumCircuit(n_wire)        
         
 
-        for i in range(n_wire):
-            
+        for i in range(n_wire):            
             phi_name = 'phi_'+str(i)
             phi = Parameter(phi_name)
-            qc.rx(phi, i)          
+            qc.rx(phi, i)      
+
+        # for i in range(n_wire):
+        #     #entagled? Why not
+        #     qc.cx(i%n_wire, (i+1)%n_wire)    
       
         
         return qc
 
+
+
+    @staticmethod
+    def encodingY_no_scaling(n_wire):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+
+        for i in range(n_wire):            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.ry(phi, i)
+
+        for i in range(n_wire):            
+            qc.cx(i%n_wire, (i+1)%n_wire)        
+      
+        
+        return qc
 
 
     @staticmethod
