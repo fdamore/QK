@@ -25,7 +25,7 @@ class Circuits:
 
     #cascade embedding
     @staticmethod
-    def cascade(n_wire):
+    def cascade(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -39,17 +39,17 @@ class Circuits:
             phi = Parameter(phi_name)
             qc.rx(phi, i)
 
-            #entagled? Why not
-            qc.cx(i%n_wire, (i+1)%n_wire)
+            if(full_ent):
+                qc.cx(i%n_wire, (i+1)%n_wire)
 
             #add hadamrd
             qc.h(i)
         
         return qc
 
-    #embedding
+    #embedding - encoded used in paper Hubregsten et all.
     @staticmethod
-    def circularEnt(n_wire):
+    def ansatz_encoded(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -65,17 +65,15 @@ class Circuits:
             phi = Parameter(phi_name)
             qc.rz(phi, i)
 
-        for i in range(n_wire):
-
-            #entagled? Why not
-            qc.cx(i%n_wire, (i+1)%n_wire)
+        if(full_ent):
+            for i in range(n_wire):            
+                qc.cx(i%n_wire, (i+1)%n_wire)
 
         
         qc.barrier()    
 
         
         for i in range(n_wire):
-
             #add hadamrd
             qc.h(i)
         
@@ -84,7 +82,7 @@ class Circuits:
     
 
     @staticmethod
-    def encodingX_ent(n_wire):
+    def x_encoded(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)        
@@ -95,37 +93,16 @@ class Circuits:
             phi = Parameter(phi_name)
             qc.rx(phi, i)      
 
-        for i in range(n_wire):
-            qc.cx(i%n_wire, (i+1)%n_wire)    
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)    
       
         
-        return qc
-
-     
-
-    @staticmethod
-    def encodingX(n_wire):
-
-        # Create a new circuit with two qubits
-        qc = QuantumCircuit(n_wire)        
-        
-
-        for i in range(n_wire):            
-            phi_name = 'phi_'+str(i)
-            phi = Parameter(phi_name)
-            qc.rx(phi, i)      
-
-        # for i in range(n_wire):
-        #     #entagled? Why not
-        #     qc.cx(i%n_wire, (i+1)%n_wire)    
-      
-        
-        return qc
-
+        return qc 
 
 
     @staticmethod
-    def encodingY_no_scaling(n_wire):
+    def y_encoded(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)        
@@ -136,19 +113,19 @@ class Circuits:
             phi = Parameter(phi_name)
             qc.ry(phi, i)
 
-        for i in range(n_wire):            
-            qc.cx(i%n_wire, (i+1)%n_wire)        
+        if(full_ent):
+            for i in range(n_wire):            
+                qc.cx(i%n_wire, (i+1)%n_wire)        
       
         
         return qc
 
 
     @staticmethod
-    def encodingY(n_wire):
+    def y_encoded_scaled(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
-        qc = QuantumCircuit(n_wire)        
-        
+        qc = QuantumCircuit(n_wire)               
 
         for i in range(n_wire):
             
@@ -156,9 +133,9 @@ class Circuits:
             phi = Parameter(phi_name)
             qc.ry(((phi + 1)/2) * np.pi, i)
 
-        for i in range(n_wire):
-            #entagled? Why not
-            qc.cx(i%n_wire, (i+1)%n_wire)        
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)        
       
         
         return qc
@@ -167,7 +144,7 @@ class Circuits:
 
 
     @staticmethod
-    def encodedOnly(n_wire):
+    def z_encoded(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -177,11 +154,14 @@ class Circuits:
             #add hadamrd
             qc.h(i)
 
-        for i in range(n_wire):
-            
+        for i in range(n_wire):            
             phi_name = 'phi_'+str(i)
             phi = Parameter(phi_name)
-            qc.rz(phi, i)        
+            qc.rz(phi, i) 
+
+        if(full_ent):
+            for i in range(n_wire):            
+                qc.cx(i%n_wire, (i+1)%n_wire)       
         
         return qc;
 
@@ -204,11 +184,11 @@ class CircuitContainer:
     #store computed feature map
     fm_dict = {}
 
-    def __init__(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.circularEnt):
+    def __init__(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.ansatz_encoded):
         print('*** Create a Container ***')
         self.build(nwire=nwire, obs=obs, qtemplate=qtemplate)
     
-    def build(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.circularEnt):
+    def build(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.ansatz_encoded):
         #define parameters
         self.obs = obs
         self.nwire = nwire 

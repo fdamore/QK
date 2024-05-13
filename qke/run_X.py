@@ -18,7 +18,7 @@ my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 
 #c = CircuitContainer(qtemplate=Circuits.encodingX, nwire=6, obs=my_obs)
-c = CircuitContainer(qtemplate=Circuits.encodingX_ent, nwire=6, obs=my_obs)
+c = CircuitContainer(qtemplate=Circuits.x_encoded, nwire=6, obs=my_obs)
 
 
 #load dataset with panda
