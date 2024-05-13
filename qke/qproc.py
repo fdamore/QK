@@ -147,12 +147,8 @@ class Circuits:
     def z_encoded(n_wire, full_ent = True):
 
         # Create a new circuit with two qubits
-        qc = QuantumCircuit(n_wire)
+        qc = QuantumCircuit(n_wire)   
         
-        for i in range(n_wire):
-                    
-            #add hadamrd
-            qc.h(i)
 
         for i in range(n_wire):            
             phi_name = 'phi_'+str(i)
@@ -184,18 +180,19 @@ class CircuitContainer:
     #store computed feature map
     fm_dict = {}
 
-    def __init__(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.ansatz_encoded):
+    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded):
         print('*** Create a Container ***')
-        self.build(nwire=nwire, obs=obs, qtemplate=qtemplate)
+        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate)
     
-    def build(self, nwire = 1, obs = ['Z'], qtemplate = Circuits.ansatz_encoded):
+    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded):
         #define parameters
         self.obs = obs
         self.nwire = nwire 
         self.template = qtemplate
+        self.full_ent =full_ent
 
         print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
-        self.circuit = self.template(self.nwire)
+        self.circuit = self.template(self.nwire,  self.full_ent)
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
 

@@ -43,7 +43,7 @@ print(f'Label for test {y_test_np.shape}')
 #get time
 t_start = time.time()
 
-kernel_type = 'linear'
+kernel_type = 'rbf'
 
 #try SVM using RBF kernel
 svm = SVC(kernel=kernel_type).fit(X_train_np, y_train_np);
@@ -62,7 +62,7 @@ print(f'Using kernel type: {kernel_type}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 
-#LAST RESULT: SEL3 - NO DUPLICATED
+#LAST RESULT: SEL3
 # Shape of dataset: (2865, 7)
 # Training shape dataset (2148, 6)
 # Label for traing (2148,)
@@ -73,24 +73,12 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 # *******SCORE: 0.7796373779637378
 # Time training: 0.06213259696960449 seconds. Final time 0.06864118576049805 seconds
 
-#RUN WITH KERNEL = LINEAR
-# Shape of dataset: (3233, 7)
-# Training shape dataset (2424, 6)
-# Label for traing (2424,)
-# Test shape dataset (809, 6)
-# Label for test (809,)
-# USING 2424 data point for training
-# Using kernel type: linear
-# *******SCORE: 0.7391841779975278
-# Time training: 0.09719133377075195 seconds. Final time 0.10743522644042969 seconds
 
-#RUN WITH KERNEL = RBF
-# Shape of dataset: (3233, 7)
-# Training shape dataset (2424, 6)
-# Label for traing (2424,)
-# Test shape dataset (809, 6)
-# Label for test (809,)
-# USING 2424 data point for training
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
 # Using kernel type: rbf
-# *******SCORE: 0.765142150803461
-# Time training: 0.05849957466125488 seconds. Final time 0.07966256141662598 seconds
+# *******SCORE: 0.8089260808926081
+# Time training: 0.03739571571350098 seconds. Final time 0.05017209053039551 seconds

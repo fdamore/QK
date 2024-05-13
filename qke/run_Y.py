@@ -15,8 +15,7 @@ np.random.seed(123)
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-
-c = CircuitContainer(qtemplate=Circuits.y_encoded, nwire=6, obs=my_obs)
+c = CircuitContainer(qtemplate=Circuits.y_encoded_scaled, full_ent= True,  nwire=6, obs=my_obs)
 
 
 #load dataset with panda
@@ -92,6 +91,34 @@ print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 # Time training: 33.309821367263794 seconds. Final time 44.152793884277344 seconds
 # Sanity check. Dict len after prediction: 2865
 
+
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌───────────┐
+# q_0: ┤ Ry(phi_0) ├
+#      ├───────────┤
+# q_1: ┤ Ry(phi_1) ├
+#      ├───────────┤
+# q_2: ┤ Ry(phi_2) ├
+#      ├───────────┤
+# q_3: ┤ Ry(phi_3) ├
+#      ├───────────┤
+# q_4: ┤ Ry(phi_4) ├
+#      ├───────────┤
+# q_5: ┤ Ry(phi_5) ├
+#      └───────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7796373779637378
+# Time training: 35.13290810585022 seconds. Final time 47.46423530578613 seconds
+# Sanity check. Dict len after prediction: 2865
+
+
 #LAST RESULT: SEL3 - NO DUPLICATED
 # *** Create a Container ***
 # *** Created quantum template for feature map using 6 qubit ***
@@ -117,4 +144,31 @@ print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 # Sanity check. Dict len after training: 2148
 # *******SCORE: 0.7280334728033473
 # Time training: 33.98324680328369 seconds. Final time 44.50042963027954 seconds
+# Sanity check. Dict len after prediction: 2865
+
+
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌─────────────────────┐
+# q_0: ┤ Ry(π/2*phi_0 + π/2) ├
+#      ├─────────────────────┤
+# q_1: ┤ Ry(π/2*phi_1 + π/2) ├
+#      ├─────────────────────┤
+# q_2: ┤ Ry(π/2*phi_2 + π/2) ├
+#      ├─────────────────────┤
+# q_3: ┤ Ry(π/2*phi_3 + π/2) ├
+#      ├─────────────────────┤
+# q_4: ┤ Ry(π/2*phi_4 + π/2) ├
+#      ├─────────────────────┤
+# q_5: ┤ Ry(π/2*phi_5 + π/2) ├
+#      └─────────────────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7810320781032078
+# Time training: 34.76724123954773 seconds. Final time 46.101622104644775 seconds
 # Sanity check. Dict len after prediction: 2865
