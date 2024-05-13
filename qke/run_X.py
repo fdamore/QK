@@ -67,6 +67,8 @@ print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
+c.get_feature_map()
+
 #RUN WITH ENT
 # *** Create a Container ***
 # *** Created quantum template for feature map using 6 qubit ***

@@ -230,6 +230,14 @@ class CircuitContainer:
         print(f'*** Quantum template for feature map using {str(self.nwire)} qubit ***')                
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
+
+    
+    def get_feature_map(self):
+        for i, (k, v) in enumerate(self.fm_dict.items()):
+            print('***')
+            print(f'The key: {k}')
+            print(f'The value: {str(v)}')
+            print('***')
     
     
 
