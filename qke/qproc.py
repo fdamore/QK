@@ -8,6 +8,10 @@ from qiskit_aer.primitives import EstimatorV2 as AerEstimator
 from qiskit.primitives import Estimator as PrimitiveEstimator 
 from qiskit.primitives import StatevectorEstimator
 
+import os
+import time
+import datetime
+
 
 from functools import wraps
 
@@ -209,19 +213,26 @@ class CircuitContainer:
         print(f'*** Required observables: {self.obs}')
 
     
-    def get_feature_map(self):
-        for i, (k, v) in enumerate(self.fm_dict.items()):
-            print('***')
-            print(f'The key: {k}')
-            print(f'The value: {str(v)}')
-            print('***')
-    
-    
+    #save my feature map
+    def save_feature_map(self, prefix = ''):
+        #create a csv file with feature maps
+        current_timestamp = time.time()
+        datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
+        formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+        csv_file = '../qfm/' + prefix + str(formatted_datetime) + '.csv'        
+        
+        main_path = os.path.dirname(__file__)
+        file_path = os.path.join(main_path, csv_file)
+        
 
-
-
-
-    
+        with open(file_path, 'w') as f:            
+            f.write(','.join(['key', 'value']))
+            f.write('\n') # Add a new line
+            for i, (k,v) in enumerate(self.fm_dict.items()):
+                l_item = [k,str(v)]
+                f.write(','.join(l_item))
+                f.write('\n') # Add a new line
+            
 
 #encode data in parameter
 def qEncoding(qc, data):               
@@ -229,6 +240,7 @@ def qEncoding(qc, data):
     return qc_assigned;
 
 
+#alternative key
 def get_key(x):
     x_r = x
     l = []
@@ -248,8 +260,8 @@ def qfKernel(x1, x2):
     obs = circuit_container.obs
 
     #define the key
-    k_x1 = get_key(x1) #str(x1)
-    k_x2 = get_key(x2) #str(x2)
+    k_x1 = str(x1) #get_key(x1) 
+    k_x2 = str(x2) #get_key(x2)
 
     #check the k1 and get feature map
     x1_fm = None
