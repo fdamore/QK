@@ -14,8 +14,8 @@ import numpy as np
 np.random.seed(123)
 
 
-my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
+#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
 c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs)
 
 
@@ -67,8 +67,34 @@ print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
-#c.save_feature_map(prefix='run_x')
+c.save_feature_map(prefix='run_x_')
 
+# 7 observables
+# *** Create a Container ***
+# *** Created quantum template for feature map using 6 qubit ***
+#      ┌───────────┐                         ┌───┐
+# q_0: ┤ Rx(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Rx(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Rx(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Rx(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Rx(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Rx(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘                    └───┘     
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ', 'ZZZZZZ']
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7866108786610879
+# Time training: 328.2446565628052 seconds. Final time 442.40824270248413 seconds
+# Sanity check. Dict len after prediction: 2865
 
 #RUN WITH ENT
 # *** Create a Container ***
