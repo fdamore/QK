@@ -15,7 +15,7 @@ np.random.seed(123)
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-c = CircuitContainer(qtemplate=Circuits.y_encoded_scaled, full_ent= True,  nwire=6, obs=my_obs)
+c = CircuitContainer(qtemplate=Circuits.y_encoded, full_ent= True,  nwire=6, obs=my_obs)
 
 
 #load dataset with panda
@@ -63,6 +63,8 @@ t_final = time.time()
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
+
+#c.save_feature_map(prefix='run_y')
 
 #RUN WITH ENT and NO PHASE SCALING
 # *** Create a Container ***
