@@ -12,6 +12,8 @@ import os
 import time
 import datetime
 
+from qiskit.circuit.library import ZZFeatureMap
+
 
 from functools import wraps
 
@@ -26,6 +28,13 @@ def singleton(cls):
 
 #embeddings
 class Circuits:
+
+
+    @staticmethod
+    def zzfeaturemap(n_wire, full_ent = True):
+        zfm = ZZFeatureMap(feature_dimension=n_wire)
+        return zfm
+
 
     #cascade embedding
     @staticmethod
