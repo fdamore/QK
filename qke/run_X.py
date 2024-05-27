@@ -14,8 +14,8 @@ import numpy as np
 np.random.seed(123)
 
 
-#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
+my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
 c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs)
 
 
