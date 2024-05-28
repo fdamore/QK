@@ -18,7 +18,7 @@ my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
 c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs)
 
-
+#c.measure_fn = c.my_evalObsAer
 
 
 #load dataset with panda
@@ -46,6 +46,7 @@ print(f'Label for traing {y_train_np.shape}')
 
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
+print(f'Measure function used: {c.measure_fn.__name__}')
 
 #get time
 t_start = time.time()

@@ -26,6 +26,62 @@ def singleton(cls):
     return _wrap
 
 
+class Measures:
+    
+    #measure using Aer
+    @staticmethod
+    def Aer(qc, observables):    
+        obs = [SparsePauliOp(label) for label in observables]
+    
+        estimator = AerEstimator() 
+        estimator.options.default_precision = 0  
+
+        obs = [
+            observable.apply_layout(qc.layout) for observable in obs
+        ]
+        
+        # One pub, with one circuit to run against observables.
+        job = estimator.run([(qc, obs)])
+        
+        # This is the result of the entire submission.  We submitted one Pub,
+        # so this contains one inner result (and some metadata of its own).
+        job_result = job.result()     
+
+        return job_result[0].data.evs
+    
+    #measure using primitive estimator
+    @staticmethod
+    def PrimitiveEstimator(qc, observables):         
+        
+        estimator = PrimitiveEstimator(options={'shots':100}) 
+        
+
+        l = []         
+
+        for itm in observables:
+            job = estimator.run(qc, itm)
+            job_result = job.result()
+            l.append(job_result.values[0])   
+
+        #return job_result[0].data.evs
+        return np.array(l)
+
+    #measure using state vector
+    def StateVectorEstimator(qc, observables):         
+        
+        estimator = StatevectorEstimator(default_precision=0)     
+
+        obs = [SparsePauliOp(label) for label in observables]
+
+        pub = (qc, obs)
+        job = estimator.run([pub])
+        result = job.result()[0]
+        return result.data.evs
+
+
+
+
+
 #embeddings
 class Circuits:
 
@@ -193,16 +249,20 @@ class CircuitContainer:
     #store computed feature map
     fm_dict = {}
 
-    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded):
+    #measure function
+    measure_fn = None    
+
+    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = Measures.Aer):
         print('*** Create a Container ***')
-        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate)
+        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= Measures.Aer)
     
-    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded):
+    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = Measures.Aer):
         #define parameters
         self.obs = obs
         self.nwire = nwire 
         self.template = qtemplate
         self.full_ent =full_ent
+        self.measure_fn = measure_fn
 
         print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
         self.circuit = self.template(self.nwire,  self.full_ent)
@@ -277,8 +337,9 @@ def qfKernel(x1, x2):
     if k_x1 in circuit_container.fm_dict:
         x1_fm = circuit_container.fm_dict[k_x1]
     else:
-        x1_qc = qEncoding(qc_template, x1)
-        x1_fm = evalObsAer(x1_qc, observables=obs)        
+        x1_qc = qEncoding(qc_template, x1)        
+        x1_fm = circuit_container.measure_fn(x1_qc, observables=obs)
+        
         circuit_container.fm_dict[k_x1] = x1_fm
 
     #check the k2 and get feature map
@@ -287,7 +348,7 @@ def qfKernel(x1, x2):
         x2_fm = circuit_container.fm_dict[k_x2]
     else:
         x2_qc = qEncoding(qc_template, x2)
-        x2_fm = evalObsAer(x2_qc, observables=obs)        
+        x2_fm = circuit_container.measure_fn(x2_qc, observables=obs)        
         circuit_container.fm_dict[k_x2] = x2_fm    
 
     #compute kernel
@@ -298,59 +359,8 @@ def qfKernel(x1, x2):
 def kernel_matrix(A, B):
     """Compute the matrix whose entries are the kernel
        evaluated on pairwise data from sets A and B."""
-    return np.array([[qfKernel(a, b) for b in B] for a in A])
+    return np.array([[qfKernel(a, b) for b in B] for a in A])   
 
-
-#measure on quantum circuits
-def evalObsAer(qc, observables):    
-
-    obs = [SparsePauliOp(label) for label in observables]
-    
-    estimator = AerEstimator() 
-    estimator.options.default_precision = 0  
-
-    obs = [
-        observable.apply_layout(qc.layout) for observable in obs
-    ]
-    
-    # One pub, with one circuit to run against observables.
-    job = estimator.run([(qc, obs)])
-    
-    # This is the result of the entire submission.  We submitted one Pub,
-    # so this contains one inner result (and some metadata of its own).
-    job_result = job.result()
-    
-     
-
-    return job_result[0].data.evs
-    
-#measure on quantum circuits
-def evalObsPrimitive(qc, observables):         
-    
-    estimator = PrimitiveEstimator(options={'shots':100}) 
-    
-
-    l = []         
-
-    for itm in observables:
-        job = estimator.run(qc, itm)
-        job_result = job.result()
-        l.append(job_result.values[0])   
-
-    #return job_result[0].data.evs
-    return np.array(l)
-
-#measure on quantum circuits
-def evalObsStateVector(qc, observables):         
-    
-    estimator = StatevectorEstimator(default_precision=0)     
-
-    obs = [SparsePauliOp(label) for label in observables]
-
-    pub = (qc, obs)
-    job = estimator.run([pub])
-    result = job.result()[0]
-    return result.data.evs
     
 
 
