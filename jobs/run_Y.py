@@ -1,13 +1,20 @@
-#Create a cotainer
-from qproc import CircuitContainer
-from qproc import Circuits
+import sys
+import os
 import time
+
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from qproc import kernel_matrix
 import numpy as np
+
+#define working directory and package for QK
+current_wd = os.getcwd()
+sys.path.append(current_wd)
+
+from qke.qproc import CircuitContainer
+from qke.qproc import Circuits
+from qke.qproc import kernel_matrix
 
 
 #set the seed

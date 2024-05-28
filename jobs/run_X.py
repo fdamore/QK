@@ -1,14 +1,22 @@
-#Create a cotainer
-from qproc import CircuitContainer
-from qproc import Circuits
-from qproc import Measures
+import sys
+import os
 import time
 import pandas as pd
 from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-from qproc import kernel_matrix
 import numpy as np
+
+#define working directory and package for QK
+current_wd = os.getcwd()
+sys.path.append(current_wd)
+
+from qke.qproc import CircuitContainer
+from qke.qproc import Circuits
+from qke.qproc import Measures
+from qke.qproc import kernel_matrix
+
+
 
 
 #set the seed
@@ -17,9 +25,6 @@ np.random.seed(123)
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=Measures.StateVectorEstimator)
-
-#c.measure_fn = c.my_evalObsAer
-
 
 #load dataset with panda
 #data are scaled outside the notebook
@@ -68,6 +73,34 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_x_')
+
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐                         ┌───┐
+# q_0: ┤ Rx(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Rx(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Rx(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Rx(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Rx(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Rx(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘                    └───┘     
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7866108786610879
+# Time training: 351.012647151947 seconds. Final time 486.23611307144165 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240528172138
 
 # USING STATE VECTOR ESTIMATOR
 # *** Create a Container ***
