@@ -254,7 +254,7 @@ class CircuitContainer:
 
     def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = Measures.Aer):
         print('*** Create a Container ***')
-        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= Measures.Aer)
+        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= measure_fn)
     
     def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = Measures.Aer):
         #define parameters
@@ -264,10 +264,10 @@ class CircuitContainer:
         self.full_ent =full_ent
         self.measure_fn = measure_fn
 
-        print(f'*** Created quantum template for feature map using {str(self.nwire)} qubit ***')        
         self.circuit = self.template(self.nwire,  self.full_ent)
-        print(self.circuit.draw())
-        print(f'*** Required observables: {self.obs}')
+
+        #print metadata
+        self.metadata()
 
         if len(self.obs) == 0:
             print('WARNING: provide observables')
@@ -280,6 +280,8 @@ class CircuitContainer:
         print(f'*** Quantum template for feature map using {str(self.nwire)} qubit ***')                
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
+        print(f'*** Measure procedure: {self.measure_fn.__name__}')
+        return ""
 
     
     #save my feature map
@@ -292,8 +294,8 @@ class CircuitContainer:
         
         main_path = os.path.dirname(__file__)
         file_path = os.path.join(main_path, csv_file)
-        
 
+        #store the features map
         with open(file_path, 'w') as f:            
             f.write(','.join(['key', 'value']))
             f.write('\n') # Add a new line
@@ -301,6 +303,9 @@ class CircuitContainer:
                 l_item = [k,str(v)]
                 f.write(','.join(l_item))
                 f.write('\n') # Add a new line
+
+        #print the related time stamp. 
+        print(f'Timestamp of the file storing data: {formatted_datetime}')
             
 
 #encode data in parameter

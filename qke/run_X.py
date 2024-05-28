@@ -1,6 +1,7 @@
 #Create a cotainer
 from qproc import CircuitContainer
 from qproc import Circuits
+from qproc import Measures
 import time
 import pandas as pd
 from sklearn.svm import SVC
@@ -15,8 +16,7 @@ np.random.seed(123)
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ','ZZZZZZ']
-c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs)
+c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=Measures.StateVectorEstimator)
 
 #c.measure_fn = c.my_evalObsAer
 
@@ -46,7 +46,6 @@ print(f'Label for traing {y_train_np.shape}')
 
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
-print(f'Measure function used: {c.measure_fn.__name__}')
 
 #get time
 t_start = time.time()
@@ -69,6 +68,35 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_x_')
+
+# USING STATE VECTOR ESTIMATOR
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐                         ┌───┐
+# q_0: ┤ Rx(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Rx(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Rx(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Rx(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Rx(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Rx(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘                    └───┘     
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7866108786610879
+# Time training: 331.76958894729614 seconds. Final time 456.21892976760864 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240528155815
 
 # 7 observables
 # *** Create a Container ***
