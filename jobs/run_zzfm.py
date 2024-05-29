@@ -19,7 +19,8 @@ from qke.qproc import kernel_matrix
 #set the seed
 np.random.seed(123)
 
-my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 c = CircuitContainer(qtemplate=Circuits.zzfeaturemap, nwire=6, obs=my_obs, measure_fn=Measures.StateVectorEstimator)
 
 
@@ -70,6 +71,34 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_zzfm')
+
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌──────────────────────────────────────────────┐
+# q_0: ┤0                                             ├
+#      │                                              │
+# q_1: ┤1                                             ├
+#      │                                              │
+# q_2: ┤2                                             ├
+#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
+# q_3: ┤3                                             ├
+#      │                                              │
+# q_4: ┤4                                             ├
+#      │                                              │
+# q_5: ┤5                                             ├
+#      └──────────────────────────────────────────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX']
+# *** Measure procedure: StateVectorEstimator
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.5467224546722455
+# Time training: 353.06747341156006 seconds. Final time 495.4989585876465 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240529124852
 
 # *** Create a Container ***
 # *** Quantum template for feature map using 6 qubit ***
