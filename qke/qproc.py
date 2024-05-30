@@ -3,6 +3,7 @@ import numpy as np
 
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter
+from qiskit.circuit import ParameterVector
 from qiskit.quantum_info import SparsePauliOp
 from qiskit_aer.primitives import EstimatorV2 as AerEstimator
 from qiskit.primitives import Estimator as PrimitiveEstimator 
