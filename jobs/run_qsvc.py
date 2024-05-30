@@ -66,3 +66,27 @@ jobs_final_time = time.time()
 
 print(f'*******SCORE: {score}')
 print(f'Time training: {training_end - training_start} seconds. Final time {jobs_final_time - training_start} seconds')
+
+
+#run
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# *** FEATURE MAP used in QSVC
+#      ┌──────────────────────────────────────────────┐
+# q_0: ┤0                                             ├
+#      │                                              │
+# q_1: ┤1                                             ├
+#      │                                              │
+# q_2: ┤2                                             ├
+#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
+# q_3: ┤3                                             ├
+#      │                                              │
+# q_4: ┤4                                             ├
+#      │                                              │
+# q_5: ┤5                                             ├
+#      └──────────────────────────────────────────────┘
+# *******SCORE: 0.8172942817294282
+# Time training: 19.143609523773193 seconds. Final time 30.912684202194214 seconds
