@@ -26,7 +26,9 @@ c = CircuitContainer(qtemplate=Circuits.zzfeaturemap, nwire=6, obs=my_obs, measu
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+#sclaled_data_file = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.minmax.csv' 
+env = pd.read_csv(data_file_csv)  
 
 
 #DEFINE design matrix
@@ -43,6 +45,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'Using dataset in datafile: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
@@ -71,6 +74,36 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_zzfm')
+
+#RUN WITH MINMAX DATASET
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌──────────────────────────────────────────────┐
+# q_0: ┤0                                             ├
+#      │                                              │
+# q_1: ┤1                                             ├
+#      │                                              │
+# q_2: ┤2                                             ├
+#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
+# q_3: ┤3                                             ├
+#      │                                              │
+# q_4: ┤4                                             ├
+#      │                                              │
+# q_5: ┤5                                             ├
+#      └──────────────────────────────────────────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX']
+# *** Measure procedure: StateVectorEstimator
+# Using dataset in datafile: data/env.sel3.minmax.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.5467224546722455
+# Time training: 361.1748855113983 seconds. Final time 481.3913857936859 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240603175004
 
 # *** Create a Container ***
 # *** Quantum template for feature map using 6 qubit ***

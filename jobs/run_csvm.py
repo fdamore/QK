@@ -10,10 +10,11 @@ import numpy as np
 #set the seed
 np.random.seed(123)
 
-
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+#sclaled_data_file = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.minmax.csv' 
+env = pd.read_csv(data_file_csv)  
 
 
 #DEFINE design matrix
@@ -59,8 +60,21 @@ score = accuracy_score(predictions, y_test)
 t_final = time.time()
 
 print(f'Using kernel type: {kernel_type}')
+print(f'Using dataset in datafile: {data_file_csv}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
+
+
+# #RUN WITH FILE SCALED USING MINMAX
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Using kernel type: rbf
+# Using dataset in datafile: data/env.sel3.minmax.csv
+# *******SCORE: 0.7894002789400278
+# Time training: 0.03862714767456055 seconds. Final time 0.051164865493774414 seconds
 
 #LAST RESULT: SEL3
 # Shape of dataset: (2865, 7)

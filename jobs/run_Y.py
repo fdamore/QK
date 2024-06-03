@@ -27,7 +27,8 @@ c = CircuitContainer(qtemplate=Circuits.y_encoded, full_ent= True,  nwire=6, obs
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+data_file_csv = 'data/env.sel3.minmax.csv'
+env = pd.read_csv(data_file_csv)    
 
 
 #DEFINE design matrix
@@ -44,6 +45,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'File used for this run: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
@@ -72,6 +74,35 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 #c.save_feature_map(prefix='run_y')
+
+# RUN USING MINMAX
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐                         ┌───┐
+# q_0: ┤ Ry(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Ry(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Ry(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Ry(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Ry(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Ry(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘                    └───┘     
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: Aer
+# File used for this run: data/env.sel3.minmax.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.6959553695955369
+# Time training: 342.43684554100037 seconds. Final time 458.68829917907715 seconds
+# Sanity check. Dict len after prediction: 2865
 
 #RUN WITH ENT and NO PHASE SCALING
 # *** Create a Container ***

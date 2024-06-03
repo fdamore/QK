@@ -26,7 +26,9 @@ np.random.seed(123)
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+#sclaled_data_file = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.minmax.csv' 
+env = pd.read_csv(data_file_csv)  
 
 
 #DEFINE design matrix
@@ -41,6 +43,7 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y)
 
 
 #check the shape of test and training dataset
+print(f'Using dataset in datafile: {data_file_csv}')
 print(f'Fraction rate used for this run: {f_rate * 100}%')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train.shape}')
@@ -106,6 +109,33 @@ print(f'*******SCORE: {score}')
 print(f'Time kernel training: {training_kernel_end - training_kernel_start} seconds.')
 print(f'Time training SVM: {training_svm_end - training_svm_start} seconds.')
 print(f'Total jobs time: {jobs_final_time - training_kernel_start} seconds.')
+
+# #RUN USING MINMAX
+# Using dataset in datafile: data/env.sel3.minmax.csv
+# Fraction rate used for this run: 5.0%
+# Shape of dataset: (2865, 7)
+# Training shape dataset (107, 6)
+# Label for traing (107,)
+# Test shape dataset (36, 6)
+# Label for test (36,)
+# *** TRAINABLE FEATURE MAP used in QSVC
+#      ┌──────────────┐┌──────────────┐
+# q_0: ┤ Ry(θ_par[0]) ├┤ Rz(x_par[0]) ├
+#      ├──────────────┤├──────────────┤
+# q_1: ┤ Ry(θ_par[1]) ├┤ Rz(x_par[1]) ├
+#      ├──────────────┤├──────────────┤
+# q_2: ┤ Ry(θ_par[2]) ├┤ Rz(x_par[2]) ├
+#      ├──────────────┤├──────────────┤
+# q_3: ┤ Ry(θ_par[3]) ├┤ Rz(x_par[3]) ├
+#      ├──────────────┤├──────────────┤
+# q_4: ┤ Ry(θ_par[4]) ├┤ Rz(x_par[4]) ├
+#      ├──────────────┤├──────────────┤
+# q_5: ┤ Ry(θ_par[5]) ├┤ Rz(x_par[5]) ├
+#      └──────────────┘└──────────────┘
+# *******SCORE: 0.7222222222222222
+# Time kernel training: 19.50859236717224 seconds.
+# Time training SVM: 0.07846307754516602 seconds.
+# Total jobs time: 19.65761113166809 seconds.
 
 # RUN
 # Fraction rate used for this run: 5.0%

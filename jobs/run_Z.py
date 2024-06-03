@@ -29,7 +29,8 @@ c = CircuitContainer(qtemplate=Circuits.z_encoded, full_ent=True, nwire=6, obs=m
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+data_file_csv = 'data/env.sel3.minmax.csv'
+env = pd.read_csv(data_file_csv)     
 
 
 #DEFINE design matrix
@@ -46,6 +47,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'File used for this run: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
@@ -73,7 +75,37 @@ print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
-#c.save_feature_map(prefix='run_z')
+c.save_feature_map(prefix='run_z')
+
+# ** RUN USING MINMAX SCALING
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐                         ┌───┐
+# q_0: ┤ Rz(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Rz(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Rz(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Rz(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘                    └───┘     
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: Aer
+# File used for this run: data/env.sel3.minmax.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.5467224546722455
+# Time training: 336.80605602264404 seconds. Final time 448.20883893966675 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240531172349
 
 # *** Create a Container ***
 # *** Created quantum template for feature map using 6 qubit ***

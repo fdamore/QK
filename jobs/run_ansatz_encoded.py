@@ -29,7 +29,9 @@ c = CircuitContainer(qtemplate=Circuits.ansatz_encoded, nwire=6, obs=my_obs)
 
 #load dataset with panda
 #data are scaled outside the notebook
-env = pd.read_csv('data/env.sel3.scaled.csv')  
+#sclaled_data_file = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.minmax.csv' 
+env = pd.read_csv(data_file_csv)  
 
 
 #DEFINE design matrix
@@ -46,6 +48,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'File used for this run: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
@@ -74,6 +77,38 @@ t_final = time.time()
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
+
+c.save_feature_map(prefix='run_ansatz_')
+
+## RUN WITH MINMAX FILE
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───┐┌───────────┐                         ┌───┐ ░ ┌───┐
+# q_0: ┤ H ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├─░─┤ H ├
+#      ├───┤├───────────┤┌─┴─┐                    └─┬─┘ ░ ├───┤
+# q_1: ┤ H ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼───░─┤ H ├
+#      ├───┤├───────────┤└───┘┌─┴─┐                 │   ░ ├───┤
+# q_2: ┤ H ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼───░─┤ H ├
+#      ├───┤├───────────┤     └───┘┌─┴─┐            │   ░ ├───┤
+# q_3: ┤ H ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼───░─┤ H ├
+#      ├───┤├───────────┤          └───┘┌─┴─┐       │   ░ ├───┤
+# q_4: ┤ H ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼───░─┤ H ├
+#      ├───┤├───────────┤               └───┘┌─┴─┐  │   ░ ├───┤
+# q_5: ┤ H ├┤ Rz(phi_5) ├────────────────────┤ X ├──■───░─┤ H ├
+#      └───┘└───────────┘                    └───┘      ░ └───┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: Aer
+# File used for this run: data/env.sel3.minmax.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.700139470013947
+# Time training: 335.8284821510315 seconds. Final time 448.3394863605499 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240603172452
 
 #LAST RESULT: SEL3 - NO DUPLICATED
 # *** Create a Container ***
