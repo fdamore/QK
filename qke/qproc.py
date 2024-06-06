@@ -314,18 +314,7 @@ def qEncoding(qc, data):
     qc_assigned = qc.assign_parameters(data, inplace = False)
     return qc_assigned;
 
-
-#alternative key
-def get_key(x):
-    x_r = x
-    l = []
-    for itm in x_r:
-        l.append(str(itm))
-    return '@'.join(l)
-
-
-    
-
+   
 #define qquantum feature kernel
 def qfKernel(x1, x2):
 
