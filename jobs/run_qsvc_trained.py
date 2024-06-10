@@ -4,8 +4,7 @@ import time
 import pandas as pd
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
-
-from qiskit_machine_learning.kernels import FidelityStatevectorKernel 
+ 
 from qiskit_machine_learning.algorithms.classifiers import QSVC
 from qiskit.circuit import ParameterVector
 from qiskit.circuit import QuantumCircuit
