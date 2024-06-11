@@ -2,17 +2,18 @@ import sys
 import os
 import time
 import pandas as pd
+
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
- 
+
 from qiskit_machine_learning.algorithms.classifiers import QSVC
 from qiskit.circuit import ParameterVector
 from qiskit.circuit import QuantumCircuit
-
 from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import QuantumKernelTrainer
 from qiskit_algorithms.optimizers import SPSA
 from qiskit_machine_learning.utils.loss_functions import SVCLoss
 from qiskit_machine_learning.kernels import TrainableFidelityStatevectorKernel
+from qiskit.circuit.library import ZZFeatureMap
 
 import numpy as np
 
@@ -21,7 +22,6 @@ current_wd = os.getcwd()
 sys.path.append(current_wd)
 
 from qke.QKCallback import QKCallback
-
 
 #set the seed
 np.random.seed(123)
@@ -43,30 +43,32 @@ X = env_slice[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 #split design matrix (25% of the design matrix used for test)
 X_train, X_test, y_train, y_test = train_test_split(X, Y)
 
+#define the maxiter paramenter
+max_iter = 20
 
 #check the shape of test and training dataset
 print(f'Using dataset in datafile: {data_file_csv}')
 print(f'Fraction rate used for this run: {f_rate * 100}%')
+print(f'Max number of iteration used in kernel optimization: {max_iter}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train.shape}')
 print(f'Label for traing {y_train.shape}')
-
 print(f'Test shape dataset {X_test.shape}')
 print(f'Label for test {y_test.shape}')
 
 #build a feature map 
 NUM_QBIT = X_train.shape[1]
-fm = QuantumCircuit(NUM_QBIT)
-input_params = ParameterVector("x_par", NUM_QBIT)
+trainable_fm = QuantumCircuit(NUM_QBIT)
+
 training_params = ParameterVector("θ_par", NUM_QBIT)
 
 # Create an initial rotation layer of trainable parameters
 for i, param in enumerate(training_params):
-    fm.ry(param, fm.qubits[i])
+    trainable_fm.ry(param, trainable_fm.qubits[i])
 
-# Create a rotation layer of input parameters
-for i, param in enumerate(input_params):
-    fm.rz(param, fm.qubits[i])
+zzfm = ZZFeatureMap(feature_dimension=NUM_QBIT)
+
+fm = trainable_fm.compose(zzfm)
 
 #show feature map
 print(f'*** TRAINABLE FEATURE MAP used in QSVC')
@@ -79,7 +81,8 @@ my_callback = QKCallback()
 q_kernel = TrainableFidelityStatevectorKernel(feature_map=fm, training_parameters=training_params)
 
 #define updater, loss and inizial param
-spsa_opt = SPSA(maxiter=10, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)
+spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)
+
 loss_func = SVCLoss(C=1.0)
 init_point=[np.pi/2 for _ in range(NUM_QBIT)]
 
