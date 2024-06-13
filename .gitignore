@@ -3,3 +3,4 @@ qke/__pycache__/*
 qfm/*csv
 .venv
 nohup.out
+*run.txt
