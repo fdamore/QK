@@ -34,7 +34,7 @@ env = pd.read_csv(data_file_csv)
 
 
 #DEFINE design matrix
-f_rate = 0.05
+f_rate = 1
 env_slice = env.sample(frac=f_rate) #slices the origin dataset
 
 Y = env_slice['occupancy']
