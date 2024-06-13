@@ -35,7 +35,7 @@ env = pd.read_csv(data_file_csv)
 
 
 #DEFINE design matrix
-f_rate = 0.05
+f_rate = 1
 env_slice = env.sample(frac=f_rate) #slices the origin dataset
 
 Y = env_slice['occupancy']
@@ -61,14 +61,20 @@ print(f'Label for test {y_test.shape}')
 NUM_QBIT = X_train.shape[1]
 trainable_fm = QuantumCircuit(NUM_QBIT)
 
-training_params = ParameterVector("θ_par", NUM_QBIT)
-
-# Create an initial rotation layer of trainable parameters
-for i, param in enumerate(training_params):
-    trainable_fm.ry(param, trainable_fm.qubits[i])
 
 zzfm = ZZFeatureMap(feature_dimension=NUM_QBIT)
-twl = TwoLocal(num_qubits=NUM_QBIT)
+#circuit = TwoLocal(n_qubits, 'ry', 'cx', 'linear', reps=n_layers)
+twl = TwoLocal(num_qubits=NUM_QBIT, 
+                   rotation_blocks='ry', 
+                   entanglement_blocks='cx', 
+                   entanglement='full', 
+                   reps=1, 
+                   insert_barriers=True, skip_final_rotation_layer=True)
+
+
+
+#define the traning paramenter
+training_params = twl.parameters
 
 fm = twl.compose(zzfm)
 
