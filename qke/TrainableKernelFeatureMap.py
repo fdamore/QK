@@ -1,7 +1,10 @@
 import numpy as np
+from typing import Sequence
 
+from qiskit_machine_learning.kernels import TrainableKernel, BaseKernel
 
-from qiskit_machine_learning.kernels import TrainableFidelityStatevectorKernel
+from qiskit import QuantumCircuit
+from qiskit.circuit import Parameter, ParameterVector
 
 from qke.qproc import Measures
 
@@ -10,7 +13,23 @@ from qke.qproc import Measures
 
 #define my trainable quantum kernel using the outer quantum kernel.
 # qke.Circuit should be defined before running the training process
-class TrainableOuterQuantumKernel(TrainableFidelityStatevectorKernel):       
+class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
+        
+       
+        
+
+        def __init__(self,*,
+                     feature_map: QuantumCircuit | None = None, 
+                     training_parameters: ParameterVector | Sequence[Parameter] | None = None) -> None:
+                        
+                        super().__init__(feature_map=feature_map,  training_parameters=training_parameters)
+                         # Override the number of features defined in the base class.
+                        self._num_features = feature_map.num_parameters - self._num_training_parameters
+                        self._feature_parameters = [parameter for parameter in feature_map.parameters 
+                                                    if parameter not in self._training_parameters]
+                        self._parameter_dict = {parameter: None for parameter in self.feature_map.parameters} 
+
+              
       
         
         #the type of measures
@@ -65,14 +84,17 @@ class TrainableOuterQuantumKernel(TrainableFidelityStatevectorKernel):
             return x.dot(y)
 
         #hook methods
-        def _evaluate(self, x_vec: np.ndarray, y_vec: np.ndarray, is_symmetric: bool):            
+        def evaluate(self,x_vec: np.ndarray,y_vec: np.ndarray | None = None) -> np.ndarray:
+                         
             #x_vec, y_vec = self._validate_input(x_vec, y_vec)
             new_x_vec = self._parameter_array(x_vec)
-            new_y_vec = self._parameter_array(y_vec)
-            RET_Mat_1 =  super()._evaluate(x_vec, y_vec, is_symmetric)
-            RET_Mat = self.kernel_matrix(new_x_vec, new_y_vec)
-
-            return RET_Mat
+            if y_vec is not None:
+                new_y_vec = self._parameter_array(y_vec)
+                return self.kernel_matrix(new_x_vec, new_y_vec)
+            else:
+                return self.kernel_matrix(new_x_vec, new_x_vec)
+                 
+             
 
         def kernel_matrix(self, A, B):
             """Compute the matrix whose entries are the kernel
