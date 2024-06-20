@@ -51,9 +51,9 @@ class Measures:
     
     #measure using primitive estimator
     @staticmethod
-    def PrimitiveEstimator(qc, observables):         
+    def PrimitiveEstimator(qc, observables, nshots = 100):         
         
-        estimator = PrimitiveEstimator(options={'shots':100}) 
+        estimator = PrimitiveEstimator(options={'shots':nshots}) 
         
 
         l = []         

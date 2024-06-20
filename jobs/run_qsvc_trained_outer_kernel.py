@@ -50,8 +50,14 @@ X = env_slice[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 #split design matrix (25% of the design matrix used for test)
 X_train, X_test, y_train, y_test = train_test_split(X, Y)
 
+#cast to numpy object
+X_train = X_train.to_numpy()
+y_train = y_train.to_numpy()
+X_test = X_test.to_numpy()
+y_test = y_test.to_numpy()
+
 #define the maxiter paramenter
-max_iter = 25
+max_iter = 2
 
 #check the shape of test and training dataset
 print(f'Using dataset in datafile: {data_file_csv}')
@@ -87,17 +93,21 @@ my_callback = QKCallback()
 
 #define the trainable kernel
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+nshots = 100 #paramenter using primitive estimator
+
+#print this info
+print(f'The observables we use: {my_obs}')
+print(f'The numbers of shots for (qiskit) primitive estimator: {nshots}')
+
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
 q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
-q_kernel.configure(measure_fn=Measures.PrimitiveEstimator, obs=my_obs)
-
-#q_kernel =  TrainableFidelityStatevectorKernel(feature_map=fm, training_parameters=training_params)
+q_kernel.configure(obs=my_obs, nshots=nshots)
 
 #define updater, loss and inizial param
 spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)
 loss_func = SVCLoss(C=1.0)
-init_point=[np.pi/2 for _ in range(NUM_QBIT)]
+init_point=[np.pi/2 for _ in range(NUM_QBIT)] #TODO: try random values (o pi)
 
 #get time
 training_kernel_start = time.time()
