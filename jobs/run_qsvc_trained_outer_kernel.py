@@ -107,7 +107,11 @@ q_kernel.configure(obs=my_obs, nshots=nshots)
 #define updater, loss and inizial param
 spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)
 loss_func = SVCLoss(C=1.0)
-init_point=[np.pi/2 for _ in range(NUM_QBIT)] #TODO: try random values (o pi)
+#init_point=[np.pi/2 for _ in range(NUM_QBIT)] #TODO: try random values (o pi)
+
+init_point = np.random.uniform(size=NUM_QBIT)
+print(f'Initial point: {init_point}')
+
 
 #get time
 training_kernel_start = time.time()
