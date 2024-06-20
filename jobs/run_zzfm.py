@@ -13,7 +13,7 @@ sys.path.append(current_wd)
 
 from qke.qproc import CircuitContainer
 from qke.qproc import Circuits
-from qke.qproc import Measures
+from qke.QMeasures import QMeasures
 from qke.qproc import kernel_matrix
 
 #set the seed
@@ -21,7 +21,7 @@ np.random.seed(123)
 
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
-c = CircuitContainer(qtemplate=Circuits.zzfeaturemap, nwire=6, obs=my_obs, measure_fn=Measures.StateVectorEstimator)
+c = CircuitContainer(qtemplate=Circuits.zzfeaturemap, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator)
 
 
 #load dataset with panda

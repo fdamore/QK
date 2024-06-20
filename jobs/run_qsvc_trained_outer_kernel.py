@@ -1,33 +1,26 @@
+
 import sys
 import os
-import time
-import pandas as pd
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
- 
-from qiskit_machine_learning.algorithms.classifiers import QSVC
-from qiskit.circuit import ParameterVector
-from qiskit.circuit import QuantumCircuit
-
-from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import QuantumKernelTrainer
-from qiskit_algorithms.optimizers import SPSA
-from qiskit_machine_learning.utils.loss_functions import SVCLoss
-
-from qiskit.circuit.library import ZZFeatureMap
-
-
-import numpy as np
 
 #define working directory and package for QK
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
+import time
+import pandas as pd
+import numpy as np
+
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+
+from qiskit_machine_learning.algorithms.classifiers import QSVC
+from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import QuantumKernelTrainer
+from qiskit_algorithms.optimizers import SPSA
+from qiskit_machine_learning.utils.loss_functions import SVCLoss
+
 from qke.TrainableKernelFeatureMap import TrainableKernelFeatureMap
-
-
-#import callback and measures
+from qke.TrainableCircuits import TrainableCircuits
 from qke.QKCallback import QKCallback
-from qke.qproc import Measures
 
 #set the seed
 np.random.seed(123)
@@ -72,17 +65,15 @@ print(f'Label for test {y_test.shape}')
 
 #build a feature map 
 NUM_QBIT = X_train.shape[1]
-trainable_fm = QuantumCircuit(NUM_QBIT)
 
-training_params = ParameterVector("θ_par", NUM_QBIT)
+#define the circuits
+#t_circuit = TrainableCircuits.zzfm(n_wire=NUM_QBIT)
+#t_circuit = TrainableCircuits.d_stack(n_wire=NUM_QBIT)
+#t_circuit = TrainableCircuits.twl_zzfm(n_wire=NUM_QBIT)
+t_circuit = TrainableCircuits.trainable_twl(n_wire=NUM_QBIT)
 
-# Create an initial rotation layer of trainable parameters
-for i, param in enumerate(training_params):
-    trainable_fm.ry(param, trainable_fm.qubits[i])
-
-zzfm = ZZFeatureMap(feature_dimension=NUM_QBIT)
-
-fm = trainable_fm.compose(zzfm)
+fm = t_circuit.qc
+training_params = t_circuit.training_parameters
 
 #show feature map
 print(f'*** TRAINABLE FEATURE MAP used in QSVC')
@@ -97,7 +88,7 @@ nshots = 100 #paramenter using primitive estimator
 
 #print this info
 print(f'The observables we use: {my_obs}')
-print(f'The numbers of shots for (qiskit) primitive estimator: {nshots}')
+print(f'The numbers of shots (if applicable) for (qiskit) primitive estimator: {nshots}')
 
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
@@ -145,55 +136,3 @@ print(f'Time kernel training: {training_kernel_end - training_kernel_start} seco
 print(f'Time training SVM: {training_svm_end - training_svm_start} seconds.')
 print(f'Total jobs time: {jobs_final_time - training_kernel_start} seconds.')
 
-# #RUN USING MINMAX
-# Using dataset in datafile: data/env.sel3.minmax.csv
-# Fraction rate used for this run: 5.0%
-# Shape of dataset: (2865, 7)
-# Training shape dataset (107, 6)
-# Label for traing (107,)
-# Test shape dataset (36, 6)
-# Label for test (36,)
-# *** TRAINABLE FEATURE MAP used in QSVC
-#      ┌──────────────┐┌──────────────┐
-# q_0: ┤ Ry(θ_par[0]) ├┤ Rz(x_par[0]) ├
-#      ├──────────────┤├──────────────┤
-# q_1: ┤ Ry(θ_par[1]) ├┤ Rz(x_par[1]) ├
-#      ├──────────────┤├──────────────┤
-# q_2: ┤ Ry(θ_par[2]) ├┤ Rz(x_par[2]) ├
-#      ├──────────────┤├──────────────┤
-# q_3: ┤ Ry(θ_par[3]) ├┤ Rz(x_par[3]) ├
-#      ├──────────────┤├──────────────┤
-# q_4: ┤ Ry(θ_par[4]) ├┤ Rz(x_par[4]) ├
-#      ├──────────────┤├──────────────┤
-# q_5: ┤ Ry(θ_par[5]) ├┤ Rz(x_par[5]) ├
-#      └──────────────┘└──────────────┘
-# *******SCORE: 0.7222222222222222
-# Time kernel training: 19.50859236717224 seconds.
-# Time training SVM: 0.07846307754516602 seconds.
-# Total jobs time: 19.65761113166809 seconds.
-
-# RUN
-# Fraction rate used for this run: 5.0%
-# Shape of dataset: (2865, 7)
-# Training shape dataset (107, 6)
-# Label for traing (107,)
-# Test shape dataset (36, 6)
-# Label for test (36,)
-# *** TRAINABLE FEATURE MAP used in QSVC
-#      ┌──────────────┐┌──────────────┐
-# q_0: ┤ Ry(θ_par[0]) ├┤ Rz(x_par[0]) ├
-#      ├──────────────┤├──────────────┤
-# q_1: ┤ Ry(θ_par[1]) ├┤ Rz(x_par[1]) ├
-#      ├──────────────┤├──────────────┤
-# q_2: ┤ Ry(θ_par[2]) ├┤ Rz(x_par[2]) ├
-#      ├──────────────┤├──────────────┤
-# q_3: ┤ Ry(θ_par[3]) ├┤ Rz(x_par[3]) ├
-#      ├──────────────┤├──────────────┤
-# q_4: ┤ Ry(θ_par[4]) ├┤ Rz(x_par[4]) ├
-#      ├──────────────┤├──────────────┤
-# q_5: ┤ Ry(θ_par[5]) ├┤ Rz(x_par[5]) ├
-#      └──────────────┘└──────────────┘
-# *******SCORE: 0.6666666666666666
-# Time kernel training: 19.962605953216553 seconds.
-# Time training SVM: 0.07925987243652344 seconds.
-# Total jobs time: 20.113325119018555 seconds.
