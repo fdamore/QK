@@ -4,3 +4,4 @@ qfm/*csv
 .venv
 nohup.out
 *run.txt
+.vscode/launch.json
