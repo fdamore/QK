@@ -10,7 +10,7 @@ class QMeasures:
     
     #measure using Aer
     @staticmethod
-    def Aer(qc, observables):    
+    def Aer(qc, observables,**kargs):    
         obs = [SparsePauliOp(label) for label in observables]
     
         estimator = AerEstimator() 
@@ -18,7 +18,7 @@ class QMeasures:
 
         obs = [
             observable.apply_layout(qc.layout) for observable in obs
-        ]
+        ]        
         
         # One pub, with one circuit to run against observables.
         job = estimator.run([(qc, obs)])
@@ -31,10 +31,14 @@ class QMeasures:
     
     #measure using primitive estimator
     @staticmethod
-    def PrimitiveEstimator(qc, observables, nshots = 100):         
+    def PrimitiveEstimator(qc, observables, **kargs):
+
+        #get the number of shots
+        nshots = kargs.get('nshots')
+        if nshots is None or type(nshots) is not int:
+            nshots = 100              
         
-        estimator = PrimitiveEstimator(options={'shots':nshots}) 
-        
+        estimator = PrimitiveEstimator(options={'shots':nshots})         
 
         l = []         
 
@@ -47,7 +51,7 @@ class QMeasures:
         return np.array(l)
 
     #measure using state vector
-    def StateVectorEstimator(qc, observables):         
+    def StateVectorEstimator(qc, observables,**kargs):         
         
         estimator = StatevectorEstimator(default_precision=0)     
 

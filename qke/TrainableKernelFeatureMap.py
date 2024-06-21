@@ -6,7 +6,7 @@ from qiskit_machine_learning.kernels import TrainableKernel, BaseKernel
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter, ParameterVector
 
-from qke.qproc import Measures
+from qke.qproc import QMeasures
 
 
 
@@ -38,12 +38,16 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
         #cache
         fm_dict = {}   
 
-        #primitive estimator use nshots
-        nshots = 100      
+        #primitive estimator use nshots (if usable)
+        nshots = 100
 
-        def configure(self, obs = ['Z'], nshots = 100):            
+        #The quantum measure function used
+        q_measure = None
+
+        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator):            
             self.obs = obs      
             self.nshots = nshots
+            self.q_measure = q_measure
         
         #encode data in parameter
         def qEncoding(self, data):               
@@ -65,7 +69,7 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
                 x1_fm = self.fm_dict[k_x1]
             else:
                 x1_qc = self.qEncoding(x1)        
-                x1_fm = Measures.PrimitiveEstimator(x1_qc, observables=self.obs, nshots=self.nshots)
+                x1_fm = self.q_measure(x1_qc, observables=self.obs, nshots=self.nshots)
                 self.fm_dict[k_x1] = x1_fm
 
             #check the k2 and get feature map
@@ -74,7 +78,7 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
                 x2_fm = self.fm_dict[k_x2]
             else:
                 x2_qc = self.qEncoding(x2)
-                x2_fm = Measures.PrimitiveEstimator(x2_qc, observables=self.obs, nshots=self.nshots) 
+                x2_fm = self.q_measure(x2_qc, observables=self.obs, nshots=self.nshots) 
                 self.fm_dict[k_x2] = x2_fm    
 
             #compute kernel

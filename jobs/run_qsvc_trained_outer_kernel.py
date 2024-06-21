@@ -21,6 +21,7 @@ from qiskit_machine_learning.utils.loss_functions import SVCLoss
 from qke.TrainableKernelFeatureMap import TrainableKernelFeatureMap
 from qke.TrainableCircuits import TrainableCircuits
 from qke.QKCallback import QKCallback
+from qke.QMeasures import QMeasures
 
 #set the seed
 np.random.seed(123)
@@ -67,10 +68,10 @@ print(f'Label for test {y_test.shape}')
 NUM_QBIT = X_train.shape[1]
 
 #define the circuits
-#t_circuit = TrainableCircuits.zzfm(n_wire=NUM_QBIT)
+t_circuit = TrainableCircuits.zzfm(n_wire=NUM_QBIT)
 #t_circuit = TrainableCircuits.d_stack(n_wire=NUM_QBIT)
 #t_circuit = TrainableCircuits.twl_zzfm(n_wire=NUM_QBIT)
-t_circuit = TrainableCircuits.trainable_twl(n_wire=NUM_QBIT)
+#t_circuit = TrainableCircuits.trainable_twl(n_wire=NUM_QBIT)
 
 fm = t_circuit.qc
 training_params = t_circuit.training_parameters
@@ -93,7 +94,7 @@ print(f'The numbers of shots (if applicable) for (qiskit) primitive estimator: {
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
 q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
-q_kernel.configure(obs=my_obs, nshots=nshots)
+q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator)
 
 #define updater, loss and inizial param
 spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)
