@@ -1,6 +1,11 @@
 import numpy as np
 from qke.CircuitContainer import CircuitContainer
 
+# In this file the procedures to compute kernel entry (qfkernel) and Gram matrix (kernel_matrix) are provided. 
+# The procedures will be used in scikit-learn SVC in order to comnpute quantum kernel using the outer approach.
+# The provided procedure use CircuitContainer in order to process data using quantum feature map 
+
+
 #define qquantum feature kernel using CircuitContainer
 def qfKernel(x1, x2):
 

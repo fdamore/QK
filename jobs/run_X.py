@@ -14,7 +14,7 @@ sys.path.append(current_wd)
 from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
 from qke.QMeasures import QMeasures
-from qke.qproc import kernel_matrix
+from qke.qkernel import kernel_matrix
 
 
 

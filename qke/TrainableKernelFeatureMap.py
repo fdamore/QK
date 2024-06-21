@@ -6,7 +6,7 @@ from qiskit_machine_learning.kernels import TrainableKernel, BaseKernel
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter, ParameterVector
 
-from qke.qproc import QMeasures
+from qke.QMeasures import QMeasures
 
 
 

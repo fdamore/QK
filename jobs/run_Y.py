@@ -14,7 +14,7 @@ sys.path.append(current_wd)
 
 from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
-from qke.qproc import kernel_matrix
+from qke.qkernel import kernel_matrix
 
 
 #set the seed
