@@ -1,4 +1,3 @@
-
 from qiskit import QuantumCircuit
 from qiskit.circuit.library import ZZFeatureMap, TwoLocal
 from qiskit.circuit import ParameterVector

@@ -1,4 +1,3 @@
-
 import sys
 import os
 import time
@@ -12,8 +11,8 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from qke.qproc import CircuitContainer
-from qke.qproc import Circuits
+from qke.CircuitContainer import CircuitContainer
+from qke.Circuits import Circuits
 from qke.qproc import kernel_matrix
 
 
