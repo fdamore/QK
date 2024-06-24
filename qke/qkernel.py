@@ -44,8 +44,7 @@ def qfKernel(x1, x2):
 
 #compute the kernel matrix (Gram if A==B)
 def kernel_matrix(A, B):
-    """Compute the matrix whose entries are the kernel
-       evaluated on pairwise data from sets A and B."""
+    #Compute gram matrix
     return np.array([[qfKernel(a, b) for b in B] for a in A])   
 
 #encode data in parameter

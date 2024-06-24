@@ -87,14 +87,17 @@ my_callback = QKCallback()
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 nshots = 100 #paramenter using primitive estimator
 
+measure_fn = QMeasures.StateVectorEstimator
+
 #print this info
+print(f'The QMeasure function used: {measure_fn.__name__}')
 print(f'The observables we use: {my_obs}')
 print(f'The numbers of shots (if applicable) for (qiskit) primitive estimator: {nshots}')
 
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
 q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
-q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator)
+q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=measure_fn)
 
 #define updater, loss and inizial param
 spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)

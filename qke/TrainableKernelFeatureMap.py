@@ -103,8 +103,7 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
              
 
         def kernel_matrix(self, A, B):
-            """Compute the matrix whose entries are the kernel
-            evaluated on pairwise data from sets A and B."""
+            #Compute gram matrix
             return np.array([[self.qfKernel(a, b) for b in B] for a in A])    
 
 
