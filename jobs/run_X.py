@@ -15,6 +15,7 @@ from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
 from qke.QMeasures import QMeasures
 from qke.qkernel import kernel_matrix
+from qke.CKernels import CKernels
 
 
 
@@ -24,7 +25,7 @@ np.random.seed(123)
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator)
+c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.linear)
 
 #load dataset with panda
 #data are scaled outside the notebook
@@ -50,9 +51,10 @@ print(f'File used for this run: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
-
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
+
+
 
 #get time
 t_start = time.time()

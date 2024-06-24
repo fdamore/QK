@@ -7,6 +7,7 @@ from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter, ParameterVector
 
 from qke.QMeasures import QMeasures
+from qke.CKernels import CKernels
 
 
 
@@ -44,10 +45,15 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
         #The quantum measure function used
         q_measure = None
 
-        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator):            
+        #define the (classical) kernel
+        kernel = CKernels.linear
+
+        #configure this instance
+        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator, c_kernel = CKernels.linear):            
             self.obs = obs      
             self.nshots = nshots
             self.q_measure = q_measure
+            self.kernel = c_kernel
         
         #encode data in parameter
         def qEncoding(self, data):               
@@ -82,12 +88,9 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
                 self.fm_dict[k_x2] = x2_fm    
 
             #compute kernel
-            k_computed = self._compute_kernel_score(x1_fm, x2_fm)
-            return k_computed
-        
-        #compute a kernel function
-        def _compute_kernel_score(self, x: np.ndarray, y: np.ndarray) -> float:
-            return x.dot(y)
+            k_computed = self.kernel(x1_fm, x2_fm)
+            return k_computed       
+       
 
         #hook methods
         def evaluate(self,x_vec: np.ndarray,y_vec: np.ndarray | None = None) -> np.ndarray:

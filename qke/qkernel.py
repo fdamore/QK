@@ -38,7 +38,8 @@ def qfKernel(x1, x2):
         circuit_container.fm_dict[k_x2] = x2_fm    
 
     #compute kernel
-    k_computed = np.dot(x1_fm, x2_fm)
+    #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
+    k_computed = circuit_container.kernel(x1_fm, x1_fm)
     return k_computed
  
 

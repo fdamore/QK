@@ -22,6 +22,7 @@ from qke.TrainableKernelFeatureMap import TrainableKernelFeatureMap
 from qke.TrainableCircuits import TrainableCircuits
 from qke.QKCallback import QKCallback
 from qke.QMeasures import QMeasures
+from qke.CKernels import CKernels
 
 #set the seed
 np.random.seed(123)
@@ -35,7 +36,7 @@ env = pd.read_csv(data_file_csv)
 
 #DEFINE design matrix
 
-f_rate = 0.05
+f_rate = 1
 env_slice = env.sample(frac=f_rate) #slices the origin dataset
 
 Y = env_slice['occupancy']
@@ -51,7 +52,7 @@ X_test = X_test.to_numpy()
 y_test = y_test.to_numpy()
 
 #define the maxiter paramenter
-max_iter = 2
+max_iter = 20
 
 #check the shape of test and training dataset
 print(f'Using dataset in datafile: {data_file_csv}')
@@ -88,16 +89,17 @@ my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 nshots = 100 #paramenter using primitive estimator
 
 measure_fn = QMeasures.StateVectorEstimator
-
-#print this info
-print(f'The QMeasure function used: {measure_fn.__name__}')
-print(f'The observables we use: {my_obs}')
-print(f'The numbers of shots (if applicable) for (qiskit) primitive estimator: {nshots}')
-
+kernel = CKernels.linear
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
 q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
-q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=measure_fn)
+q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.linear)
+
+#print this info
+print(f'The QMeasure function used: {q_kernel.q_measure.__name__}')
+print(f'The classical kernel used: {q_kernel.kernel.__name__}')
+print(f'The observables we use: {my_obs}')
+print(f'The numbers of shots (if applicable) for (qiskit) primitive estimator: {nshots}')
 
 #define updater, loss and inizial param
 spsa_opt = SPSA(maxiter=max_iter, learning_rate=0.03, perturbation=0.01, termination_checker=my_callback.callback)

@@ -5,6 +5,7 @@ import time
 import datetime
 from qke.QMeasures import QMeasures
 from qke.Circuits import Circuits
+from qke.CKernels import CKernels
 
 from functools import wraps
 
@@ -37,19 +38,23 @@ class CircuitContainer:
     fm_dict = {}
 
     #measure function
-    measure_fn = None    
+    measure_fn = None  
 
-    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer):
+    #the classical kernel used to compute
+    kernel = None  
+
+    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         print('*** Create a Container ***')
-        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= measure_fn)
+        self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= measure_fn, c_kernel=c_kernel)
     
-    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer):
+    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         #define parameters
         self.obs = obs
         self.nwire = nwire 
         self.template = qtemplate
         self.full_ent =full_ent
         self.measure_fn = measure_fn
+        self.kernel = c_kernel
 
         self.circuit = self.template(self.nwire,  self.full_ent)
 
@@ -68,6 +73,7 @@ class CircuitContainer:
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
         print(f'*** Measure procedure: {self.measure_fn.__name__}')
+        print(f'*** CKernel function used: {self.kernel.__name__}')
         return ""
 
     
