@@ -94,6 +94,9 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
 
         #hook methods
         def evaluate(self,x_vec: np.ndarray,y_vec: np.ndarray | None = None) -> np.ndarray:
+
+            #clear the cache
+            self.fm_dict.clear()
                          
             #x_vec, y_vec = self._validate_input(x_vec, y_vec)
             new_x_vec = self._parameter_array(x_vec)
