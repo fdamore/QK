@@ -23,9 +23,11 @@ from qke.TrainableCircuits import TrainableCircuits
 from qke.QKCallback import QKCallback
 from qke.QMeasures import QMeasures
 from qke.CKernels import CKernels
+from qiskit_algorithms.utils import algorithm_globals
 
 #set the seed
 np.random.seed(123)
+algorithm_globals.random_seed = 123
 
 #load dataset with panda
 #data are scaled outside the notebook
