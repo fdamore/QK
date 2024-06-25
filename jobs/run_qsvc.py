@@ -8,6 +8,7 @@ from sklearn.metrics import accuracy_score
 from qiskit_machine_learning.kernels import FidelityStatevectorKernel 
 from qiskit.circuit.library import ZZFeatureMap
 from qiskit_machine_learning.algorithms.classifiers import QSVC
+from qiskit_algorithms.utils import algorithm_globals
 
 import numpy as np
 
@@ -17,6 +18,7 @@ sys.path.append(current_wd)
 
 #set the seed
 np.random.seed(123)
+algorithm_globals.random_seed = 123
 
 #load dataset with panda
 #data are scaled outside the notebook

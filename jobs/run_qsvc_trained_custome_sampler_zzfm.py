@@ -17,6 +17,7 @@ from qiskit.circuit.library import ZZFeatureMap
 
 from qiskit_aer.primitives import Sampler as AerSampler # Aer Sampler
 from qiskit_algorithms.state_fidelities import ComputeUncompute
+from qiskit_algorithms.utils import algorithm_globals
 
 import numpy as np
 

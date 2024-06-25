@@ -14,10 +14,12 @@ sys.path.append(current_wd)
 from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
 from qke.qkernel import kernel_matrix
+from qiskit_algorithms.utils import algorithm_globals
 
 
-#set the seed
+#set the seed(s)
 np.random.seed(123)
+algorithm_globals.random_seed = 123
 
 
 

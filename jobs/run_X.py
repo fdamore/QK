@@ -6,6 +6,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
+from qiskit_algorithms.utils import algorithm_globals
 
 #define working directory and package for QK
 current_wd = os.getcwd()
@@ -19,9 +20,9 @@ from qke.CKernels import CKernels
 
 
 
-
 #set the seed
 np.random.seed(123)
+algorithm_globals.random_seed = 123
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']

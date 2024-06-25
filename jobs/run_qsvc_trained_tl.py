@@ -7,14 +7,13 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 
 from qiskit_machine_learning.algorithms.classifiers import QSVC
-from qiskit.circuit import ParameterVector
 from qiskit.circuit import QuantumCircuit
 from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import QuantumKernelTrainer
 from qiskit_algorithms.optimizers import SPSA
 from qiskit_machine_learning.utils.loss_functions import SVCLoss
 from qiskit_machine_learning.kernels import TrainableFidelityStatevectorKernel
-from qiskit.circuit.library import ZZFeatureMap
 from qiskit.circuit.library import TwoLocal
+from qiskit_algorithms.utils import algorithm_globals
 
 import numpy as np
 
@@ -26,6 +25,7 @@ from qke.QKCallback import QKCallback
 
 #set the seed
 np.random.seed(123)
+algorithm_globals.random_seed = 123
 
 #load dataset with panda
 #data are scaled outside the notebook
