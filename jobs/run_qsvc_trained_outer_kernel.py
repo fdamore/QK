@@ -93,7 +93,7 @@ kernel = CKernels.linear
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
 q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
-q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.linear)
+q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print this info
 print(f'The QMeasure function used: {q_kernel.q_measure.__name__}')
