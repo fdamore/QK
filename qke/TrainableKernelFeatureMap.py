@@ -1,3 +1,6 @@
+import datetime
+import os
+import time
 import numpy as np
 from typing import Sequence
 
@@ -48,12 +51,19 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
         #define the (classical) kernel
         kernel = CKernels.linear
 
+        #save the feature map
+        save_feature_map = False
+
+        #evaulate call number (used in save feature map)
+        _n_eval = 1
+
         #configure this instance
-        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator, c_kernel = CKernels.linear):            
+        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator, c_kernel = CKernels.linear, save_feature_map = False):            
             self.obs = obs      
             self.nshots = nshots
             self.q_measure = q_measure
             self.kernel = c_kernel
+            self.save_feature_map = save_feature_map
         
         #encode data in parameter
         def qEncoding(self, data):               
@@ -97,20 +107,57 @@ class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
 
             #clear the cache
             self.fm_dict.clear()
+
+            #the gram matrix
+            gram_matrix = None
                          
             #x_vec, y_vec = self._validate_input(x_vec, y_vec)
             new_x_vec = self._parameter_array(x_vec)
             if y_vec is not None:
                 new_y_vec = self._parameter_array(y_vec)
-                return self.kernel_matrix(new_x_vec, new_y_vec)
+                gram_matrix = self.kernel_matrix(new_x_vec, new_y_vec)
             else:
-                return self.kernel_matrix(new_x_vec, new_x_vec)
+                gram_matrix = self.kernel_matrix(new_x_vec, new_x_vec)
+            
+            #if needed, save feature map
+            if self.save_feature_map:                 
+                 pref = f'TKFM_{self._n_eval}_'
+                 self.save_fm(prefix=pref)
+
+            #next evauation
+            self._n_eval += 1
+            
+            return gram_matrix
+                
                  
              
 
         def kernel_matrix(self, A, B):
             #Compute gram matrix
-            return np.array([[self.qfKernel(a, b) for b in B] for a in A])    
+            return np.array([[self.qfKernel(a, b) for b in B] for a in A])
+
+
+            #save my feature map
+        def save_fm(self, prefix = ''):
+            #create a csv file with feature maps
+            current_timestamp = time.time()
+            datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
+            formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+            csv_file = '../qfm/tkfm/' + prefix + str(formatted_datetime) + '.csv'        
+
+            main_path = os.path.dirname(__file__)
+            file_path = os.path.join(main_path, csv_file)
+
+            #store the features map
+            with open(file_path, 'w') as f:            
+                f.write(','.join(['key', 'value']))
+                f.write('\n') # Add a new line
+                for i, (k,v) in enumerate(self.fm_dict.items()):
+                    l_item = [k,str(v)]
+                    f.write(','.join(l_item))
+                    f.write('\n') # Add a new line
+
+            
 
 
         
