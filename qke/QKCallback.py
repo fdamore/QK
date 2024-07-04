@@ -1,6 +1,9 @@
-import matplotlib
+import datetime
+import os
+import time
 import matplotlib.pyplot as plt
 import numpy as np
+import json
 
 
 
@@ -37,7 +40,7 @@ class QKCallback:
             print(f'**********************')
 
             self._data[0].append(x0)
-            self._data[1].append(x1)
+            self._data[1].append(x1.tolist())
             self._data[2].append(x2)
             self._data[3].append(x3)
             self._data[4].append(x4)
@@ -47,12 +50,58 @@ class QKCallback:
             return stop_training
     
     def plot_data(self):
-          plt.rcParams["font.size"] = 20
-          #fig, ax = plt.subplots(1, 2, figsize=(14, 5))#plt.subplots(1, 2, figsize=(14, 5))
-          plt.plot([i + 1 for i in range(len(self._data[0]))], np.array(self._data[2]), c="k", marker="o")
-          #ax[0].set_xlabel("Iterations")
-          #ax[0].set_ylabel("Loss")
-          #fig.tight_layout()
-          plt.show()
+        QKCallback._plot_data(self._data)
+
+    #plot data from list of data
+    def _plot_data(data):
+        plt.rcParams["font.size"] = 20          
+        plt.plot([i + 1 for i in range(len(data[0]))], np.array(data[2]), c="k", marker="o")
+        plt.show()
+
+
+    #save my feature map
+    def save(self, prefix = ''):
+        #create a csv file with feature maps
+        current_timestamp = time.time()
+        datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
+        formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+        csv_file = '../qfm/callback/' + prefix + str(formatted_datetime) + '.json'
+
+        json_str = json.dumps(self._data, indent= 3)        
+
+        main_path = os.path.dirname(__file__)
+        file_path = os.path.join(main_path, csv_file)
+
+        #store the features map
+        with open(file_path, 'w') as f:
+            f.write(json_str)
+
+    def plot_data_file(file = ''):
+        data_to_plot = None
+        
+        # open file and read the content in a list
+        with open(file, 'r') as _file:
+            content = _file.read()
+            data_to_plot = json.loads(content)
+                   
+        QKCallback._plot_data(data_to_plot)
+
+
+
+if __name__ == '__main__':
+    ##check the reader    
+    QKCallback.plot_data_file(file='qfm/callback/callback_20240704230145.json')
+     
+     
+
+
+
+
+        
+                   
+                   
+
+            
+            
     
 

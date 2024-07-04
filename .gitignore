@@ -1,7 +1,7 @@
 __pycache__/*
 qke/__pycache__/*
 qfm/*csv
-qfm/callback/*csv
+qfm/callback/*json
 qfm/tkfm/*csv
 .venv
 nohup.out
