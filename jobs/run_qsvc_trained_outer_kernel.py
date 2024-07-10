@@ -39,13 +39,13 @@ env = pd.read_csv(data_file_csv)
 #DEFINE design matrix
 
 f_rate = 1
-env_slice = env.sample(frac=f_rate) #slices the origin dataset
+env_slice = env.sample(frac=f_rate, random_state=123) #slices the origin dataset
 
 Y = env_slice['occupancy']
 X = env_slice[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 #split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
 
 #cast to numpy object
 X_train = X_train.to_numpy()

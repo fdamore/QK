@@ -32,7 +32,7 @@ Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 #split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
 
 
 #check the shape of test and training dataset
