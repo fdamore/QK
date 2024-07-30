@@ -23,8 +23,8 @@ from qke.CKernels import CKernels
 np.random.seed(123)
 algorithm_globals.random_seed = 123
 
-
-my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #load dataset with panda
@@ -77,6 +77,66 @@ print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_s
 print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_x_')
+
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐
+# q_0: ┤ Rx(phi_0) ├
+#      ├───────────┤
+# q_1: ┤ Rx(phi_1) ├
+#      ├───────────┤
+# q_2: ┤ Rx(phi_2) ├
+#      ├───────────┤
+# q_3: ┤ Rx(phi_3) ├
+#      ├───────────┤
+# q_4: ┤ Rx(phi_4) ├
+#      ├───────────┤
+# q_5: ┤ Rx(phi_5) ├
+#      └───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# File used for this run: data/env.sel3.scaled.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.8354253835425384
+# Time training: 290.7938551902771 seconds. Final time 380.73357820510864 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240730225734
+
+# *** Create a Container *** RUN ON SERVER
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐
+# q_0: ┤ Rx(phi_0) ├
+#      ├───────────┤
+# q_1: ┤ Rx(phi_1) ├
+#      ├───────────┤
+# q_2: ┤ Rx(phi_2) ├
+#      ├───────────┤
+# q_3: ┤ Rx(phi_3) ├
+#      ├───────────┤
+# q_4: ┤ Rx(phi_4) ├
+#      ├───────────┤
+# q_5: ┤ Rx(phi_5) ├
+#      └───────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# File used for this run: data/env.sel3.scaled.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7880055788005579
+# Time training: 274.8976364135742 seconds. Final time 362.8320071697235 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240730224522
 
 # *** Create a Container ***
 # *** Quantum template for feature map using 6 qubit ***
