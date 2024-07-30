@@ -68,7 +68,26 @@ class Circuits:
         
         return qc
     
-    
+    @staticmethod
+    def xyz_encoded(n_wire, full_ent = True):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+
+        for i in range(n_wire):            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.rx(phi, i) 
+            qc.ry(phi, i)
+            qc.rz(phi, i)     
+
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)    
+      
+        
+        return qc 
 
     @staticmethod
     def x_encoded(n_wire, full_ent = True):
