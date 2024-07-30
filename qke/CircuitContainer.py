@@ -116,7 +116,7 @@ class CircuitContainer:
 
         #compute kernel
         #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
-        k_computed = circuit_container.kernel(x1_fm, x1_fm)
+        k_computed = circuit_container.kernel(x1_fm, x2_fm)
         return k_computed
     
     #compute the kernel matrix (Gram if A==B)

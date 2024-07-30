@@ -25,11 +25,11 @@ algorithm_globals.random_seed = 123
 
 
 my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.linear)
+c = CircuitContainer(qtemplate=Circuits.x_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #load dataset with panda
 #data are scaled outside the notebook
-data_file_csv = 'data/env.sel3.minmax.csv'
+data_file_csv = 'data/env.sel3.scaled.csv'
 env = pd.read_csv(data_file_csv)  
 
 
@@ -78,7 +78,37 @@ print(f'Sanity check. Dict len after prediction: {len(c.fm_dict)}')
 
 c.save_feature_map(prefix='run_x_')
 
-#RUN USING MINMAX
+# *** Create a Container ***
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐
+# q_0: ┤ Rx(phi_0) ├
+#      ├───────────┤
+# q_1: ┤ Rx(phi_1) ├
+#      ├───────────┤
+# q_2: ┤ Rx(phi_2) ├
+#      ├───────────┤
+# q_3: ┤ Rx(phi_3) ├
+#      ├───────────┤
+# q_4: ┤ Rx(phi_4) ├
+#      ├───────────┤
+# q_5: ┤ Rx(phi_5) ├
+#      └───────────┘
+# *** Required observables: ['ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# File used for this run: data/env.sel3.scaled.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.7880055788005579
+# Time training: 353.1887757778168 seconds. Final time 470.8954598903656 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240730214200
+
+#RUN USING MINMAX-0.06989177  0.14        0.01        0.46669998 -0.36310348  1.25351499
 # *** Create a Container ***
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐                         ┌───┐
