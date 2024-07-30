@@ -15,7 +15,6 @@ sys.path.append(current_wd)
 from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
 from qke.QMeasures import QMeasures
-from qke.qkernel import kernel_matrix
 from qke.CKernels import CKernels
 
 
@@ -32,7 +31,7 @@ c = CircuitContainer(qtemplate=Circuits.xyz_encoded, full_ent=False, nwire=6, ob
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #¶ate of data sampling fot testing pourpose
+f_rate = 0.1 #rate of data sampling fot testing pourpose
 data_file_csv = 'data/env.sel3.scaled.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
@@ -61,7 +60,7 @@ print(f'Label for test {y_test_np.shape}')
 #get time
 t_start = time.time()
 
-svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np, y_train_np);
+svm_quantum = SVC(kernel=CircuitContainer.kernel_matrix).fit(X_train_np, y_train_np);
 print(f'Sanity check. Dict len after training: {len(c.fm_dict)}')
 
 #get time training

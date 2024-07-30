@@ -15,7 +15,7 @@ sys.path.append(current_wd)
 
 from qke.CircuitContainer import CircuitContainer
 from qke.Circuits import Circuits
-from qke.qkernel import kernel_matrix
+
 
 
 #set the seed
@@ -59,7 +59,7 @@ print(f'Label for test {y_test_np.shape}')
 #get time
 t_start = time.time()
 
-svm_quantum = SVC(kernel=kernel_matrix).fit(X_train_np, y_train_np);
+svm_quantum = SVC(kernel=CircuitContainer.kernel_matrix).fit(X_train_np, y_train_np);
 print(f'Sanity check. Dict len after training: {len(c.fm_dict)}')
 
 #get time training

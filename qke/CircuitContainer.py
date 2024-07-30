@@ -76,6 +76,54 @@ class CircuitContainer:
         print(f'*** CKernel function used: {self.kernel.__name__}')
         return ""
 
+    #encode data in parameter
+    @staticmethod
+    def qEncoding(qc, data):               
+        qc_assigned = qc.assign_parameters(data, inplace = False)
+        return qc_assigned;  
+
+    #define qquantum feature kernel using CircuitContainer
+    @staticmethod
+    def qfKernel(x1, x2):
+
+        #get info about obs and circuits
+        circuit_container = CircuitContainer()  
+        qc_template = circuit_container.circuit
+        obs = circuit_container.obs
+
+        #define the key
+        k_x1 = str(x1) #get_key(x1) 
+        k_x2 = str(x2) #get_key(x2)
+
+        #check the k1 and get feature map
+        x1_fm = None
+        if k_x1 in circuit_container.fm_dict:
+            x1_fm = circuit_container.fm_dict[k_x1]
+        else:
+            x1_qc = CircuitContainer.qEncoding(qc_template, x1)        
+            x1_fm = circuit_container.measure_fn(x1_qc, observables=obs)
+            
+            circuit_container.fm_dict[k_x1] = x1_fm
+
+        #check the k2 and get feature map
+        x2_fm = None
+        if k_x2 in circuit_container.fm_dict:
+            x2_fm = circuit_container.fm_dict[k_x2]
+        else:
+            x2_qc = CircuitContainer.qEncoding(qc_template, x2)
+            x2_fm = circuit_container.measure_fn(x2_qc, observables=obs)        
+            circuit_container.fm_dict[k_x2] = x2_fm    
+
+        #compute kernel
+        #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
+        k_computed = circuit_container.kernel(x1_fm, x1_fm)
+        return k_computed
+    
+    #compute the kernel matrix (Gram if A==B)
+    @staticmethod
+    def kernel_matrix(A, B):
+        #Compute gram matrix
+        return np.array([[CircuitContainer.qfKernel(a, b) for b in B] for a in A]) 
     
     #save my feature map
     def save_feature_map(self, prefix = ''):
