@@ -1,9 +1,18 @@
 from qiskit.circuit import Parameter
 from qiskit.circuit.library import ZZFeatureMap
+from qiskit.circuit.library import IQP
+from qiskit.quantum_info import random_hermitian
 from qiskit import QuantumCircuit
+import numpy as np
 
 
 class Circuits:
+
+    @staticmethod
+    def iqpfeaturemap(n_wire, full_ent = True):
+        mat_param = np.real(random_hermitian(n_wire, seed=1234))
+        circuit = IQP(mat_param)
+        return circuit   
 
 
     @staticmethod
