@@ -13,7 +13,7 @@ np.random.seed(123)
 #load dataset with panda
 #data are scaled outside the notebook
 #sclaled_data_file = 'data/env.sel3.scaled.csv'
-data_file_csv = 'data/env.sel3.minmax.csv' 
+data_file_csv = 'data/env.sel3.scaled.csv' 
 env = pd.read_csv(data_file_csv)  
 
 
@@ -64,6 +64,16 @@ print(f'Using dataset in datafile: {data_file_csv}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 
+#LAST RUNNING in Sept 2024 
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Using kernel type: rbf
+# Using dataset in datafile: data/env.sel3.scaled.csv
+# *******SCORE: 0.8089260808926081
+# Time training: 0.03664994239807129 seconds. Final time 0.0490415096282959 seconds
 
 # #RUN WITH FILE SCALED USING MINMAX
 # Shape of dataset: (2865, 7)
