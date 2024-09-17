@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
         "./qke"
-    ]
+    ],
+
+    "python.languageServer": "Pylance"
 }
