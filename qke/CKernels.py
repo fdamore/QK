@@ -10,8 +10,9 @@ class CKernels:
             return x.dot(y)            
     
     @staticmethod
-    def rbf(x: np.ndarray, y: np.ndarray) -> float:
-          return np.exp(0.5 * -(norm(x - y))**2)
+    def rbf(x: np.ndarray, y: np.ndarray, gamma = 0.5) -> float:
+          return np.exp(gamma * -(norm(x - y))**2)
+          
             
     
 

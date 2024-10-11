@@ -66,17 +66,6 @@ print(f'Using dataset in datafile: {data_file_csv}')
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
 
-
-Shape of dataset: (2865, 7)
-Training shape dataset (2148, 6)
-Label for traing (2148,)
-Test shape dataset (717, 6)
-Label for test (717,)
-Using kernel type: rbf
-Using dataset in datafile: data/env.sel3.scaled.csv
-*******SCORE: 0.8284518828451883
-Time training: 0.0435330867767334 seconds. Final time 0.05626320838928223 seconds
-
 #LAST RUNNING in OPT 2024 WITH BEST PARAMETERS
 # Shape of dataset: (2865, 7)
 # Training shape dataset (2148, 6)

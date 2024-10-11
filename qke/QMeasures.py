@@ -50,7 +50,7 @@ class QMeasures:
         #return job_result[0].data.evs
         return np.array(l)
 
-    #measure using state vector
+    #measure using state vector (evs is the expectation values of the measure)
     def StateVectorEstimator(qc, observables,**kargs):         
         
         estimator = StatevectorEstimator(default_precision=0)     
