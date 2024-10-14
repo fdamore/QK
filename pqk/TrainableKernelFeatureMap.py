@@ -9,14 +9,14 @@ from qiskit_machine_learning.kernels import TrainableKernel, BaseKernel
 from qiskit import QuantumCircuit
 from qiskit.circuit import Parameter, ParameterVector
 
-from qke.QMeasures import QMeasures
-from qke.CKernels import CKernels
+from pqk.QMeasures import QMeasures
+from pqk.CKernels import CKernels
 
 
 
 
 #define my trainable quantum kernel using the outer quantum kernel.
-# qke.Circuit should be defined before running the training process
+# pqk.Circuit should be defined before running the training process
 class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
         
        

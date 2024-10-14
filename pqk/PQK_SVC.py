@@ -3,9 +3,9 @@ import numpy as np
 import os
 import time
 import datetime
-from qke.QMeasures import QMeasures
-from qke.Circuits import Circuits
-from qke.CKernels import CKernels
+from pqk.QMeasures import QMeasures
+from pqk.Circuits import Circuits
+from pqk.CKernels import CKernels
 
 
 class PQK_SVC:   
