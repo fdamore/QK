@@ -21,11 +21,11 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from qke.QKCallback import QKCallback
-from qke.TrainableCircuits import TrainableCircuits
-from qke.QMeasures import QMeasures
-from qke.TrainableKernelFeatureMap import TrainableKernelFeatureMap
-from qke.CKernels import CKernels
+from pqk.QKCallback import QKCallback
+from pqk.TrainableCircuits import TrainableCircuits
+from pqk.QMeasures import QMeasures
+from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
+from pqk.CKernels import CKernels
 
 
 

@@ -18,11 +18,11 @@ from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import Qu
 from qiskit_algorithms.optimizers import SPSA
 from qiskit_machine_learning.utils.loss_functions import SVCLoss
 
-from qke.TrainableKernelFeatureMap import TrainableKernelFeatureMap
-from qke.TrainableCircuits import TrainableCircuits
-from qke.QKCallback import QKCallback
-from qke.QMeasures import QMeasures
-from qke.CKernels import CKernels
+from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
+from pqk.TrainableCircuits import TrainableCircuits
+from pqk.QKCallback import QKCallback
+from pqk.QMeasures import QMeasures
+from pqk.CKernels import CKernels
 from qiskit_algorithms.utils import algorithm_globals
 
 #set the seed

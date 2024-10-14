@@ -25,7 +25,7 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from qke.QKCallback import QKCallback
+from pqk.QKCallback import QKCallback
 
 #set the seed
 np.random.seed(123)

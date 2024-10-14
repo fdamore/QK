@@ -13,8 +13,8 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from qke.CircuitContainer import CircuitContainer
-from qke.Circuits import Circuits
+from pqk.CircuitContainer import CircuitContainer
+from pqk.Circuits import Circuits
 
 
 

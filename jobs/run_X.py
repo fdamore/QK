@@ -12,10 +12,10 @@ from qiskit_algorithms.utils import algorithm_globals
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from qke.CircuitContainer import CircuitContainer
-from qke.Circuits import Circuits
-from qke.QMeasures import QMeasures
-from qke.CKernels import CKernels
+from pqk.CircuitContainer import CircuitContainer
+from pqk.Circuits import Circuits
+from pqk.QMeasures import QMeasures
+from pqk.CKernels import CKernels
 
 
 
