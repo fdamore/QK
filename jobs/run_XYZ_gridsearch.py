@@ -2,9 +2,7 @@ import sys
 import os
 import time
 import pandas as pd
-from sklearn.svm import SVC
 from sklearn.model_selection import GridSearchCV, train_test_split
-from sklearn.metrics import accuracy_score
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
 
@@ -12,7 +10,6 @@ from qiskit_algorithms.utils import algorithm_globals
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
-from pqk.CircuitContainer import CircuitContainer
 from pqk.Circuits import Circuits
 from pqk.QMeasures import QMeasures
 from pqk.CKernels import CKernels
