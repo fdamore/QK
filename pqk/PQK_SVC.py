@@ -68,7 +68,7 @@ class PQK_SVC(SVC):
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
         print(f'*** Measure procedure: {self.measure_fn.__name__}')
-        print(f'*** CKernel function used: {self.kernel.__name__}')
+        print(f'*** CKernel function used: {self.c_kernel.__name__}')
         return ""
 
     #encode data in parameter    
