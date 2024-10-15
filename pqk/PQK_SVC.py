@@ -34,12 +34,9 @@ class PQK_SVC(SVC):
     #the classical kernel used to compute
     c_kernel = None
 
-    #clear the cach at each fit
-    fit_clear = True  
-
     
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, print_param = False, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         
         super().__init__(C=C, gamma=gamma, kernel=self.__kernel_matrix)
 
@@ -52,14 +49,16 @@ class PQK_SVC(SVC):
         c_kernel is the used classical kernel
         """
 
-        #define parameters
+        #clear the cache before fit
+        self.fit_clear = fit_clear       
+
+        #define PQK_SVM arameters 
         self.obs = obs
         self.nwire = nwire 
         self.template = template
         self.full_ent =full_ent
         self.measure_fn = measure_fn
-        self.c_kernel = c_kernel
-        self.fit_clear = fit_clear
+        self.c_kernel = c_kernel       
         self.circuit = self.template(self.nwire,  self.full_ent)        
 
 
@@ -147,9 +146,7 @@ class PQK_SVC(SVC):
         
         """
         need to reimplements fit in order to manage the latent cache
-        """
-
-        print(self.get_params())
+        """        
 
         if len(self.obs) == 0:
             print('WARNING: provide observables')

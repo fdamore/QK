@@ -1,5 +1,10 @@
 import numpy as np
 
+
+import warnings as warnings
+warnings.simplefilter("always")
+
+
 import os
 import time
 import datetime
@@ -44,10 +49,14 @@ class CircuitContainer:
     kernel = None  
 
     def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+        
+        warnings.warn(f'{self.__class__.__name__} will be deprecated.', DeprecationWarning, stacklevel=2)
+        
         print('*** Create a Container ***')
         self.build(nwire=nwire, obs=obs,full_ent=full_ent, qtemplate=qtemplate, measure_fn= measure_fn, c_kernel=c_kernel)
     
-    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+    def build(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):        
+
         #define parameters
         self.obs = obs
         self.nwire = nwire 
@@ -78,13 +87,15 @@ class CircuitContainer:
 
     #encode data in parameter
     @staticmethod
-    def qEncoding(qc, data):               
+    def qEncoding(qc, data): 
+        warnings.warn('CircuitContainer will be deprecated.', DeprecationWarning, stacklevel=2)              
         qc_assigned = qc.assign_parameters(data, inplace = False)
         return qc_assigned;  
 
     #define qquantum feature kernel using CircuitContainer
     @staticmethod
     def qfKernel(x1, x2):
+        warnings.warn('CircuitContainer will be deprecated.', DeprecationWarning, stacklevel=2) 
 
         #get info about obs and circuits
         circuit_container = CircuitContainer()  
@@ -122,11 +133,14 @@ class CircuitContainer:
     #compute the kernel matrix (Gram if A==B)
     @staticmethod
     def kernel_matrix(A, B):
+        warnings.warn('CircuitContainer will be deprecated.', DeprecationWarning, stacklevel=2) 
+
         #Compute gram matrix
         return np.array([[CircuitContainer.qfKernel(a, b) for b in B] for a in A]) 
     
     #save my feature map
     def save_feature_map(self, prefix = ''):
+        warnings.warn('CircuitContainer will be deprecated.', DeprecationWarning, stacklevel=2) 
         #create a csv file with feature maps
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
