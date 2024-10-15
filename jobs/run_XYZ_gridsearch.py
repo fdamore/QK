@@ -27,7 +27,7 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
-pqk = PQK_SVC(template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(template=Circuits.xyz_encoded, fit_clear=False, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
@@ -69,7 +69,7 @@ params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0
 
 
 #Create the GridSearchCV object
-grid_clf = GridSearchCV(pqk, params_grid)
+grid_clf = GridSearchCV(pqk, params_grid, verbose=4)
 
 #get time
 t_start = time.time()
@@ -83,6 +83,38 @@ t_training = time.time()
 
 #Print the best estimator with it's parameters
 print(f'Best paramenter: {grid_clf.best_params_}')
+
+#GRID SEARCH HIGH VERBOSITY
+# [CV 4/5] END .................C=0.25, gamma=4.0;, score=0.767 total time=   2.0s
+# [CV 5/5] END .................C=0.25, gamma=4.0;, score=0.738 total time=   2.0s
+# [CV 1/5] END ..................C=0.5, gamma=0.1;, score=0.767 total time=   2.0s
+# [CV 2/5] END ..................C=0.5, gamma=0.1;, score=0.767 total time=   2.0s
+# [CV 3/5] END ..................C=0.5, gamma=0.1;, score=0.814 total time=   2.0s
+# [CV 4/5] END ..................C=0.5, gamma=0.1;, score=0.814 total time=   2.0s
+# [CV 5/5] END ..................C=0.5, gamma=0.1;, score=0.786 total time=   2.1s
+# [CV 1/5] END .................C=0.5, gamma=0.15;, score=0.767 total time=   2.0s
+# [CV 2/5] END .................C=0.5, gamma=0.15;, score=0.767 total time=   2.0s
+# [CV 3/5] END .................C=0.5, gamma=0.15;, score=0.814 total time=   2.0s
+# [CV 4/5] END .................C=0.5, gamma=0.15;, score=0.814 total time=   2.0s
+# [CV 5/5] END .................C=0.5, gamma=0.15;, score=0.786 total time=   2.1s
+
+#CUT
+
+# [CV 2/5] END ................C=128.0, gamma=3.0;, score=0.698 total time=   2.0s
+# [CV 3/5] END ................C=128.0, gamma=3.0;, score=0.791 total time=   2.0s
+# [CV 4/5] END ................C=128.0, gamma=3.0;, score=0.744 total time=   2.0s
+# [CV 5/5] END ................C=128.0, gamma=3.0;, score=0.762 total time=   2.0s
+# [CV 1/5] END ................C=128.0, gamma=4.0;, score=0.698 total time=   2.0s
+# [CV 2/5] END ................C=128.0, gamma=4.0;, score=0.698 total time=   2.0s
+# [CV 3/5] END ................C=128.0, gamma=4.0;, score=0.791 total time=   2.0s
+# [CV 4/5] END ................C=128.0, gamma=4.0;, score=0.744 total time=   2.0s
+# [CV 5/5] END ................C=128.0, gamma=4.0;, score=0.762 total time=   2.0s
+# [CV 1/5] END ..................C=256, gamma=0.1;, score=0.721 total time=   2.0s
+# [CV 2/5] END ..................C=256, gamma=0.1;, score=0.651 total time=   2.0s
+
+# Best paramenter: {'C': 0.5, 'gamma': 0.1}
+
+
 
 #GRID SEARCH 2024-10-15 #1
 # *** Quantum template for feature map using 6 qubit ***

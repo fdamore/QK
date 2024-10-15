@@ -36,7 +36,7 @@ class PQK_SVC(SVC):
 
     
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, print_param = False, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         
         super().__init__(C=C, gamma=gamma, kernel=self.__kernel_matrix)
 
