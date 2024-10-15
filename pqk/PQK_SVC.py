@@ -149,6 +149,8 @@ class PQK_SVC(SVC):
         need to reimplements fit in order to manage the latent cache
         """
 
+        print(self.get_params())
+
         if len(self.obs) == 0:
             print('WARNING: provide observables')
         

@@ -27,7 +27,7 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
-pqk = PQK_SVC(template=Circuits.xyz_encoded, full_ent=True, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
@@ -84,6 +84,30 @@ t_training = time.time()
 #Print the best estimator with it's parameters
 print(f'Best paramenter: {grid_clf.best_params_}')
 
-
-
+#GRID SEARCH 2024-10-15 #1
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# File used for this run: data/env.sel3.scaled.csv
+# Fraction rate used for this run: 10.0%
+# Shape of dataset: (286, 7)
+# Training shape dataset (214, 6)
+# Label for traing (214,)
+# Test shape dataset (72, 6)
+# Label for test (72,)
+# Best paramenter: {'C': 0.5, 'gamma': 0.1}
 
