@@ -1,14 +1,17 @@
+from debugpy import configure
 import numpy as np
 
 import os
 import time
 import datetime
+
 from pqk.QMeasures import QMeasures
 from pqk.Circuits import Circuits
 from pqk.CKernels import CKernels
+from sklearn.svm import SVC
 
 
-class PQK_SVC:   
+class PQK_SVC(SVC):   
 
     #quantum circuit used to define feature map
     circuit = None
@@ -29,28 +32,35 @@ class PQK_SVC:
     measure_fn = None  
 
     #the classical kernel used to compute
-    kernel = None      
+    c_kernel = None
+
+    #clear the cach at each fit
+    fit_clear = True  
+
     
-    def __init__(self, nwire = 1, obs = ['Z'], full_ent = True, qtemplate = Circuits.ansatz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
-        print('*** Create a Container ***')
+    
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+        
+        super().__init__(C=C, gamma=gamma, kernel=self.__kernel_matrix)
+
+        """
+         
+        nwire are the number of qubits
+        obs are the observation used to project state vector back to classical space
+        qtemplate is the circuit template used to  encode data in quantum space
+        measure_fn is the measure procedure used to get evs to encoded states
+        c_kernel is the used classical kernel
+        """
+
         #define parameters
         self.obs = obs
         self.nwire = nwire 
-        self.template = qtemplate
+        self.template = template
         self.full_ent =full_ent
         self.measure_fn = measure_fn
-        self.kernel = c_kernel
-
-        self.circuit = self.template(self.nwire,  self.full_ent)
-
-        #print metadata
-        self.metadata()
-
-        if len(self.obs) == 0:
-            print('WARNING: provide observables')
-        
-        #clear the cache
-        self.fm_dict.clear()
+        self.c_kernel = c_kernel
+        self.fit_clear = fit_clear
+        self.circuit = self.template(self.nwire,  self.full_ent)        
 
 
     def metadata(self):
@@ -62,12 +72,12 @@ class PQK_SVC:
         return ""
 
     #encode data in parameter    
-    def qEncoding(qc, data):               
+    def __qEncoding(self, qc, data):         
         qc_assigned = qc.assign_parameters(data, inplace = False)
         return qc_assigned;  
 
-    #define qquantum feature kernel using CircuitContainer    
-    def qfKernel(self, x1, x2):
+    #define quantum feature kernel using CircuitContainer    
+    def __qfKernel(self, x1, x2):
 
         
         qc_template = self.circuit
@@ -82,7 +92,7 @@ class PQK_SVC:
         if k_x1 in self.fm_dict:
             x1_fm = self.fm_dict[k_x1]
         else:
-            x1_qc = self.qEncoding(qc_template, x1)        
+            x1_qc = self.__qEncoding(qc_template, x1)        
             x1_fm = self.measure_fn(x1_qc, observables=obs)
             
             self.fm_dict[k_x1] = x1_fm
@@ -92,20 +102,21 @@ class PQK_SVC:
         if k_x2 in self.fm_dict:
             x2_fm = self.fm_dict[k_x2]
         else:
-            x2_qc = self.qEncoding(qc_template, x2)
+            x2_qc = self.__qEncoding(qc_template, x2)
             x2_fm = self.measure_fn(x2_qc, observables=obs)        
             self.fm_dict[k_x2] = x2_fm    
 
         #compute kernel
         #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
-        k_computed = self.kernel(x1_fm, x2_fm)
+        k_computed = self.c_kernel(x1_fm, x2_fm)
         return k_computed
     
-    #compute the kernel matrix (Gram if A==B)    
-    def kernel_matrix(self, A, B):
-
-        #Compute gram matrix
-        return np.array([[self.qfKernel(a, b) for b in B] for a in A]) 
+    
+    def __kernel_matrix(self, A, B):
+        """
+        compute the kernel matrix (Gram if A==B)    
+        """        
+        return np.array([[self.__qfKernel(a, b) for b in B] for a in A]) 
     
     #save my feature map
     def save_feature_map(self, prefix = ''):
@@ -129,7 +140,25 @@ class PQK_SVC:
 
         #print the related time stamp. 
         print(f'Timestamp of the file storing data: {formatted_datetime}')
+    
+    
+    
+    def fit(self, X, y):
+        
+        """
+        need to reimplements fit in order to manage the latent cache
+        """
 
+        if len(self.obs) == 0:
+            print('WARNING: provide observables')
+        
+        #clear the cache
+        if self.fit_clear:
+            self.fm_dict.clear()      
 
-    def fit():
-        pass
+        super().fit(X=X, y=y)
+                
+        return self
+
+   
+        
