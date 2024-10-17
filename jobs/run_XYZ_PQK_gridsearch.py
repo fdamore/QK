@@ -2,8 +2,7 @@ import sys
 import os
 import time
 import pandas as pd
-from sklearn.base import accuracy_score
-from sklearn.metrics import classification_report
+from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
