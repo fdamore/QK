@@ -72,7 +72,7 @@ params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0
 
 
 
-#Create the GridSearchCV object (be carefull... it uses all processor on the host machine)
+#Create the GridSearchCV object (be carefull... it uses all processors on the host machine)
 grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=-1)
 
 #get time
