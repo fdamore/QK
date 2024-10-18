@@ -38,7 +38,7 @@ class PQK_SVC(SVC):
     
     def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         
-        super().__init__(C=C, gamma=gamma, kernel=self.__kernel_matrix)
+        super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
 
         """
          
@@ -71,12 +71,12 @@ class PQK_SVC(SVC):
         return ""
 
     #encode data in parameter    
-    def __qEncoding(self, qc, data):         
+    def _qEncoding(self, qc, data):
         qc_assigned = qc.assign_parameters(data, inplace = False)
         return qc_assigned;  
 
     #define quantum feature kernel using CircuitContainer    
-    def __qfKernel(self, x1, x2):
+    def _qfKernel(self, x1, x2):
 
         
         qc_template = self.circuit
@@ -91,7 +91,7 @@ class PQK_SVC(SVC):
         if k_x1 in self.fm_dict:
             x1_fm = self.fm_dict[k_x1]
         else:
-            x1_qc = self.__qEncoding(qc_template, x1)        
+            x1_qc = self._qEncoding(qc_template, x1)
             x1_fm = self.measure_fn(x1_qc, observables=obs)
             
             self.fm_dict[k_x1] = x1_fm
@@ -101,7 +101,7 @@ class PQK_SVC(SVC):
         if k_x2 in self.fm_dict:
             x2_fm = self.fm_dict[k_x2]
         else:
-            x2_qc = self.__qEncoding(qc_template, x2)
+            x2_qc = self._qEncoding(qc_template, x2)
             x2_fm = self.measure_fn(x2_qc, observables=obs)        
             self.fm_dict[k_x2] = x2_fm    
 
@@ -111,11 +111,11 @@ class PQK_SVC(SVC):
         return k_computed
     
     
-    def __kernel_matrix(self, A, B):
+    def _kernel_matrix(self, A, B):
         """
         compute the kernel matrix (Gram if A==B)    
         """        
-        return np.array([[self.__qfKernel(a, b) for b in B] for a in A]) 
+        return np.array([[self._qfKernel(a, b) for b in B] for a in A])
     
     #save my feature map
     def save_feature_map(self, prefix = ''):
