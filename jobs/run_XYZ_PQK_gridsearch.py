@@ -28,7 +28,7 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
-pqk = PQK_SVC(template=Circuits.xyz_encoded, fit_clear=False, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(template=Circuits.xyz_encoded, fit_clear=True, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
@@ -71,7 +71,7 @@ params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=1)
+grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=-1)
 
 #get time
 t_start = time.time()
