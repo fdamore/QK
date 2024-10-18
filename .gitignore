@@ -7,3 +7,5 @@ qfm/tkfm/*csv
 nohup.out
 *run.txt
 .vscode/launch.json
+/myscratch/
+/.idea/
