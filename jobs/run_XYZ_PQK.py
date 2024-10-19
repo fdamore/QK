@@ -24,9 +24,9 @@ np.random.seed(123)
 algorithm_globals.random_seed = 123
 
 
-# Best paramenter: {'C': 0.5, 'gamma': 0.1}
+# Best paramenter: {'C': 256, 'gamma': 0.1}
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-pqk = PQK_SVC(C=0.5, gamma=0.1, template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(C=256, gamma=0.1, template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
@@ -90,6 +90,39 @@ formatted_datetime = datetime_object.strftime("%Y-%m-%d %H-%M-%S")
 print(f'Simulation end at: {formatted_datetime}')
 
 pqk.save_feature_map(prefix='run_xyz_pqk_')
+
+# Best paramenter: {'C': 256, 'gamma': 0.1}
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# File used for this run: data/env.sel3.scaled.csv
+# Fraction rate used for this run: 100%
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.8744769874476988
+# Time training: 373.48385190963745 seconds. Final time 500.45435881614685 seconds
+# Sanity check. Dict len after prediction: 2865
+# Simulation end at: 2024-10-19 20-29-37
+# Timestamp of the file storing data: 20241019202937
+
 
 ## Best paramenter: {'C': 0.5, 'gamma': 0.1} from gird search
 # *** Quantum template for feature map using 6 qubit ***
