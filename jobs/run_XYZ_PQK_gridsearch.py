@@ -96,6 +96,60 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
+#RESULT 2024-10-19....  Erro on get info about accuracy score and prediction 
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Fitting 5 folds for each of 270 candidates, totalling 1350 fits
+# Best paramenter: {'C': 256, 'gamma': 0.1}
+# Traceback (most recent call last):
+#   File "/home/damore/git/QK/jobs/run_XYZ_PQK_gridsearch.py", line 90, in <module>
+#     grid_predictions = grid.predict(X_test) 
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/sklearn/model_selection/_search.py", line 546, in predict
+#     return self.best_estimator_.predict(X)
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/sklearn/svm/_base.py", line 814, in predict
+#     y = super().predict(X)
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/sklearn/svm/_base.py", line 431, in predict
+#     return predict(X)
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/sklearn/svm/_base.py", line 434, in _dense_predict
+#     X = self._compute_kernel(X)
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/sklearn/svm/_base.py", line 508, in _compute_kernel
+#     kernel = self.kernel(X, self.__Xfit)
+#   File "/home/damore/git/QK/pqk/PQK_SVC.py", line 118, in _kernel_matrix
+#     return np.array([[self._qfKernel(a, b) for b in B] for a in A])
+#   File "/home/damore/git/QK/pqk/PQK_SVC.py", line 118, in <listcomp>
+#     return np.array([[self._qfKernel(a, b) for b in B] for a in A])
+#   File "/home/damore/git/QK/pqk/PQK_SVC.py", line 118, in <listcomp>
+#     return np.array([[self._qfKernel(a, b) for b in B] for a in A])
+#   File "/home/damore/git/QK/pqk/PQK_SVC.py", line 94, in _qfKernel
+#     x1_qc = self._qEncoding(qc_template, x1)
+#   File "/home/damore/git/QK/pqk/PQK_SVC.py", line 75, in _qEncoding
+#     qc_assigned = qc.assign_parameters(data, inplace = False)
+#   File "/home/damore/git/QK/.venv/lib/python3.10/site-packages/qiskit/circuit/quantumcircuit.py", line 2705, in assign_parameters
+#     raise ValueError(
+# ValueError: Mismatching number of values and parameters. For partial binding please pass a dictionary of {parameter: value} pairs.
+
+
+
 #GRID SEARCH HIGH VERBOSITY
 # [CV 4/5] END .................C=0.25, gamma=4.0;, score=0.767 total time=   2.0s
 # [CV 5/5] END .................C=0.25, gamma=4.0;, score=0.738 total time=   2.0s
@@ -131,7 +185,7 @@ print(f'Accuracy Score on data: {score}')
 #GRID SEARCH 2024-10-15 #1
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐┌───────────┐┌───────────┐
-# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├-1
 #      ├───────────┤├───────────┤├───────────┤
 # q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
 #      ├───────────┤├───────────┤├───────────┤

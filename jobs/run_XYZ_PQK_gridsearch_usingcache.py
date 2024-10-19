@@ -66,12 +66,14 @@ print(f'Label for test {y_test_np.shape}')
 # define grid search strategy
 #Create a dictionary of possible parameters
 params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
-          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
+          'gamma': np.array([0.01,0.05, 0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0])}
 
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=-1)
+nj = 1
+grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj)
+print(f'N jobs param:{nj}')
 
 #get time
 t_start = time.time()
@@ -96,62 +98,5 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
-#GRID SEARCH HIGH VERBOSITY
-# [CV 4/5] END .................C=0.25, gamma=4.0;, score=0.767 total time=   2.0s
-# [CV 5/5] END .................C=0.25, gamma=4.0;, score=0.738 total time=   2.0s
-# [CV 1/5] END ..................C=0.5, gamma=0.1;, score=0.767 total time=   2.0s
-# [CV 2/5] END ..................C=0.5, gamma=0.1;, score=0.767 total time=   2.0s
-# [CV 3/5] END ..................C=0.5, gamma=0.1;, score=0.814 total time=   2.0s
-# [CV 4/5] END ..................C=0.5, gamma=0.1;, score=0.814 total time=   2.0s
-# [CV 5/5] END ..................C=0.5, gamma=0.1;, score=0.786 total time=   2.1s
-# [CV 1/5] END .................C=0.5, gamma=0.15;, score=0.767 total time=   2.0s
-# [CV 2/5] END .................C=0.5, gamma=0.15;, score=0.767 total time=   2.0s
-# [CV 3/5] END .................C=0.5, gamma=0.15;, score=0.814 total time=   2.0s
-# [CV 4/5] END .................C=0.5, gamma=0.15;, score=0.814 total time=   2.0s
-# [CV 5/5] END .................C=0.5, gamma=0.15;, score=0.786 total time=   2.1s
 
-#CUT
-
-# [CV 2/5] END ................C=128.0, gamma=3.0;, score=0.698 total time=   2.0s
-# [CV 3/5] END ................C=128.0, gamma=3.0;, score=0.791 total time=   2.0s
-# [CV 4/5] END ................C=128.0, gamma=3.0;, score=0.744 total time=   2.0s
-# [CV 5/5] END ................C=128.0, gamma=3.0;, score=0.762 total time=   2.0s
-# [CV 1/5] END ................C=128.0, gamma=4.0;, score=0.698 total time=   2.0s
-# [CV 2/5] END ................C=128.0, gamma=4.0;, score=0.698 total time=   2.0s
-# [CV 3/5] END ................C=128.0, gamma=4.0;, score=0.791 total time=   2.0s
-# [CV 4/5] END ................C=128.0, gamma=4.0;, score=0.744 total time=   2.0s
-# [CV 5/5] END ................C=128.0, gamma=4.0;, score=0.762 total time=   2.0s
-# [CV 1/5] END ..................C=256, gamma=0.1;, score=0.721 total time=   2.0s
-# [CV 2/5] END ..................C=256, gamma=0.1;, score=0.651 total time=   2.0s
-
-# Best paramenter: {'C': 0.5, 'gamma': 0.1}
-
-
-
-#GRID SEARCH 2024-10-15 #1
-# *** Quantum template for feature map using 6 qubit ***
-#      ┌───────────┐┌───────────┐┌───────────┐
-# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
-#      ├───────────┤├───────────┤├───────────┤
-# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
-#      ├───────────┤├───────────┤├───────────┤
-# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
-#      ├───────────┤├───────────┤├───────────┤
-# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
-#      ├───────────┤├───────────┤├───────────┤
-# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
-#      ├───────────┤├───────────┤├───────────┤
-# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
-#      └───────────┘└───────────┘└───────────┘
-# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
-# *** Measure procedure: StateVectorEstimator
-# *** CKernel function used: rbf
-# File used for this run: data/env.sel3.scaled.csv
-# Fraction rate used for this run: 10.0%
-# Shape of dataset: (286, 7)
-# Training shape dataset (214, 6)
-# Label for traing (214,)
-# Test shape dataset (72, 6)
-# Label for test (72,)
-# Best paramenter: {'C': 0.5, 'gamma': 0.1}
 
