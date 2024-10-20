@@ -49,9 +49,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
 #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
 X_train_np = X_train.to_numpy()
 y_train_np = y_train.to_numpy()
-#LAST RESULT:
-##USING 1000 data point for training
-##*******SCORE: 0.8222384784198976
 X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
@@ -66,7 +63,7 @@ print(f'Label for test {y_test_np.shape}')
 # define grid search strategy
 #Create a dictionary of possible parameters
 params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
-          'gamma': np.array([0.01,0.05, 0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0])}
+          'gamma': np.array([0.01,0.05, 0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0])}
 
 
 
