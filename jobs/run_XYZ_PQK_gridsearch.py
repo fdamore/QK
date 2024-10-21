@@ -28,7 +28,8 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
-pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=True, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+clear_cache = True
+pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
@@ -49,9 +50,6 @@ X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
 #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
 X_train_np = X_train.to_numpy()
 y_train_np = y_train.to_numpy()
-#LAST RESULT:
-##USING 1000 data point for training
-##*******SCORE: 0.8222384784198976
 X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
@@ -59,19 +57,29 @@ y_test_np = y_test.to_numpy()
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
-
 print(f'Test shape dataset {X_test_np.shape}')
 print(f'Label for test {y_test_np.shape}')
 
+
 # define grid search strategy
 #Create a dictionary of possible parameters
-params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
-          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
+#params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
+#          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
+
+params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
+          'gamma': np.array([0.01,0.05,0.75, 0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.50, 1.75, 2.0, 2.5])}
 
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=-1)
+nj = -1
+grid = GridSearchCV(pqk, params_grid, verbose=2, n_jobs=nj)
+
+print('***INFO RUN***')
+print(f'Clear cache: {clear_cache}')
+print(f'N job param = {nj}')
+print(f'GridSearch Dict: {params_grid}')
+
 
 #get time
 t_start = time.time()
