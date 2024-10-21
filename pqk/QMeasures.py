@@ -6,6 +6,7 @@ from qiskit.primitives import Estimator as PrimitiveEstimator
 from qiskit.primitives import StatevectorEstimator
 
 
+
 class QMeasures:
     
     #measure using Aer
@@ -61,3 +62,52 @@ class QMeasures:
         job = estimator.run([pub])
         result = job.result()[0]
         return result.data.evs
+
+    def GPUAerStateVectorEstimator(qc, observables, **kargs):
+
+        default_precision=0.0
+        backend_options={
+            "method":"statevector",
+            "device":"GPU"
+        }
+        estimator=AerEstimator(
+            options={
+                "backend_options":backend_options,
+                "default_precision":default_precision
+            }
+        )
+
+        obs = [SparsePauliOp(label) for label in observables]
+
+        pub = (qc, obs)
+        job = estimator.run([pub])
+        result = job.result()[0]
+        return result.data.evs
+
+    def GPUAerVigoNoiseStateVectorEstimator(qc, observables, **kargs):
+        from qiskit_ibm_runtime.fake_provider import FakeVigoV2
+        from qiskit_aer.noise import NoiseModel
+        fake_backend = FakeVigoV2()
+        noise_model = NoiseModel.from_backend(fake_backend)
+
+        default_precision = 0.0
+        backend_options = {
+            "method": "statevector",
+            "device": "GPU",
+            "noise_model": noise_model
+        }
+        estimator = AerEstimator(
+            options={
+                "backend_options": backend_options,
+                "default_precision": default_precision
+            }
+        )
+
+        obs = [SparsePauliOp(label) for label in observables]
+
+        pub = (qc, obs)
+        job = estimator.run([pub])
+        result = job.result()[0]
+        print(result)
+        return result.data.evs
+
