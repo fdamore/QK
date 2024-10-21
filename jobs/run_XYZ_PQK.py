@@ -26,7 +26,7 @@ algorithm_globals.random_seed = 123
 
 # Best paramenter: {'C': 256, 'gamma': 0.1}
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-pqk = PQK_SVC(C=256, gamma=0.1, template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(C=256, gamma=0.1, circuit_template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
@@ -68,7 +68,7 @@ print(f'Label for test {y_test_np.shape}')
 t_start = time.time()
 
 svm_quantum = pqk.fit(X_train_np, y_train_np);
-print(f'Sanity check. Dict len after training: {len(pqk.fm_dict)}')
+print(f'Sanity check. Dict len after training: {len(pqk._fm_dict)}')
 
 #get time training
 t_training = time.time()
@@ -82,7 +82,7 @@ t_final = time.time()
 
 print(f'*******SCORE: {score}')
 print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
-print(f'Sanity check. Dict len after prediction: {len(pqk.fm_dict)}')
+print(f'Sanity check. Dict len after prediction: {len(pqk._fm_dict)}')
 
 #time simulation info
 datetime_object = datetime.datetime.fromtimestamp(t_final)

@@ -1,3 +1,4 @@
+from re import template
 from debugpy import configure
 import numpy as np
 
@@ -11,42 +12,24 @@ from pqk.CKernels import CKernels
 from sklearn.svm import SVC
 
 
-class PQK_SVC(SVC):   
+class PQK_SVC(SVC):
 
-    #quantum circuit used to define feature map
-    circuit = None
 
-    #quantum template for the circuit
-    template = None    
-
-    #number of qubit
-    nwire = None
-
-    #list of observables
-    obs = None
-
-    #store computed feature map
-    fm_dict = {}
-
-    #measure function
-    measure_fn = None  
-
-    #the classical kernel used to compute
-    c_kernel = None
-
+    #dict for latent space
+    _fm_dict = {}          
     
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, circuit_template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
 
-        """
-         
+        """         
         nwire are the number of qubits
         obs are the observation used to project state vector back to classical space
         qtemplate is the circuit template used to  encode data in quantum space
         measure_fn is the measure procedure used to get evs to encoded states
         c_kernel is the used classical kernel
+        template is the function used to create the quantum circuits
         """
 
         #clear the cache before fit
@@ -55,11 +38,15 @@ class PQK_SVC(SVC):
         #define PQK_SVM arameters 
         self.obs = obs
         self.nwire = nwire 
-        self.template = template
+        
         self.full_ent =full_ent
         self.measure_fn = measure_fn
-        self.c_kernel = c_kernel       
-        self.circuit = self.template(self.nwire,  self.full_ent)        
+        self.c_kernel = c_kernel  
+
+        #create a tamplate of the encoding circuit based on tamplate 
+        self.circuit_template = circuit_template       
+        self.circuit = self.circuit_template(self.nwire,  self.full_ent)     
+                
 
 
     def metadata(self):
@@ -71,15 +58,15 @@ class PQK_SVC(SVC):
         return ""
 
     #encode data in parameter    
-    def _qEncoding(self, qc, data):
-        qc_assigned = qc.assign_parameters(data, inplace = False)
+    def _qEncoding(self, data): 
+        #inplace = If False, a copy of the circuit with the bound parameters is returned       
+        qc_assigned = self.circuit.assign_parameters(data, inplace = False)
         return qc_assigned;  
 
     #define quantum feature kernel using CircuitContainer    
     def _qfKernel(self, x1, x2):
 
         
-        qc_template = self.circuit
         obs = self.obs
 
         #define the key
@@ -88,22 +75,22 @@ class PQK_SVC(SVC):
 
         #check the k1 and get feature map
         x1_fm = None
-        if k_x1 in self.fm_dict:
-            x1_fm = self.fm_dict[k_x1]
+        if k_x1 in self._fm_dict:
+            x1_fm = self._fm_dict[k_x1]
         else:
-            x1_qc = self._qEncoding(qc_template, x1)
+            x1_qc = self._qEncoding(x1)
             x1_fm = self.measure_fn(x1_qc, observables=obs)
             
-            self.fm_dict[k_x1] = x1_fm
+            self._fm_dict[k_x1] = x1_fm
 
         #check the k2 and get feature map
         x2_fm = None
-        if k_x2 in self.fm_dict:
-            x2_fm = self.fm_dict[k_x2]
+        if k_x2 in self._fm_dict:
+            x2_fm = self._fm_dict[k_x2]
         else:
-            x2_qc = self._qEncoding(qc_template, x2)
+            x2_qc = self._qEncoding(x2)
             x2_fm = self.measure_fn(x2_qc, observables=obs)        
-            self.fm_dict[k_x2] = x2_fm    
+            self._fm_dict[k_x2] = x2_fm    
 
         #compute kernel
         #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
@@ -132,7 +119,7 @@ class PQK_SVC(SVC):
         with open(file_path, 'w') as f:            
             f.write(','.join(['key', 'value']))
             f.write('\n') # Add a new line
-            for i, (k,v) in enumerate(self.fm_dict.items()):
+            for i, (k,v) in enumerate(self._fm_dict.items()):
                 l_item = [k,str(v)]
                 f.write(','.join(l_item))
                 f.write('\n') # Add a new line
@@ -153,7 +140,7 @@ class PQK_SVC(SVC):
         
         #clear the cache
         if self.fit_clear:
-            self.fm_dict.clear()      
+            self._fm_dict.clear()      
 
         super().fit(X=X, y=y)
                 
