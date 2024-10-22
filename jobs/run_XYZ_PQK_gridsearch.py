@@ -37,7 +37,7 @@ pqk.metadata()
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #rate of data sampling fot testing pourpose 
+f_rate = 1 #rate of data sampling fot testing pourpose
 data_file_csv = 'data/env.sel3.scaled.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
@@ -95,7 +95,7 @@ t_training = time.time()
 print(f'Best paramenter: {grid.best_params_}')
 
 #perform grid prediction on test set
-grid_predictions = grid.predict(X_test) 
+grid_predictions = grid.predict(X_test_np)
 
 # print classification report 
 print(classification_report(y_test, grid_predictions))
