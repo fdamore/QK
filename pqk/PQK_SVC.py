@@ -55,6 +55,7 @@ class PQK_SVC(SVC):
         print(f'*** Required observables: {self.obs}')
         print(f'*** Measure procedure: {self.measure_fn.__name__}')
         print(f'*** CKernel function used: {self.c_kernel.__name__}')
+        print(f'Param: {self.get_params}')
         return ""
 
     #encode data in parameter    

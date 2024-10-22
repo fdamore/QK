@@ -104,6 +104,37 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
+#RESULT 2024-10-21. ERROR ON BEST ESTIMATOR
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: True
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': array([0.01, 0.05, 0.75, 0.1 , 0.15, 0.25, 0.5 , 0.75, 1.  , 1.5 , 1.75,
+#        2.  , 2.5 ])}
+# Best paramenter: {'C': 256, 'gamma': 0.01}
+
+
 #RESULT 2024-10-19....  Erro on get info about accuracy score and prediction 
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐┌───────────┐┌───────────┐
