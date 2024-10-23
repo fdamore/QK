@@ -97,6 +97,48 @@ class Circuits:
       
         
         return qc 
+    
+    @staticmethod
+    def spiral_encoding(n_wire, n_windings, full_ent = True):   # im considering n_wire as number of qubits (not features) - Luca
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+        # assuming phis normalized bw 0 and 1
+        for i in range(n_wire):            
+            phi_name = 'phi_'+str(i)
+            phi = Parameter(phi_name)
+            qc.ry(np.pi * phi, i)
+            qc.rz(2 * np.pi * n_windings * phi, i)    # n_windings is the number of times the spiral makes a complete turn - Luca
+
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)    
+    
+        
+        return qc 
+
+    @staticmethod
+    def uniform_bloch_encoding(n_wire, full_ent = True):   # requires half as much qubits like dense encoding! - L
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire)        
+        
+        # assuming phis, thetas normalized bw 0 and 1
+        for i in range(n_wire):            
+            theta_name = 'phi_'+str(2*i)
+            theta = Parameter(theta_name)
+            phi_name = 'phi_'+str(2*i+1)
+            phi = Parameter(phi_name)
+            qc.ry(2*np.arccos(np.sqrt(theta)), i)
+            qc.rz(phi*np.pi, i)
+
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)
+        
+        return qc 
+
 
     @staticmethod
     def x_encoded(n_wire, full_ent = True):
