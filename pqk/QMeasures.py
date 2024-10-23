@@ -108,6 +108,5 @@ class QMeasures:
         pub = (qc, obs)
         job = estimator.run([pub])
         result = job.result()[0]
-        print(result)
         return result.data.evs
 
