@@ -118,6 +118,50 @@ print(f'Accuracy Score on data: {score}')
 #      ├───────────┤├───────────┤├───────────┤               └───┘┌─┴─┐  │  
 # q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├────────────────────┤ X ├──■──
 #      └───────────┘└───────────┘└───────────┘                    └───┘     
+# *** Required observables: ['YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Param: <bound method BaseEstimator.get_params of PQK_SVC(c_kernel=<function CKernels.rbf at 0x757d6f7b0160>,
+#         measure_fn=<function QMeasures.StateVectorEstimator at 0x757d6f79feb0>,
+#         nwire=6,
+#         obs=['YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY'])>
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: True
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1, 2.0, 3.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024, 2048, 3000, 3500], 'gamma': array([1.0e-04, 5.0e-03, 1.0e-02, 5.0e-02, 7.5e-01, 1.0e-01, 1.5e-01,
+#        2.5e-01, 5.0e-01, 7.5e-01, 1.0e+00, 1.5e+00, 3.0e+00, 3.5e+00])}
+# Fitting 5 folds for each of 210 candidates, totalling 1050 fits
+# Best paramenter: {'C': 512, 'gamma': 0.0001}
+#               precision    recall  f1-score   support
+
+#           -1       0.84      0.68      0.75       410
+#            1       0.66      0.83      0.74       307
+
+#     accuracy                           0.74       717
+#    macro avg       0.75      0.76      0.74       717
+# weighted avg       0.77      0.74      0.75       717
+
+# Accuracy Score on data: 0.7447698744769874
+
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐                         ┌───┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├
+#      ├───────────┤├───────────┤├───────────┤┌─┴─┐                    └─┬─┘
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼──
+#      ├───────────┤├───────────┤├───────────┤└───┘┌─┴─┐                 │  
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼──
+#      ├───────────┤├───────────┤├───────────┤     └───┘┌─┴─┐            │  
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼──
+#      ├───────────┤├───────────┤├───────────┤          └───┘┌─┴─┐       │  
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼──
+#      ├───────────┤├───────────┤├───────────┤               └───┘┌─┴─┐  │  
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├────────────────────┤ X ├──■──
+#      └───────────┘└───────────┘└───────────┘                    └───┘     
 # *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX']
 # *** Measure procedure: StateVectorEstimator
 # *** CKernel function used: rbf
