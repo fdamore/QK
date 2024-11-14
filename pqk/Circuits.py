@@ -119,7 +119,12 @@ class Circuits:
         return qc 
 
     @staticmethod
-    def uniform_bloch_encoding(n_wire, full_ent = True, param_prefix = 'phi'):   # requires half as much qubits like dense encoding! - L
+    def uniform_bloch_encoding(n_wire, full_ent = True, param_prefix = 'phi'):   
+        
+        '''
+        requires half as much qubits like dense encoding! - L
+
+        '''
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
@@ -128,10 +133,11 @@ class Circuits:
         # assuming phis, thetas normalized bw 0 and 1
         for i in range(n_wire):            
             theta_name = param_prefix + '_'+str(2*i)
-            theta = Parameter(theta_name)
+            theta = Parameter(theta_name)            
             phi_name = param_prefix + '_'+str(2*i+1)
             phi = Parameter(phi_name)
-            qc.ry(2*np.arccos(np.sqrt(theta)), i)
+            #qc.ry(2*np.arccos(np.sqrt(theta)), i)             
+            qc.ry(2*np.arccos(theta**(1/2)), i)            
             qc.rz(phi*np.pi, i)
 
         if(full_ent):
