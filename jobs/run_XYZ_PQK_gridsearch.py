@@ -38,7 +38,8 @@ pqk.metadata()
 #load dataset with panda
 #data are scaled outside the notebook
 f_rate = 1 #rate of data sampling fot testing pourpose
-data_file_csv = 'data/env.sel3.scaled.csv'
+#data_file_csv = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 #DEFINE design matrix
@@ -54,6 +55,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 #check the shape of test and training dataset
+print(f'Source file: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
