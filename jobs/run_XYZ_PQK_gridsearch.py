@@ -75,7 +75,7 @@ params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512,
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 nj = -1
-grid = GridSearchCV(pqk, params_grid, verbose=2, n_jobs=nj)
+grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj)
 
 print('***INFO RUN***')
 print(f'Clear cache: {clear_cache}')
@@ -105,6 +105,54 @@ print(classification_report(y_test, grid_predictions))
 #print scro a comparison
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
+
+
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Param: <bound method BaseEstimator.get_params of PQK_SVC(c_kernel=<function CKernels.rbf at 0x781b47fbc0d0>, full_ent=False,
+#         measure_fn=<function QMeasures.StateVectorEstimator at 0x781b47fabe20>,
+#         nwire=6,
+#         obs=['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX',
+#              'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY',
+#              'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ'])>
+# Source file: data/env.sel3.sk_sc.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: True
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': array([0.01, 0.05, 0.75, 0.1 , 0.15, 0.25, 0.5 , 0.75, 1.  , 1.5 , 1.75,
+#        2.  , 2.5 ])}
+# Fitting 5 folds for each of 156 candidates, totalling 780 fits
+# Best paramenter: {'C': 32.0, 'gamma': 0.01}
+#               precision    recall  f1-score   support
+
+#           -1       0.94      0.83      0.88       410
+#            1       0.81      0.93      0.86       307
+
+#     accuracy                           0.87       717
+#    macro avg       0.87      0.88      0.87       717
+# weighted avg       0.88      0.87      0.87       717
+
+# Accuracy Score on data: 0.8730822873082287
 
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐┌───────────┐┌───────────┐                         ┌───┐
