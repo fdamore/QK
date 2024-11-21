@@ -23,10 +23,9 @@ from pqk.CKernels import CKernels
 np.random.seed(123)
 algorithm_globals.random_seed = 123
 
-
-# Best paramenter: {'C': 256, 'gamma': 0.1}
+# Best paramenter: {'C': 32.0, 'gamma': 0.01}
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-pqk = PQK_SVC(C=256, gamma=0.1, circuit_template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(C=32, gamma=0.01, circuit_template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
@@ -39,7 +38,7 @@ pqk.metadata()
 #load dataset with panda
 #data are scaled outside the notebook
 f_rate = 1 #rate of data sampling fot testing pourpose
-data_file_csv = 'data/env.sel3.scaled.csv'
+data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 #DEFINE design matrix
@@ -89,7 +88,10 @@ datetime_object = datetime.datetime.fromtimestamp(t_final)
 formatted_datetime = datetime_object.strftime("%Y-%m-%d %H-%M-%S")
 print(f'Simulation end at: {formatted_datetime}')
 
-pqk.save_feature_map(prefix='run_xyz_pqk_')
+pqk.save_feature_map(prefix='xyz_latent_')
+pqk.save_latent_space(prefix='xyz_latent_', y = np.append(y_train_np, y_test_np))
+
+
 
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐┌───────────┐┌───────────┐
