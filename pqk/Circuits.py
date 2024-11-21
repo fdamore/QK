@@ -77,8 +77,11 @@ class Circuits:
     
     @staticmethod
     def xyz_encoded(n_wire, full_ent = True, param_prefix = 'phi'):
-
-        # Create a new circuit with two qubits
+        
+        '''
+        XYZ encoded
+        '''
+        
         qc = QuantumCircuit(n_wire) 
         qc.name = 'XYZ'       
         
@@ -95,7 +98,39 @@ class Circuits:
                 qc.cx(i%n_wire, (i+1)%n_wire)    
       
         
-        return qc 
+        return qc
+
+    @staticmethod
+    def zy_decomposition(n_wire, full_ent = True, param_prefix = 'phi'):
+        
+        '''
+        Z-Y decomposition (see Nielsen pag. 175. Therem 4.1)
+        '''
+        
+        qc = QuantumCircuit(n_wire) 
+        qc.name = 'Z-Y decomposition'       
+        
+
+        for i in range(n_wire):            
+            phi_beta_name = param_prefix + '_' + str(i) + '_' + 'beta'
+            phi_gamma_name = param_prefix + '_' + str(i) + '_' + 'gamma'
+            phi_delta_name = param_prefix + '_' + str(i) + '_' + 'delta'
+
+            phi_beta = Parameter(phi_beta_name)
+            phi_gamma = Parameter(phi_gamma_name)
+            phi_delta = Parameter(phi_delta_name)           
+            
+            qc.rz(phi_beta, i) 
+            qc.ry(phi_gamma, i)
+            qc.rz(phi_delta, i)     
+
+        if(full_ent):
+            for i in range(n_wire):
+                qc.cx(i%n_wire, (i+1)%n_wire)    
+      
+        
+        return qc
+
     
     @staticmethod
     def spiral_encoding(n_wire, n_windings, full_ent = True, param_prefix = 'phi'):   # im considering n_wire as number of qubits (not features) - Luca
