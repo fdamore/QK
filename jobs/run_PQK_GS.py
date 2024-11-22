@@ -54,13 +54,7 @@ y_train_np = y_train.to_numpy()
 X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
-#check the shape of test and training dataset
-print(f'Source file: {data_file_csv}')
-print(f'Shape of dataset: {env.shape}')
-print(f'Training shape dataset {X_train_np.shape}')
-print(f'Label for traing {y_train_np.shape}')
-print(f'Test shape dataset {X_test_np.shape}')
-print(f'Label for test {y_test_np.shape}')
+
 
 
 # define grid search strategy
@@ -77,11 +71,18 @@ params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512,
 nj = -1
 grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj)
 
+
 print('***INFO RUN***')
 print(f'Clear cache: {clear_cache}')
 print(f'N job param = {nj}')
 print(f'GridSearch Dict: {params_grid}')
-
+#check the shape of test and training dataset
+print(f'Source file: {data_file_csv}')
+print(f'Shape of dataset: {env.shape}')
+print(f'Training shape dataset {X_train_np.shape}')
+print(f'Label for traing {y_train_np.shape}')
+print(f'Test shape dataset {X_test_np.shape}')
+print(f'Label for test {y_test_np.shape}')
 
 #get time
 t_start = time.time()
