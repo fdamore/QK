@@ -106,6 +106,55 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌──────────────────────────────────────────────────────────┐
+# q_0: ┤0                                                         ├
+#      │                                                          │
+# q_1: ┤1                                                         ├
+#      │                                                          │
+# q_2: ┤2                                                         ├
+#      │  ZZFeatureMap(phi[0],phi[1],phi[2],phi[3],phi[4],phi[5]) │
+# q_3: ┤3                                                         ├
+#      │                                                          │
+# q_4: ┤4                                                         ├
+#      │                                                          │
+# q_5: ┤5                                                         ├
+#      └──────────────────────────────────────────────────────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Param: <bound method BaseEstimator.get_params of PQK_SVC(c_kernel=<function CKernels.rbf at 0x7a47819c40d0>,
+#         circuit_template=<function Circuits.zzfeaturemap at 0x7a4781a70040>,
+#         fit_clear=False, full_ent=False,
+#         measure_fn=<function QMeasures.StateVectorEstimator at 0x7a47819afe20>,
+#         nwire=6,
+#         obs=['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX',
+#              'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY',
+#              'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ'])>
+# Source file: data/env.sel3.sk_sc.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: False
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': array([0.01, 0.05, 0.75, 0.1 , 0.15, 0.25, 0.5 , 0.75, 1.  , 1.5 , 1.75,
+#        2.  , 2.5 ])}
+# Fitting 5 folds for each of 156 candidates, totalling 780 fits
+# Best paramenter: {'C': 1024, 'gamma': 0.01}
+#               precision    recall  f1-score   support
+
+#           -1       0.73      0.76      0.75       410
+#            1       0.66      0.64      0.65       307
+
+#     accuracy                           0.70       717
+#    macro avg       0.70      0.70      0.70       717
+# weighted avg       0.70      0.70      0.70       717
+
+# Accuracy Score on data: 0.704323570432357
+
 
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌───────────┐┌───────────┐┌───────────┐
