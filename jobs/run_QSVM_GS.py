@@ -58,7 +58,7 @@ q_kernel = FidelityStatevectorKernel(feature_map=fm)
 svm_quantum = QSVC(quantum_kernel=q_kernel)
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-nj = -1
+nj = 1
 grid = GridSearchCV(svm_quantum, params_grid, verbose=1, n_jobs=nj)
 
 print('***INFO RUN***')
@@ -97,49 +97,3 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
-# #RUN USING MINMAX
-# Using dataset in datafile: data/env.sel3.minmax.csv
-# Shape of dataset: (2865, 7)
-# Training shape dataset (2148, 6)
-# Label for traing (2148,)
-# Test shape dataset (717, 6)
-# Label for test (717,)
-# *** FEATURE MAP used in QSVC
-#      ┌──────────────────────────────────────────────┐
-# q_0: ┤0                                             ├
-#      │                                              │
-# q_1: ┤1                                             ├
-#      │                                              │
-# q_2: ┤2                                             ├
-#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
-# q_3: ┤3                                             ├
-#      │                                              │
-# q_4: ┤4                                             ├
-#      │                                              │
-# q_5: ┤5                                             ├
-#      └──────────────────────────────────────────────┘
-# *******SCORE: 0.8382147838214784
-# Time training: 18.973737955093384 seconds. Final time 30.72221088409424 seconds
-
-#run
-# Shape of dataset: (2865, 7)
-# Training shape dataset (2148, 6)
-# Label for traing (2148,)
-# Test shape dataset (717, 6)
-# Label for test (717,)
-# *** FEATURE MAP used in QSVC
-#      ┌──────────────────────────────────────────────┐
-# q_0: ┤0                                             ├
-#      │                                              │
-# q_1: ┤1                                             ├
-#      │                                              │
-# q_2: ┤2                                             ├
-#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
-# q_3: ┤3                                             ├
-#      │                                              │
-# q_4: ┤4                                             ├
-#      │                                              │
-# q_5: ┤5                                             ├
-#      └──────────────────────────────────────────────┘
-# *******SCORE: 0.8172942817294282
-# Time training: 19.143609523773193 seconds. Final time 30.912684202194214 seconds
