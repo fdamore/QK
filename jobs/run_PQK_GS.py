@@ -46,15 +46,10 @@ env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)
 Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
-#split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
+
 #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
-X_train_np = X_train.to_numpy()
-y_train_np = y_train.to_numpy()
-X_test_np = X_test.to_numpy()
-y_test_np = y_test.to_numpy()
-
-
+X_train_np = X.to_numpy()
+y_train_np = Y.to_numpy()
 
 
 # define grid search strategy
@@ -69,7 +64,7 @@ params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512,
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 nj = -1
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj)
+grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=10)
 
 
 print('***INFO RUN***')
@@ -81,15 +76,13 @@ print(f'Source file: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
-print(f'Test shape dataset {X_test_np.shape}')
-print(f'Label for test {y_test_np.shape}')
 
 #get time
 t_start = time.time()
 
 
 #Fit the data with the best possible parameters
-grid_clf = grid.fit(X_train_np, y_train_np)
+grid.fit(X_train_np, y_train_np)
 
 #get time training
 t_training = time.time()
@@ -97,15 +90,14 @@ t_training = time.time()
 #Print the best estimator with it's parameters
 print(f'Best paramenter: {grid.best_params_}')
 
-#perform grid prediction on test set
-grid_predictions = grid.predict(X_test_np)
+print(f'Best score {grid.best_score_}')
 
-# print classification report 
-print(classification_report(y_test, grid_predictions))
+print(f'Results: {grid.cv_results_.keys()}')
 
-#print scro a comparison
-score = accuracy_score(grid_predictions, y_test)
-print(f'Accuracy Score on data: {score}')
+print(f'Results to test: {grid.cv_results_['mean_test_score']}')
+print(f'Results to test: {grid.cv_results_['std_test_score']}')
+
+
 
 # *** Quantum template for feature map using 6 qubit ***
 #      ┌──────────────────────────────────────────────────────────┐
