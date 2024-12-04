@@ -14,7 +14,8 @@ np.random.seed(123)
 #data are scaled outside the notebook
 #sclaled_data_file = 'data/env.sel3.scaled.csv'
 f_rate = 1 #rate of data sampling.
-data_file_csv = 'data/env.sel3.scaled.csv' 
+#data_file_csv = 'data/env.sel3.scaled.csv' 
+data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 
@@ -72,6 +73,27 @@ print(classification_report(y_test, grid_predictions))
 #print scro a comparison
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
+
+#Using a different scale method (standard sklearn)
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Fitting 5 folds for each of 270 candidates, totalling 1350 fits
+# Best paramenter: {'C': 16.0, 'gamma': 1.75, 'kernel': 'rbf'}
+# /home/francesco/git/QK/.venv/lib/python3.12/site-packages/sklearn/base.py:486: UserWarning: X has feature names, but SVC was fitted without feature names
+#   warnings.warn(
+#               precision    recall  f1-score   support
+
+#           -1       0.93      0.83      0.88       410
+#            1       0.80      0.92      0.86       307
+
+#     accuracy                           0.87       717
+#    macro avg       0.87      0.88      0.87       717
+# weighted avg       0.88      0.87      0.87       717
+
+# Accuracy Score on data: 0.8688981868898187
 
 # GridSearchCV 
 # Shape of dataset: (2865, 7)

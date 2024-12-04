@@ -11,6 +11,8 @@ from pqk.Circuits import Circuits
 from pqk.CKernels import CKernels
 from sklearn.svm import SVC
 
+import pandas as pd
+
 
 class PQK_SVC(SVC):
 
@@ -105,9 +107,13 @@ class PQK_SVC(SVC):
         """        
         return np.array([[self._qfKernel(a, b) for b in B] for a in A])
     
-    #save my feature map
+    
     def save_feature_map(self, prefix = ''):
-        #create a csv file with feature maps
+        
+        '''
+        create a csv file with feature maps
+        '''
+        
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
@@ -128,6 +134,27 @@ class PQK_SVC(SVC):
         #print the related time stamp. 
         print(f'Timestamp of the file storing data: {formatted_datetime}')
     
+
+    def save_latent_space(self, prefix = '', *, y):
+        '''
+        Save latent space
+        '''
+        #create a csv file with feature maps
+        current_timestamp = time.time()
+        datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
+        formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+        csv_file = '../qfm/lt_space/' + prefix + str(formatted_datetime) + '.csv' 
+
+        main_path = os.path.dirname(__file__)
+        file_path = os.path.join(main_path, csv_file)               
+        
+        df = pd.DataFrame(self._fm_dict.values())         
+        df['label'] = y
+
+        df.to_csv(file_path, encoding='utf-8', index=False)
+            
+        #print the related time stamp. 
+        print(f'Timestamp of the file storing data: {formatted_datetime}')
     
     
     def fit(self, X, y):
@@ -143,7 +170,7 @@ class PQK_SVC(SVC):
         if self.fit_clear:
             self._fm_dict.clear()      
 
-        super().fit(X=X, y=y)
+        super().fit(X=X, y=y)       
                 
         return self
 
