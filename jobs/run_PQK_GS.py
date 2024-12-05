@@ -6,6 +6,7 @@ from sklearn.metrics import classification_report, accuracy_score
 from sklearn.model_selection import GridSearchCV, train_test_split
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
+from datetime import datetime
 
 #define working directory and package for QK
 current_wd = os.getcwd()
@@ -19,8 +20,9 @@ from pqk.PQK_SVC import PQK_SVC
 
 
 #set the seed
-np.random.seed(123)
-algorithm_globals.random_seed = 123
+seed=123
+np.random.seed(seed)
+algorithm_globals.random_seed = seed
 
 
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
@@ -28,7 +30,7 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
-clear_cache = True
+clear_cache = False
 pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
@@ -37,10 +39,10 @@ pqk.metadata()
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #rate of data sampling fot testing pourpose
+f_rate = 1. #rate of data sampling fot testing pourpose
 #data_file_csv = 'data/env.sel3.scaled.csv'
 data_file_csv = 'data/env.sel3.sk_sc.csv'
-env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
+env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  
 
 #DEFINE design matrix
 Y = env['occupancy']
@@ -57,14 +59,15 @@ y_train_np = Y.to_numpy()
 #params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
 #          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
 
-params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
-          'gamma': np.array([0.01,0.05,0.75, 0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.50, 1.75, 2.0, 2.5])}
+params_grid = {'C': 2.**np.arange(-1,10,2),
+        'gamma': 10**np.arange(-9,-5.)}
 
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 nj = -1
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=10)
+nfolds = 10
+grid = GridSearchCV(pqk, params_grid, verbose=2, n_jobs=nj, cv=nfolds)
 
 
 print('***INFO RUN***')
@@ -94,9 +97,20 @@ print(f'Best score {grid.best_score_}')
 
 print(f'Results: {grid.cv_results_.keys()}')
 
-print(f'Results to test: {grid.cv_results_['mean_test_score']}')
-print(f'Results to test: {grid.cv_results_['std_test_score']}')
+# taking the largest average accuracy of the grid search and the corresponding standard dev.
+cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
+cv_std = grid.cv_results_['std_test_score'][grid.best_index_]
 
+print(f'\nAverage accuracy, best score: {cv_mean:.3f}')
+print(f'Standard deviation, best score: {cv_std:.3f}')
+
+print(f'{t_training-t_start} seconds elapsed.')
+
+# the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
+final_msg = f'\nAccuracy (95% confidence) = {cv_mean:.3f} +/- {2*cv_std/np.sqrt(nfolds):.3f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.3f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.3f}]'
+print(final_msg)
+with open(f'accuracy_{nfolds}folds_seed{seed}_frate{f_rate}.txt', "w") as file:
+    file.write(final_msg + '\n' + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n' + f'{t_training-t_start:.1f} seconds elapsed.')
 
 
 # *** Quantum template for feature map using 6 qubit ***
