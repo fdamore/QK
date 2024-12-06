@@ -5,10 +5,8 @@ from sklearn.metrics import accuracy_score
 
 #define the trainable kernel
 from qiskit_algorithms.optimizers import SPSA
-from qiskit_machine_learning.utils.loss_functions import SVCLoss
- 
+from qiskit_machine_learning.utils.loss_functions import SVCLoss 
 from qiskit_machine_learning.algorithms.classifiers import QSVC
-
 from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import QuantumKernelTrainer
 from qiskit_machine_learning.datasets import ad_hoc_data
 from qiskit_algorithms.optimizers import SPSA
@@ -21,10 +19,10 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
+from pqk import Circuits
 from pqk.QKCallback import QKCallback
-from pqk.TrainableCircuits import TrainableCircuits
 from pqk.QMeasures import QMeasures
-from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
+from pqk.TrainablePQK_SVC import TrainablePQK_SVC
 from pqk.CKernels import CKernels
 
 
@@ -56,10 +54,11 @@ print(f'Test shape dataset {X_test.shape}')
 print(f'Label for test {y_test.shape}')
 print(f'NUM_QUBIT {NUM_QBIT}')
 
-qc_trainable = TrainableCircuits.zzfm(n_wire=NUM_QBIT)
-
-fm = qc_trainable.qc
-training_params = qc_trainable.training_parameters
+encoding_circuit = Circuits.zzfeaturemap(n_wire=NUM_QBIT)
+trainable_circuit = Circuits.x_encoded(n_wire=NUM_QBIT)
+encoding_circuit.barrier()
+fm = encoding_circuit.compose(trainable_circuit)
+training_params = trainable_circuit.parameters
 
 fm.draw()
 
@@ -72,7 +71,7 @@ nshots = 100 #paramenter using primitive estimator
 measure_fn = QMeasures.StateVectorEstimator
 
 #using kernel feature map (change the q_kernel in order to modiy the trainable kernel)
-q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
+q_kernel = TrainablePQK_SVC(feature_map=fm, training_parameters=training_params)
 q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #q_kernel = TrainableFidelityQuantumKernel(feature_map=fm, training_parameters=training_params)

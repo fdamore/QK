@@ -2,7 +2,6 @@ from textwrap import wrap
 from qiskit.circuit import Parameter
 from qiskit.circuit.library import ZZFeatureMap
 from qiskit.circuit.library import IQP
-from qiskit.quantum_info import random_hermitian
 from qiskit import QuantumCircuit
 import numpy as np
 
