@@ -22,7 +22,7 @@ class TrainablePQK_SVC(TrainableKernel, BaseKernel):
        
         
 
-        def __init__(self,*,
+        def __init__(self, obs = ['Z'], measure_fn = QMeasures.PrimitiveEstimator, c_kernel = CKernels.linear, save_feature_map = False, *,
                      feature_map: QuantumCircuit | None = None, 
                      training_parameters: ParameterVector | Sequence[Parameter] | None = None) -> None:
                         
@@ -31,82 +31,72 @@ class TrainablePQK_SVC(TrainableKernel, BaseKernel):
                         self._num_features = feature_map.num_parameters - self._num_training_parameters
                         self._feature_parameters = [parameter for parameter in feature_map.parameters 
                                                     if parameter not in self._training_parameters]
-                        self._parameter_dict = {parameter: None for parameter in self.feature_map.parameters} 
+                        self._parameter_dict = {parameter: None for parameter in self.feature_map.parameters}
 
-              
-      
+                        #configure the tranable PQK instance
+                        self._fm_dict = {}
+                        self.obs = obs               
+                        self.measure_fn = measure_fn
+                        self.c_kernel = c_kernel
+                        self.save_feature_map = save_feature_map
+
+
+        def metadata(self):
+            '''
+            Print metadata
+            '''
+            print(f'*** Quantum template for feature map using {str(self._num_features)} Features ***')                
+            print(self.feature_map.draw())
+            print(f'*** Required observables: {self.obs}')
+            print(f'*** Measure procedure: {self.measure_fn.__name__}')
+            print(f'*** CKernel function used: {self.c_kernel.__name__}')            
+            return ""
         
-        #the type of measures        
-        obs = ['Z']       
-
-        #cache
-        fm_dict = {}   
-
-        #primitive estimator use nshots (if usable)
-        nshots = 100
-
-        #The quantum measure function used
-        q_measure = None
-
-        #define the (classical) kernel
-        kernel = CKernels.linear
-
-        #save the feature map
-        save_feature_map = False
-
-        #evaulate call number (used in save feature map)
-        _n_eval = 1
-
-        #configure this instance
-        def configure(self, obs = ['Z'], nshots = 100, q_measure = QMeasures.PrimitiveEstimator, c_kernel = CKernels.linear, save_feature_map = False):            
-            self.obs = obs      
-            self.nshots = nshots
-            self.q_measure = q_measure
-            self.kernel = c_kernel
-            self.save_feature_map = save_feature_map
-        
-        #encode data in parameter
-        def qEncoding(self, data):               
+        def _qEncoding(self, data):               
+             '''
+             Encode data in parameter
+             '''
              qc_assigned = self._feature_map.assign_parameters(data, inplace = False)
              return qc_assigned
 
-        #define qquantum feature kernel
-        def qfKernel(self, x1, x2):
-
-            #get info about obs and circuits                        
-
+        
+        def _qfKernel(self, x1, x2):
+            '''
+            Define the quantum kernel
+            '''                        
+            
             #define the key
             k_x1 = str(x1) #get_key(x1) 
             k_x2 = str(x2) #get_key(x2)
 
             #check the k1 and get feature map
             x1_fm = None
-            if k_x1 in self.fm_dict:
-                x1_fm = self.fm_dict[k_x1]
+            if k_x1 in self._fm_dict:
+                x1_fm = self._fm_dict[k_x1]
             else:
-                x1_qc = self.qEncoding(x1)        
-                x1_fm = self.q_measure(x1_qc, observables=self.obs, nshots=self.nshots)
-                self.fm_dict[k_x1] = x1_fm
+                x1_qc = self._qEncoding(x1)
+                x1_fm = self.measure_fn(x1_qc, observables=self.obs)                
+                self._fm_dict[k_x1] = x1_fm
 
             #check the k2 and get feature map
             x2_fm = None
-            if k_x2 in self.fm_dict:
-                x2_fm = self.fm_dict[k_x2]
+            if k_x2 in self._fm_dict:
+                x2_fm = self._fm_dict[k_x2]
             else:
-                x2_qc = self.qEncoding(x2)
-                x2_fm = self.q_measure(x2_qc, observables=self.obs, nshots=self.nshots) 
-                self.fm_dict[k_x2] = x2_fm    
+                x2_qc = self._qEncoding(x2)
+                x2_fm = self.measure_fn(x2_qc, observables=self.obs)        
+                self._fm_dict[k_x2] = x2_fm    
 
-            #compute kernel
-            k_computed = self.kernel(x1_fm, x2_fm)
-            return k_computed       
+            #compute kernel            
+            k_computed = self.c_kernel(x1_fm, x2_fm)
+            return k_computed      
        
 
         #hook methods
         def evaluate(self,x_vec: np.ndarray,y_vec: np.ndarray | None = None) -> np.ndarray:
 
             #clear the cache
-            self.fm_dict.clear()
+            self._fm_dict.clear()
 
             #the gram matrix
             gram_matrix = None
@@ -115,34 +105,32 @@ class TrainablePQK_SVC(TrainableKernel, BaseKernel):
             new_x_vec = self._parameter_array(x_vec)
             if y_vec is not None:
                 new_y_vec = self._parameter_array(y_vec)
-                gram_matrix = self.kernel_matrix(new_x_vec, new_y_vec)
+                gram_matrix = self._kernel_matrix(new_x_vec, new_y_vec)
             else:
-                gram_matrix = self.kernel_matrix(new_x_vec, new_x_vec)
+                gram_matrix = self._kernel_matrix(new_x_vec, new_x_vec)
             
             #if needed, save feature map
-            if self.save_feature_map:                 
-                 pref = f'TKFM_{self._n_eval}_'
-                 self.save_fm(prefix=pref)
-
-            #next evauation
-            self._n_eval += 1
+            if self.save_feature_map:                                  
+                 self.save_fm(prefix='TKFM-')
             
             return gram_matrix
-                
-                 
+        
+
+        def _kernel_matrix(self, A, B):             
+            """
+            compute the kernel matrix (Gram if A==B)    
+            """        
+            return np.array([[self._qfKernel(a, b) for b in B] for a in A])           
              
 
-        def kernel_matrix(self, A, B):
-            #Compute gram matrix
-            return np.array([[self.qfKernel(a, b) for b in B] for a in A])
-
-
-            #save my feature map
+                    
         def save_fm(self, prefix = ''):
+            '''
             #create a csv file with feature maps
+            '''
             current_timestamp = time.time()
             datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
-            formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+            formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S%f")
             csv_file = '../qfm/tkfm/' + prefix + str(formatted_datetime) + '.csv'        
 
             main_path = os.path.dirname(__file__)
