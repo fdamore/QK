@@ -2,6 +2,8 @@
 import sys
 import os
 
+from pqk import Circuits
+
 #define working directory and package for QK
 current_wd = os.getcwd()
 sys.path.append(current_wd)
@@ -19,10 +21,10 @@ from qiskit_algorithms.optimizers import SPSA
 from qiskit_machine_learning.utils.loss_functions import SVCLoss
 
 from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
-from pqk.TrainableCircuits import TrainableCircuits
 from pqk.QKCallback import QKCallback
 from pqk.QMeasures import QMeasures
 from pqk.CKernels import CKernels
+from pqk.Circuits import Circuits
 from qiskit_algorithms.utils import algorithm_globals
 
 #set the seed
@@ -71,13 +73,11 @@ print(f'Label for test {y_test.shape}')
 NUM_QBIT = X_train.shape[1]
 
 #define the circuits
-t_circuit = TrainableCircuits.zzfm(n_wire=NUM_QBIT)
-#t_circuit = TrainableCircuits.d_stack(n_wire=NUM_QBIT)
-#t_circuit = TrainableCircuits.twl_zzfm(n_wire=NUM_QBIT)
-#t_circuit = TrainableCircuits.trainable_twl(n_wire=NUM_QBIT)
-
-fm = t_circuit.qc
-training_params = t_circuit.training_parameters
+encoding_circuit = Circuits.zzfeaturemap(n_wire=NUM_QBIT)
+trainable_circuit = Circuits.x_encoded(n_wire=NUM_QBIT, full_ent=False)
+encoding_circuit.barrier()
+fm = encoding_circuit.compose(trainable_circuit)
+training_params = trainable_circuit.parameters
 
 #show feature map
 print(f'*** TRAINABLE FEATURE MAP used in QSVC')
