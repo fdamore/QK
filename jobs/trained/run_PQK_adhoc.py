@@ -22,7 +22,7 @@ sys.path.append(current_wd)
 from pqk import Circuits
 from pqk.QKCallback import QKCallback
 from pqk.QMeasures import QMeasures
-from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
+from pqk.TrainablePQK_SVC import TrainablePQK_SVC
 from pqk.CKernels import CKernels
 
 
@@ -71,7 +71,7 @@ nshots = 100 #paramenter using primitive estimator
 measure_fn = QMeasures.StateVectorEstimator
 
 #using kernel feature map (change the q_kernel in order to modiy the trainable kernel)
-q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
+q_kernel = TrainablePQK_SVC(feature_map=fm, training_parameters=training_params)
 q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #q_kernel = TrainableFidelityQuantumKernel(feature_map=fm, training_parameters=training_params)

@@ -20,7 +20,7 @@ from qiskit_machine_learning.kernels.algorithms.quantum_kernel_trainer import Qu
 from qiskit_algorithms.optimizers import SPSA
 from qiskit_machine_learning.utils.loss_functions import SVCLoss
 
-from pqk.TrainableKernelFeatureMap import TrainableKernelFeatureMap
+from pqk.TrainablePQK_SVC import TrainablePQK_SVC
 from pqk.QKCallback import QKCallback
 from pqk.QMeasures import QMeasures
 from pqk.CKernels import CKernels
@@ -94,7 +94,7 @@ measure_fn = QMeasures.StateVectorEstimator
 kernel = CKernels.linear
 
 #q_kernel = TrainableOuterQuantumKernel(feature_map=fm, training_parameters=training_params)
-q_kernel = TrainableKernelFeatureMap(feature_map=fm, training_parameters=training_params)
+q_kernel = TrainablePQK_SVC(feature_map=fm, training_parameters=training_params)
 q_kernel.configure(obs=my_obs, nshots=nshots, q_measure=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print this info

@@ -17,7 +17,7 @@ from pqk.CKernels import CKernels
 
 #define my trainable quantum kernel using the outer quantum kernel.
 # pqk.Circuit should be defined before running the training process
-class TrainableKernelFeatureMap(TrainableKernel, BaseKernel):
+class TrainablePQK_SVC(TrainableKernel, BaseKernel):
         
        
         
