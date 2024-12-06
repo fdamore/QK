@@ -3,7 +3,7 @@ import os
 import time
 import pandas as pd
 from sklearn.metrics import classification_report, accuracy_score
-from sklearn.model_selection import GridSearchCV, train_test_split
+from sklearn.model_selection import GridSearchCV, train_test_split, ParameterGrid
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
 from datetime import datetime
@@ -31,7 +31,8 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 clear_cache = False
-pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+full_ent=False
+pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
@@ -77,8 +78,9 @@ print(f'GridSearch Dict: {params_grid}')
 #check the shape of test and training dataset
 print(f'Source file: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
-print(f'Training shape dataset {X_train_np.shape}')
-print(f'Label for traing {y_train_np.shape}')
+print(f'Shape of training dataset {X_train_np.shape}')
+print(f'Shape of training labels {y_train_np.shape}')
+print(f'Seed: {seed}')
 
 #get time
 t_start = time.time()
@@ -107,10 +109,30 @@ print(f'Standard deviation, best score: {cv_std:.3f}')
 print(f'{t_training-t_start} seconds elapsed.')
 
 # the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
-final_msg = f'\nAccuracy (95% confidence) = {cv_mean:.3f} +/- {2*cv_std/np.sqrt(nfolds):.3f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.3f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.3f}]'
+final_msg = f'Accuracy (95% confidence) = {cv_mean:.3f} +/- {2*cv_std/np.sqrt(nfolds):.3f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.3f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.3f}]'
 print(final_msg)
-with open(f'accuracy_{nfolds}folds_seed{seed}_frate{f_rate}.txt', "w") as file:
-    file.write(final_msg + '\n' + datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n' + f'{t_training-t_start:.1f} seconds elapsed.')
+
+# INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
+with open(f'scores/accuracy_{nfolds}folds_seed{seed}_frate{f_rate}.txt', "w") as file:
+    file.write(final_msg + '\n\n')
+    file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
+    file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
+    file.write(f'Circuit template: {pqk.circuit_template}' + '\n')
+    file.write(f'Entangling layer: {pqk.full_ent}' + '\n')    
+    file.write(f'Required observables: {pqk.obs}' + '\n')
+    file.write(f'Measure procedure: {pqk.measure_fn.__name__}' + '\n')
+    file.write(f'CKernel function used: {pqk.c_kernel.__name__}' + '\n')
+    file.write(f'Best parameter: {grid.best_params_}' + '\n')
+    file.write(f'Clear cache: {clear_cache}' + '\n')
+    file.write(f'N job param = {nj}' + '\n')
+    file.write(f'GridSearch Dict: {params_grid}' + '\n')
+    #check the shape of test and training dataset
+    file.write(f'Source file: {data_file_csv}' + '\n')
+    file.write(f'Shape of dataset: {env.shape}' + '\n')
+    file.write(f'Shape of training dataset {X_train_np.shape}' + '\n')
+    file.write(f'Shape of training labels {y_train_np.shape}' + '\n')
+    file.write(f'Seed: {seed}' + '\n')
+    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits' + '\n')
 
 
 # *** Quantum template for feature map using 6 qubit ***
