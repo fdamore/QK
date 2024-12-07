@@ -12,9 +12,13 @@ from qiskit_algorithms.utils import algorithm_globals
 
 import numpy as np
 
+
+
 #define working directory and package for QK
 current_wd = os.getcwd()
 sys.path.append(current_wd)
+
+from pqk.Circuits import Circuits
 
 #set the seed
 np.random.seed(123)
@@ -53,12 +57,15 @@ params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512,
 
 #take a feature map and setting QSVC
 NUM_QBIT = 6 #commonly, this is the number of the features
-fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
+fm = Circuits.xyz_encoded(n_wire=NUM_QBIT, full_ent=False)      
+fm.draw()
+#fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
 q_kernel = FidelityStatevectorKernel(feature_map=fm)
 svm_quantum = QSVC(quantum_kernel=q_kernel)
 
+
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-nj = 1
+nj = -1
 grid = GridSearchCV(svm_quantum, params_grid, verbose=1, n_jobs=nj)
 
 print('***INFO RUN***')
@@ -97,3 +104,25 @@ print(classification_report(y_test, grid_predictions))
 score = accuracy_score(grid_predictions, y_test)
 print(f'Accuracy Score on data: {score}')
 
+# ***INFO RUN*** USING ZZFEATURE MAP
+# N job param = 1
+# GridSearch Dict: {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': array([0.005, 0.01 , 0.05 , 0.75 , 0.1  , 0.15 , 0.25 , 0.5  , 0.75 ,
+#        1.   , 1.5  ])}
+# Source file: data/env.sel3.sk_sc.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Fitting 5 folds for each of 132 candidates, totalling 660 fits
+# Best paramenter: {'C': 1.0, 'gamma': 0.005}
+#               precision    recall  f1-score   support
+
+#           -1       0.82      0.81      0.82       410
+#            1       0.75      0.76      0.76       307
+
+#     accuracy                           0.79       717
+#    macro avg       0.79      0.79      0.79       717
+# weighted avg       0.79      0.79      0.79       717
+
+# Accuracy Score on data: 0.7907949790794979
