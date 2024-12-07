@@ -19,11 +19,13 @@ from pqk.PQK_SVC import PQK_SVC
 
 
 
-#set the seed
-seed=123
+seed=123              # the seed
 np.random.seed(seed)
 algorithm_globals.random_seed = seed
 
+encoding_dict = {'xyz': Circuits.xyz_encoded, 'zz': Circuits.zzfeaturemap}   
+nfolds = 10 #set number of folds in CV
+f_rate = 1. #rate of data sampling fot testing pourpose
 
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
@@ -31,16 +33,24 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 clear_cache = False
-full_ent=False
-pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+encoding_key = 'zz'
+full_ent = False
+pqk = PQK_SVC(circuit_template=encoding_dict[encoding_key], fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
 
+# defining a unique label for the simulation 
+id_string = f'_{encoding_key}_ent{pqk.full_ent}_{len(my_obs)}obs_{nfolds}folds_seed{seed}_frate{f_rate}'
+
+# setting a location for the output file
+output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
+sys.stdout = open(output_filename, 'w')
+sys.stderr = sys.stdout
+
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1. #rate of data sampling fot testing pourpose
 #data_file_csv = 'data/env.sel3.scaled.csv'
 data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  
@@ -67,7 +77,6 @@ params_grid = {'C': 2.**np.arange(-1,10,2),
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 nj = -1
-nfolds = 10
 grid = GridSearchCV(pqk, params_grid, verbose=2, n_jobs=nj, cv=nfolds)
 
 
@@ -81,6 +90,7 @@ print(f'Shape of dataset: {env.shape}')
 print(f'Shape of training dataset {X_train_np.shape}')
 print(f'Shape of training labels {y_train_np.shape}')
 print(f'Seed: {seed}')
+print(f'Entangling layer={pqk.full_ent}')
 
 #get time
 t_start = time.time()
@@ -113,7 +123,7 @@ final_msg = f'Accuracy (95% confidence) = {cv_mean:.3f} +/- {2*cv_std/np.sqrt(nf
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'scores/accuracy_{nfolds}folds_seed{seed}_frate{f_rate}.txt', "w") as file:
+with open(f'scores/accuracy' + id_string + '.txt', "w") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
