@@ -111,9 +111,9 @@ class Circuits:
         
 
         for i in range(n_wire):            
-            phi_beta_name = param_prefix + '_' + str(i) + '_' + 'beta'
-            phi_gamma_name = param_prefix + '_' + str(i) + '_' + 'gamma'
-            phi_delta_name = param_prefix + '_' + str(i) + '_' + 'delta'
+            phi_beta_name = param_prefix + 'beta' + '_' + str(i)
+            phi_gamma_name = param_prefix + 'gamma' + '_' + str(i)
+            phi_delta_name = param_prefix + 'delta' + '_' + str(i)
 
             phi_beta = Parameter(phi_beta_name)
             phi_gamma = Parameter(phi_gamma_name)
