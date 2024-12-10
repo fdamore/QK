@@ -43,7 +43,7 @@ algorithm_globals.random_seed = 123
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 0.05 #rate of data sampling fot testing pourpose
+f_rate = 1 #rate of data sampling fot testing pourpose
 #data_file_csv = 'data/env.sel3.scaled.csv'
 data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)    
