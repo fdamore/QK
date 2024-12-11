@@ -147,7 +147,7 @@ print(f'Total jobs time: {jobs_final_time - training_kernel_start} seconds.')
 
 
 
-#RUN ON SERVER 2024-11-11
+#RUN ON SERVER 2024-12-11 on server callback TR_20241210221314.json
 # Using dataset in datafile: data/env.sel3.sk_sc.csv
 # Fraction rate used for this run: 100%
 # Max number of iteration used in kernel optimization: 20
