@@ -18,8 +18,8 @@ seed=123              # the seed
 np.random.seed(seed)
 
 nfolds = 10 #set number of folds in CV
-f_rate = 1. #rate of data sampling fot testing pourpose
-nj = 10     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
+f_rate = .05 #rate of data sampling fot testing pourpose
+nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 number_of_feature_copies = 1    # this is the number of times we stack the same identical feats (Annalisa's suggestion)
 
 
@@ -40,12 +40,7 @@ X_train_np = np.tile(X.to_numpy(), (1,number_of_feature_copies))  # to implement
 y_train_np = Y.to_numpy()
 
 # defining a unique label for the simulation 
-id_string = f'_CSVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_rate}'
-
-# # setting a location for the output file
-output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
-sys.stdout = open(output_filename, 'w')
-sys.stderr = sys.stdout
+id_string = f'_SVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_rate}'
 
 
 #check the shape of test and training dataset
@@ -97,20 +92,22 @@ final_msg = f'Accuracy (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nf
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'scores/accuracy' + id_string + '.txt', "w") as file:
+with open(f'jobs/scores/accuracy' + id_string + '.txt', "w") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
-    file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
-    file.write(f'Best parameter: {grid.best_params_}' + '\n')
-    file.write(f'N job param = {nj}' + '\n')
-    file.write(f'GridSearch Dict: {params_grid}' + '\n')
+    file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
+    file.write(f'Best parameter: {grid.best_params_}\n')
+    file.write(f'N job param = {nj}\n')
+    file.write(f'GridSearch Dict: {params_grid}\n')
     #check the shape of test and training dataset
-    file.write(f'Source file: {data_file_csv}' + '\n')
-    file.write(f'Shape of dataset: {env.shape}' + '\n')
-    file.write(f'Shape of training dataset {X_train_np.shape}' + '\n')
-    file.write(f'Shape of training labels {y_train_np.shape}' + '\n')
-    file.write(f'Seed: {seed}' + '\n')
-    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits' + '\n')
+    file.write(f'Source file: {data_file_csv}\n')
+    file.write(f'Shape of dataset: {env.shape}\n')
+    file.write(f'Shape of training dataset {X_train_np.shape}\n')
+    file.write(f'Shape of training labels {y_train_np.shape}\n')
+    file.write(f'Seed: {seed}\n')
+    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits\n')
+    for i in range(nfolds):
+        file.write(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}\n")
 
 
 #Using a different scale method (standard sklearn)

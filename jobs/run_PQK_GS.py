@@ -44,8 +44,8 @@ pauli_meas_dict = {
     'BLOCH_XYZ' : ['XII', 'IXI','IIX','YII','IYI','IIY','ZII','IZI','IIZ'], #for the uniform bloch:   (couldnt make it work yet - Luca)
 }
 
-nfolds = 10 #set number of folds in CV
-f_rate = 1. #rate of data sampling fot testing pourpose
+nfolds = 3 #set number of folds in CV
+f_rate = .02 #rate of data sampling fot testing pourpose
 nj = 10     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 clear_cache = False
 encoding_key = 'xyz'
@@ -55,17 +55,8 @@ my_obs = pauli_meas_dict[my_obs_key]
 
 
 
-pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
-#print metadata
-pqk.metadata()
-
 # defining a unique label for the simulation 
-id_string = f'_PQK_{encoding_key}_ent{pqk.full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
-
-# setting a location for the output file
-output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
-sys.stdout = open(output_filename, 'w')
-sys.stderr = sys.stdout
+id_string = f'_PQK_{encoding_key}_ent{full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
 
 
 #load dataset with panda
@@ -88,13 +79,14 @@ X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 X_train_np = X.to_numpy()
 y_train_np = Y.to_numpy()
 
-
-# define grid search strategy
-#Create a dictionary of possible parameters
-#params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
-#          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
 params_grid = {'C': 2.**np.arange(1,12,2),
         'gamma': 10**np.arange(-7,0.,2)}
+
+pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+#print metadata
+pqk.metadata()
+
+
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=nfolds)
 
@@ -144,23 +136,25 @@ print(final_msg)
 with open(f'jobs/scores/accuracy' + id_string + '.txt', "w+") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
-    file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
-    file.write('Circuit template' + '\n' + str(pqk.circuit.draw()) + '\n')    
-    file.write(f'Entangling layer: {full_ent}' + '\n')    
-    file.write(f'Required observables: {pqk.obs}' + '\n')
-    file.write(f'Measure procedure: {pqk.measure_fn.__name__}' + '\n')
-    file.write(f'CKernel function used: {pqk.c_kernel.__name__}' + '\n')
-    file.write(f'Best parameter: {grid.best_params_}' + '\n')
-    file.write(f'Clear cache: {clear_cache}' + '\n')
-    file.write(f'N job param = {nj}' + '\n')
-    file.write(f'GridSearch Dict: {params_grid}' + '\n')
+    file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
+    file.write(f'Feature map: {encoding_dict[encoding_key].name}\n')
+    file.write(f'Entangling layer: {full_ent}\n')    
+    file.write(f'Required observables: {pqk.obs}\n')
+    file.write(f'Measure procedure: {pqk.measure_fn.__name__}\n')
+    file.write(f'CKernel function used: {pqk.c_kernel.__name__}\n')
+    file.write(f'Best parameter: {grid.best_params_}\n')
+    file.write(f'Clear cache: {clear_cache}\n')
+    file.write(f'N job param = {nj}\n')
+    file.write(f'GridSearch Dict: {params_grid}\n')
     #check the shape of test and training dataset
-    file.write(f'Source file: {data_file_csv}' + '\n')
-    file.write(f'Shape of dataset: {env.shape}' + '\n')
-    file.write(f'Shape of training dataset {X_train_np.shape}' + '\n')
-    file.write(f'Shape of training labels {y_train_np.shape}' + '\n')
-    file.write(f'Seed: {seed}' + '\n')
-    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits' + '\n')
+    file.write(f'Source file: {data_file_csv}\n')
+    file.write(f'Shape of dataset: {env.shape}\n')
+    file.write(f'Shape of training dataset {X_train_np.shape}\n')
+    file.write(f'Shape of training labels {y_train_np.shape}\n')
+    file.write(f'Seed: {seed}\n')
+    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits\n')
+    for i in range(nfolds):
+        file.write(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}\n")
 
 
 # *** Quantum template for feature map using 6 qubit ***

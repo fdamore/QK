@@ -38,8 +38,8 @@ encoding_dict = {
     'uniform': Circuits.uniform_bloch_encoding
     }   
 
-nfolds = 10 #set number of folds in CV
-f_rate = 1. #rate of data sampling fot testing pourpose
+nfolds = 3 #set number of folds in CV
+f_rate = .02 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 #load dataset with panda
@@ -48,10 +48,6 @@ nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROC
 # defining a unique label for the simulation 
 id_string = f'_QSVM_{encoding_key}_ent{full_ent}_{nfolds}folds_seed{seed}_frate{f_rate}'
 
-# setting a location for the output file
-output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
-sys.stdout = open(output_filename, 'w')
-sys.stderr = sys.stdout
 
 if encoding_key == 'uniform':
     data_file_csv = 'data/env.sel3.2pi_minmax.csv'
@@ -79,6 +75,9 @@ fm = encoding_dict[encoding_key](n_wire=NUM_QBIT, full_ent=full_ent)
 #fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
 q_kernel = FidelityStatevectorKernel(feature_map=fm)
 svm_quantum = QSVC(quantum_kernel=q_kernel)
+
+print(f'Feature map: {fm.name}\n')
+
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
@@ -117,8 +116,6 @@ cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
 cv_std = grid.cv_results_['std_test_score'][grid.best_index_]
 
 results = grid.cv_results_
-for i in range(nfolds):
-    print(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}")
 
 print(f'\nAverage accuracy, best score: {cv_mean:.6f}')
 print(f'Standard deviation, best score: {cv_std:.6f}')
@@ -130,22 +127,24 @@ final_msg = f'Accuracy (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nf
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'scores/accuracy' + id_string + '.txt', "w") as file:
+with open(f'jobs/scores/accuracy' + id_string + '.txt', "w") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
-    file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
-    file.write('Circuit template: ' + encoding_key + '\n')
-    file.write(f'Entangling layer: {full_ent}' + '\n')    
-    file.write(f'Best parameter: {grid.best_params_}' + '\n')
-    file.write(f'N job param = {nj}' + '\n')
-    file.write(f'GridSearch Dict: {params_grid}' + '\n')
+    file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
+    file.write(f'Feature map: {fm.name}\n')
+    file.write(f'Entangling layer: {full_ent}\n')    
+    file.write(f'Best parameter: {grid.best_params_}\n')
+    file.write(f'N job param = {nj}\n')
+    file.write(f'GridSearch Dict: {params_grid}\n')
     #check the shape of test and training dataset
-    file.write(f'Source file: {data_file_csv}' + '\n')
-    file.write(f'Shape of dataset: {env.shape}' + '\n')
-    file.write(f'Shape of training dataset {X_train_np.shape}' + '\n')
-    file.write(f'Shape of training labels {y_train_np.shape}' + '\n')
-    file.write(f'Seed: {seed}' + '\n')
-    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits' + '\n')
+    file.write(f'Source file: {data_file_csv}\n')
+    file.write(f'Shape of dataset: {env.shape}\n')
+    file.write(f'Shape of training dataset {X_train_np.shape}\n')
+    file.write(f'Shape of training labels {y_train_np.shape}\n')
+    file.write(f'Seed: {seed}\n')
+    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits\n')
+    for i in range(nfolds):
+        file.write(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}\n")
 
 
 
