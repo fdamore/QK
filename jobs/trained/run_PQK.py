@@ -146,6 +146,254 @@ print(f'Time training SVM: {training_svm_end - training_svm_start} seconds.')
 print(f'Total jobs time: {jobs_final_time - training_kernel_start} seconds.')
 
 
+# Using dataset in datafile: data/env.sel3.sk_sc.csv
+# Fraction rate used for this run: 100%
+# Max number of iteration used in kernel optimization: 20
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# *** TRAINABLE FEATURE MAP used in QSVC
+#      ┌───────────┐┌───────────┐┌───────────┐ ░ ┌──────────────┐»
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├─░─┤ Rz(trbeta_0) ├»
+#      ├───────────┤├───────────┤├───────────┤ ░ ├──────────────┤»
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├─░─┤ Rz(trbeta_1) ├»
+#      ├───────────┤├───────────┤├───────────┤ ░ ├──────────────┤»
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├─░─┤ Rz(trbeta_2) ├»
+#      ├───────────┤├───────────┤├───────────┤ ░ ├──────────────┤»
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├─░─┤ Rz(trbeta_3) ├»
+#      ├───────────┤├───────────┤├───────────┤ ░ ├──────────────┤»
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├─░─┤ Rz(trbeta_4) ├»
+#      ├───────────┤├───────────┤├───────────┤ ░ ├──────────────┤»
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├─░─┤ Rz(trbeta_5) ├»
+#      └───────────┘└───────────┘└───────────┘ ░ └──────────────┘»
+# «     ┌───────────────┐┌───────────────┐
+# «q_0: ┤ Ry(trgamma_0) ├┤ Rz(trdelta_0) ├
+# «     ├───────────────┤├───────────────┤
+# «q_1: ┤ Ry(trgamma_1) ├┤ Rz(trdelta_1) ├
+# «     ├───────────────┤├───────────────┤
+# «q_2: ┤ Ry(trgamma_2) ├┤ Rz(trdelta_2) ├
+# «     ├───────────────┤├───────────────┤
+# «q_3: ┤ Ry(trgamma_3) ├┤ Rz(trdelta_3) ├
+# «     ├───────────────┤├───────────────┤
+# «q_4: ┤ Ry(trgamma_4) ├┤ Rz(trdelta_4) ├
+# «     ├───────────────┤├───────────────┤
+# «q_5: ┤ Ry(trgamma_5) ├┤ Rz(trdelta_5) ├
+# «     └───────────────┘└───────────────┘
+# Number of trainable paramenters: 18
+# The QMeasure function used: StateVectorEstimator
+# The classical kernel used: rbf
+# The observables we use: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# Initial point: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# **********************
+# Print callback. Iteration 1
+# Number of function evaluations: 2
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929205
+# The stepsize: 6.511487444653352e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 2
+# Number of function evaluations: 4
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 5.787988839691868e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 3
+# Number of function evaluations: 6
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929213
+# The stepsize: 1.446997209922967e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 4
+# Number of function evaluations: 8
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929212
+# The stepsize: 0.0
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 5
+# Number of function evaluations: 10
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 2.893994419845934e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 6
+# Number of function evaluations: 12
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929215
+# The stepsize: 4.340991629768902e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 7
+# Number of function evaluations: 14
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929212
+# The stepsize: 7.234986049614835e-13
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 8
+# Number of function evaluations: 16
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929207
+# The stepsize: 2.170495814884451e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 9
+# Number of function evaluations: 18
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 2.170495814884451e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 10
+# Number of function evaluations: 20
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 1.446997209922967e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 11
+# Number of function evaluations: 22
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929212
+# The stepsize: 6.511487444653352e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 12
+# Number of function evaluations: 24
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929212
+# The stepsize: 3.617493024807418e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 13
+# Number of function evaluations: 26
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 2.170495814884451e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 14
+# Number of function evaluations: 28
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929207
+# The stepsize: 2.170495814884451e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 15
+# Number of function evaluations: 30
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.122360492921
+# The stepsize: 2.170495814884451e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 16
+# Number of function evaluations: 32
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929212
+# The stepsize: 0.0
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 17
+# Number of function evaluations: 34
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929211
+# The stepsize: 1.446997209922967e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 18
+# Number of function evaluations: 36
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929206
+# The stepsize: 1.446997209922967e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 19
+# Number of function evaluations: 38
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929213
+# The stepsize: 4.340991629768902e-12
+# Whether the step was accepted: True
+# **********************
+# **********************
+# Print callback. Iteration 20
+# Number of function evaluations: 40
+# The paramenters: [0.69646919 0.28613933 0.22685145 0.55131477 0.71946897 0.42310646
+#  0.9807642  0.68482974 0.4809319  0.39211752 0.34317802 0.72904971
+#  0.43857224 0.0596779  0.39804426 0.73799541 0.18249173 0.17545176]
+# The function value: 705.1223604929211
+# The stepsize: 1.446997209922967e-12
+# Whether the step was accepted: True
+# **********************
+# *******SCORE: 0.8563458856345886
+# Time kernel training: 47345.12213516235 seconds.
+# Time training SVM: 1335.9874138832092 seconds.
+# Total jobs time: 49231.60648202896 seconds.
+
+
 
 #RUN ON SERVER 2024-12-11 on server callback TR_20241210221314.json
 # Using dataset in datafile: data/env.sel3.sk_sc.csv
