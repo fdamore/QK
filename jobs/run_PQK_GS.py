@@ -33,29 +33,32 @@ encoding_dict = {
     'uniform': Circuits.uniform_bloch_encoding
     }   
 
+pauli_meas_dict = {
+    'XYZ' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ'],
+    'XY' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY'],
+    'X' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX'],
+    'Y' : ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY'],
+    'Z' : ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ'],
+    'BLOCH_XYZ' : ['XII', 'IXI','IIX','YII','IYI','IIY','ZII','IZI','IIZ'], #for the uniform bloch:   (couldnt make it work yet - Luca)
+}
+
 nfolds = 10 #set number of folds in CV
 f_rate = 1. #rate of data sampling fot testing pourpose
-nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
-
-
-# my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
-#my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
-#my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-
-#for the uniform bloch:   (couldnt make it work yet - Luca)
-# my_obs = ['XII', 'IXI','IIX','YII','IYI','IIY','ZII','IZI','IIZ']
-
+nj = 10     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 clear_cache = False
 encoding_key = 'xyz'
-full_ent = False
-pqk = PQK_SVC(circuit_template=encoding_dict[encoding_key], fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+full_ent = True
+my_obs_key = 'Z'
+my_obs = pauli_meas_dict[my_obs_key]
 
+
+
+pqk = PQK_SVC(circuit_template=encoding_dict[encoding_key], fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 #print metadata
 pqk.metadata()
 
 # defining a unique label for the simulation 
-id_string = f'_{encoding_key}_ent{pqk.full_ent}_{len(my_obs)}obs_{nfolds}folds_seed{seed}_frate{f_rate}'
+id_string = f'_PQK_{encoding_key}_ent{pqk.full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
 
 # setting a location for the output file
 output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
@@ -88,12 +91,8 @@ y_train_np = Y.to_numpy()
 #Create a dictionary of possible parameters
 #params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024],
 #          'gamma': np.array([0.10, 0.15, 0.25, 0.5, 0.75, 1.0, 1.25,1.50, 1.75, 2.0, 2.5, 3.0,3.5,3.7, 4.0])}
-
 params_grid = {'C': 2.**np.arange(1,12,2),
         'gamma': 10**np.arange(-7,0.,2)}
-
-
-
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=nfolds)
 
@@ -113,7 +112,6 @@ print(f'Entangling layer={pqk.full_ent}')
 #get time
 t_start = time.time()
 
-
 #Fit the data with the best possible parameters
 grid.fit(X_train_np, y_train_np)
 
@@ -122,22 +120,18 @@ t_training = time.time()
 
 #Print the best estimator with it's parameters
 print(f'Best paramenter: {grid.best_params_}')
-
 print(f'Best score {grid.best_score_}')
-
 print(f'Results: {grid.cv_results_.keys()}')
 
 # taking the largest average accuracy of the grid search and the corresponding standard dev.
-cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
-cv_std = grid.cv_results_['std_test_score'][grid.best_index_]
-
 results = grid.cv_results_
+cv_mean = results['mean_test_score'][grid.best_index_]
+cv_std = results['std_test_score'][grid.best_index_]
+
 for i in range(nfolds):
     print(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}")
-
 print(f'\nAverage accuracy, best score: {cv_mean:.6f}')
 print(f'Standard deviation, best score: {cv_std:.6f}')
-
 print(f'{t_training-t_start} seconds elapsed.')
 
 # the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
