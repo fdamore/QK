@@ -22,7 +22,7 @@ class PQK_SVC(SVC):
         pass          
     
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = CKernels.rbf,*,  circuit : QuantumCircuit = Circuits.xyz_encoded):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = CKernels.rbf,*,  circuit : QuantumCircuit):
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
 

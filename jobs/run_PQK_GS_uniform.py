@@ -29,7 +29,10 @@ my_obs = ['XII', 'IXI','IIX', 'YII', 'IYI','IIY','ZII', 'IZI','IIZ']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 clear_cache = True
-pqk = PQK_SVC(circuit_template=Circuits.uniform_bloch_encoding, fit_clear=clear_cache, full_ent=False, nwire=3, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+
+qc = Circuits.uniform_bloch_encoding(n_wire=3,full_ent=False)
+
+pqk = PQK_SVC(circuit=qc, fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()

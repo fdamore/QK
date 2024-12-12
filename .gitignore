@@ -12,3 +12,4 @@ nohup.out
 /.idea/
 server_QK/*
 notebooks/*log
+logs/*out

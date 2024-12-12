@@ -25,7 +25,10 @@ algorithm_globals.random_seed = 123
 
 # Best paramenter: {'C': 32.0, 'gamma': 0.01}
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-pqk = PQK_SVC(C=32, gamma=0.01, circuit_template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+
+q_c = Circuits.xyz_encoded(full_ent=False, n_wire=6)
+
+pqk = PQK_SVC(C=32, gamma=0.01, circuit=q_c, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
@@ -37,7 +40,7 @@ pqk.metadata()
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #rate of data sampling fot testing pourpose
+f_rate = 0.01 #rate of data sampling fot testing pourpose
 data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 

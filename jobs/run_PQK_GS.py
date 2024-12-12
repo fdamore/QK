@@ -2,8 +2,7 @@ import sys
 import os
 import time
 import pandas as pd
-from sklearn.metrics import classification_report, accuracy_score
-from sklearn.model_selection import GridSearchCV, train_test_split, ParameterGrid
+from sklearn.model_selection import GridSearchCV, ParameterGrid
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
 from datetime import datetime
@@ -23,18 +22,21 @@ seed=123              # the seed
 np.random.seed(seed)
 algorithm_globals.random_seed = seed
 
+
+#circuit paramenters
+full_ent=False
+nwire=6
+
 encoding_dict = {
-    'xyz': Circuits.xyz_encoded, 
-    'zz': Circuits.zzfeaturemap, 
-    'x': Circuits.x_encoded, 
-    'y': Circuits.y_encoded, 
-    'z': Circuits.z_encoded, 
-    'spiral': Circuits.spiral_encoding,
-    'uniform': Circuits.uniform_bloch_encoding
+    'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6), 
+    'zz': Circuits.zzfeaturemap(full_ent=full_ent, n_wire=6), 
+    'x': Circuits.x_encoded(full_ent=full_ent, n_wire=6), 
+    'spiral': Circuits.spiral_encoding(full_ent=full_ent, n_wire=6, n_windings=1),
+    'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=6)
     }   
 
 nfolds = 10 #set number of folds in CV
-f_rate = 1. #rate of data sampling fot testing pourpose
+f_rate = 0.05 #rate of data sampling fot testing pourpose
 nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 
@@ -48,14 +50,13 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 
 clear_cache = False
 encoding_key = 'xyz'
-full_ent = False
-pqk = PQK_SVC(circuit_template=encoding_dict[encoding_key], fit_clear=clear_cache, full_ent=full_ent, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #print metadata
 pqk.metadata()
 
 # defining a unique label for the simulation 
-id_string = f'_{encoding_key}_ent{pqk.full_ent}_{len(my_obs)}obs_{nfolds}folds_seed{seed}_frate{f_rate}'
+id_string = f'_{encoding_key}_ent{full_ent}_{len(my_obs)}obs_{nfolds}folds_seed{seed}_frate{f_rate}'
 
 # setting a location for the output file
 output_filename = 'logs/out'+id_string+f'_{datetime.now().strftime("%Y%m%d_%H%M%S")}.out'
@@ -108,7 +109,7 @@ print(f'Shape of dataset: {env.shape}')
 print(f'Shape of training dataset {X_train_np.shape}')
 print(f'Shape of training labels {y_train_np.shape}')
 print(f'Seed: {seed}')
-print(f'Entangling layer={pqk.full_ent}')
+print(f'Entangling layer={full_ent}')
 
 #get time
 t_start = time.time()
@@ -145,12 +146,12 @@ final_msg = f'Accuracy (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nf
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'scores/accuracy' + id_string + '.txt', "w") as file:
+with open(f'jobs/scores/accuracy' + id_string + '.txt', "w+") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.' + '\n')
-    file.write(f'Circuit template: {pqk.circuit_template}' + '\n')
-    file.write(f'Entangling layer: {pqk.full_ent}' + '\n')    
+    file.write('Circuit template' + '\n' + str(pqk.circuit.draw()) + '\n')    
+    file.write(f'Entangling layer: {full_ent}' + '\n')    
     file.write(f'Required observables: {pqk.obs}' + '\n')
     file.write(f'Measure procedure: {pqk.measure_fn.__name__}' + '\n')
     file.write(f'CKernel function used: {pqk.c_kernel.__name__}' + '\n')
