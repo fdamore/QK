@@ -15,17 +15,21 @@ from pqk.Circuits import Circuits
 from pqk.QMeasures import QMeasures
 from pqk.CKernels import CKernels
 from pqk.PQK_SVC import PQK_SVC
-
-
+from pqk.aux_funcs import *
 
 seed=123              # the seed
 np.random.seed(seed)
 algorithm_globals.random_seed = seed
 
-
 #circuit paramenters
 full_ent=False
 nwire=6
+encoding_key = 'xyz'
+my_obs_key = 'ADJAC_2QUB'
+#cv parameters
+nfolds = 10 #set number of folds in CV
+f_rate = .02 #rate of data sampling fot testing pourpose
+nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 encoding_dict = {
     'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6), 
@@ -36,23 +40,20 @@ encoding_dict = {
     }   
 
 pauli_meas_dict = {
-    'XYZ' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ'],
-    'XY' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY'],
-    'X' : ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX'],
-    'Y' : ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY'],
-    'Z' : ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ'],
-    'BLOCH_XYZ' : ['XII', 'IXI','IIX','YII','IYI','IIY','ZII','IZI','IIZ'], #for the uniform bloch:   (couldnt make it work yet - Luca)
+    'XYZ' : generate_my_obs(['X','Y','Z'], n_qub=6),
+    'XY' : generate_my_obs(['X','Y'], n_qub=6),
+    'X' : generate_my_obs(['X'], n_qub=6),
+    'Y' : generate_my_obs(['Y'], n_qub=6),
+    'Z' : generate_my_obs(['Z'], n_qub=6),
+    'BLOCH_XYZ' : generate_my_obs(['X','Y','Z'], n_qub=3), #for the uniform bloch:   (couldnt make it work yet - Luca)
+    'NON_LOCAL_XX' : generate_my_obs(['X','Y','Z','XX'], n_qub=6),
+    'ADJAC_2QUB' : adjacent_qub_obs(['X','Y','Z'], n_qub=6, non_locality=2)
 }
+pauli_meas_dict['ADJAC_2QUB_EXTRA'] = pauli_meas_dict['XYZ'] + pauli_meas_dict['ADJAC_2QUB']
 
-nfolds = 3 #set number of folds in CV
-f_rate = .02 #rate of data sampling fot testing pourpose
-nj = 10     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 clear_cache = False
-encoding_key = 'xyz'
-full_ent = True
-my_obs_key = 'Z'
 my_obs = pauli_meas_dict[my_obs_key]
-
+print(my_obs)
 
 
 # defining a unique label for the simulation 
