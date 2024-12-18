@@ -98,6 +98,37 @@ class Circuits:
       
         
         return qc
+    
+    @staticmethod
+    def corr_encoded(n_wire, full_ent = True, param_prefix = 'phi'):
+        
+        '''
+        CORR_XYZ encoded (work with COGITO database only)
+        '''
+        
+        qc = QuantumCircuit(n_wire) 
+        qc.name = 'CORR XYZ'       
+        
+
+        for i in range(n_wire):            
+            phi_name = param_prefix + '_' + str(i)
+            phi = Parameter(phi_name)
+            qc.rx(phi, i) 
+            qc.ry(phi, i)
+            qc.rz(phi, i)
+        
+        #entanlgled using correlation
+        qc.cx(0,2) #illuminance->lamps
+        qc.cx(1,5) #blinds ->temps
+        qc.cx(3,5) #rh -> temps
+        qc.cx(4,3) #co2 -> rh
+
+
+
+
+        
+        
+        return qc
 
     @staticmethod
     def zy_decomposition(n_wire, full_ent = True, param_prefix = 'phi'):
