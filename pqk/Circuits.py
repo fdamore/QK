@@ -158,7 +158,7 @@ class Circuits:
         '''
         
         qc = QuantumCircuit(n_wire) 
-        qc.name = 'CORR XYZ'       
+        qc.name = 'ANTICORR XYZ'       
         
 
         for i in range(n_wire):            
