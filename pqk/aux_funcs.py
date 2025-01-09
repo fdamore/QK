@@ -25,13 +25,13 @@ def generate_my_obs(pauli_str_list, n_qub):
 
 # to automatically generate strings of non local obs, involving adjacent qubits
 # ['X'], 4, 2 --> ['XXII', 'IXXI', 'IIXX', 'XIIX']
-def adjacent_qub_obs(single_pauli_list, n_qub, non_locality):
+def adjacent_qub_obs(single_pauli_list, n_qub, n_measured_qub):
     global_Id = 'I' * n_qub
     global_obs_list = []
     for obs in single_pauli_list:
         for i in range(n_qub):
             global_obs = list(global_Id)
-            for j in range(non_locality):
+            for j in range(n_measured_qub):
                 global_obs[(i+j)%n_qub] = obs
             global_obs_list.append(''.join(global_obs))
     return global_obs_list
