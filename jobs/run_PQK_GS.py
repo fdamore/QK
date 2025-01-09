@@ -23,20 +23,22 @@ algorithm_globals.random_seed = seed
 
 #circuit paramenters
 full_ent=False
-nwire=6
 encoding_key = 'xyz'
 my_obs_key = 'ADJAC_2QUB'
+measure_fn_key = 'GPUfakenoise'
 #cv parameters
-nfolds = 10 #set number of folds in CV
+nfolds = 3 #set number of folds in CV
 f_rate = .02 #rate of data sampling fot testing pourpose
 nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 encoding_dict = {
-    'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6), 
+    'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6),   # change to 3d ? 
     'zz': Circuits.zzfeaturemap(full_ent=full_ent, n_wire=6), 
     'x': Circuits.x_encoded(full_ent=full_ent, n_wire=6), 
     'spiral': Circuits.spiral_encoding(full_ent=full_ent, n_wire=6, n_windings=1),
-    'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=6)
+    'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=6),
+    'corrxyz': Circuits.corr3_encoded(n_wire=6),
+    'anticorrxyz': Circuits.anticorr3_encoded(n_wire=6),
     }   
 
 pauli_meas_dict = {
@@ -47,9 +49,19 @@ pauli_meas_dict = {
     'Z' : generate_my_obs(['Z'], n_qub=6),
     'BLOCH_XYZ' : generate_my_obs(['X','Y','Z'], n_qub=3), #for the uniform bloch:   (couldnt make it work yet - Luca)
     'NON_LOCAL_XX' : generate_my_obs(['X','Y','Z','XX'], n_qub=6),
-    'ADJAC_2QUB' : adjacent_qub_obs(['X','Y','Z'], n_qub=6, non_locality=2)
+    'ADJAC_2QUB' : adjacent_qub_obs(['X','Y','Z'], n_qub=6, n_measured_qub=2),
+    'ADJAC_XX' : adjacent_qub_obs(['X'], n_qub=6, n_measured_qub=2),
+    'ADJAC_YY' : adjacent_qub_obs(['Y'], n_qub=6, n_measured_qub=2),
+    'ADJAC_ZZ' : adjacent_qub_obs(['Z'], n_qub=6, n_measured_qub=2),
 }
 pauli_meas_dict['ADJAC_2QUB_EXTRA'] = pauli_meas_dict['XYZ'] + pauli_meas_dict['ADJAC_2QUB']
+
+measure_fn_dict = {
+    'CPU' : QMeasures.StateVectorEstimator,
+    'GPU' : QMeasures.GPUAerStateVectorEstimator,
+    'GPUfakenoise' : QMeasures.GPUAerVigoNoiseStateVectorEstimator,
+    #'QPU' : ???
+}
 
 clear_cache = False
 my_obs = pauli_meas_dict[my_obs_key]
@@ -57,7 +69,7 @@ print(my_obs)
 
 
 # defining a unique label for the simulation 
-id_string = f'_PQK_{encoding_key}_ent{full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
+id_string = f'_PQK_{measure_fn_key}_{encoding_key}_ent{full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
 
 
 #load dataset with panda
@@ -83,7 +95,7 @@ y_train_np = Y.to_numpy()
 params_grid = {'C': 2.**np.arange(1,12,2),
         'gamma': 10**np.arange(-7,0.,2)}
 
-pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel=CKernels.rbf)
 #print metadata
 pqk.metadata()
 
