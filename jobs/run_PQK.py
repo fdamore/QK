@@ -23,10 +23,12 @@ from pqk.CKernels import CKernels
 np.random.seed(123)
 algorithm_globals.random_seed = 123
 
-
-# Best paramenter: {'C': 256, 'gamma': 0.1}
+# Best paramenter: {'C': 32.0, 'gamma': 0.01}
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-pqk = PQK_SVC(C=256, gamma=0.1, circuit_template=Circuits.xyz_encoded, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+
+q_c = Circuits.xyz_encoded(full_ent=False, n_wire=6)
+
+pqk = PQK_SVC(C=32, gamma=0.01, circuit=q_c, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
@@ -38,8 +40,8 @@ pqk.metadata()
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #rate of data sampling fot testing pourpose
-data_file_csv = 'data/env.sel3.scaled.csv'
+f_rate = 0.01 #rate of data sampling fot testing pourpose
+data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 #DEFINE design matrix
@@ -89,7 +91,101 @@ datetime_object = datetime.datetime.fromtimestamp(t_final)
 formatted_datetime = datetime_object.strftime("%Y-%m-%d %H-%M-%S")
 print(f'Simulation end at: {formatted_datetime}')
 
-pqk.save_feature_map(prefix='run_xyz_pqk_')
+pqk.save_feature_map(prefix='xyz_latent_')
+pqk.save_latent_space(prefix='xyz_latent_', y = np.append(y_train_np, y_test_np))
+
+
+
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Param: <bound method BaseEstimator.get_params of PQK_SVC(c_kernel=<function CKernels.rbf at 0x7b28277b8160>, full_ent=False,
+#         measure_fn=<function QMeasures.StateVectorEstimator at 0x7b28277a3eb0>,
+#         nwire=6,
+#         obs=['YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY'])>
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: True
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1, 2.0, 3.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024, 2048, 3000, 3500], 'gamma': array([1.0e-04, 5.0e-03, 1.0e-02, 5.0e-02, 7.5e-01, 1.0e-01, 1.5e-01,
+#        2.5e-01, 5.0e-01, 7.5e-01, 1.0e+00, 1.5e+00, 3.0e+00, 3.5e+00])}
+# Fitting 5 folds for each of 210 candidates, totalling 1050 fits
+# Best paramenter: {'C': 3500, 'gamma': 0.0001}
+#               precision    recall  f1-score   support
+
+#           -1       0.93      0.74      0.82       410
+#            1       0.73      0.92      0.81       307
+
+#     accuracy                           0.82       717
+#    macro avg       0.83      0.83      0.82       717
+# weighted avg       0.84      0.82      0.82       717
+
+# Accuracy Score on data: 0.8186889818688982
+
+
+
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌───────────┐┌───────────┐┌───────────┐
+# q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├
+#      ├───────────┤├───────────┤├───────────┤
+# q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├
+#      └───────────┘└───────────┘└───────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Param: <bound method BaseEstimator.get_params of PQK_SVC(c_kernel=<function CKernels.rbf at 0x79a9961c4160>, full_ent=False,
+#         measure_fn=<function QMeasures.StateVectorEstimator at 0x79a9961afeb0>,
+#         nwire=6,
+#         obs=['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX'])>
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# ***INFO RUN***
+# Clear cache: True
+# N job param = -1
+# GridSearch Dict: {'C': [0.5, 1, 2.0, 3.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024, 2048, 3000, 3500], 'gamma': array([1.0e-04, 5.0e-03, 1.0e-02, 5.0e-02, 7.5e-01, 1.0e-01, 1.5e-01,
+#        2.5e-01, 5.0e-01, 7.5e-01, 1.0e+00, 1.5e+00, 3.0e+00, 3.5e+00])}
+# Fitting 5 folds for each of 210 candidates, totalling 1050 fits
+# Best paramenter: {'C': 3500, 'gamma': 0.0001}
+#               precision    recall  f1-score   support
+
+#           -1       0.93      0.80      0.86       410
+#            1       0.77      0.93      0.84       307
+
+#     accuracy                           0.85       717
+#    macro avg       0.85      0.86      0.85       717
+# weighted avg       0.87      0.85      0.85       717
+
+# Accuracy Score on data: 0.8521617852161785
+
 
 
 # *** Quantum template for feature map using 6 qubit ***
@@ -329,3 +425,34 @@ pqk.save_feature_map(prefix='run_xyz_pqk_')
 # Sanity check. Dict len after prediction: 2865
 # Timestamp of the file storing data: 20241015142950
 
+
+#RUNNED WITH OLD CICRUICT CONTAINER
+# *** Create a Container *** RUN ON SERVER
+# *** Quantum template for feature map using 6 qubit ***
+#      ┌──────────────────────────────────────────────┐
+# q_0: ┤0                                             ├
+#      │                                              │
+# q_1: ┤1                                             ├
+#      │                                              │
+# q_2: ┤2                                             ├
+#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
+# q_3: ┤3                                             ├
+#      │                                              │
+# q_4: ┤4                                             ├
+#      │                                              │
+# q_5: ┤5                                             ├
+#      └──────────────────────────────────────────────┘
+# *** Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+# *** Measure procedure: StateVectorEstimator
+# *** CKernel function used: rbf
+# Using dataset in datafile: data/env.sel3.scaled.csv
+# Shape of dataset: (2865, 7)
+# Training shape dataset (2148, 6)
+# Label for traing (2148,)
+# Test shape dataset (717, 6)
+# Label for test (717,)
+# Sanity check. Dict len after training: 2148
+# *******SCORE: 0.5857740585774058
+# Time training: 325.1087284088135 seconds. Final time 433.3743648529053 seconds
+# Sanity check. Dict len after prediction: 2865
+# Timestamp of the file storing data: 20240730232653

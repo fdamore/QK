@@ -1,0 +1,19 @@
+Accuracy (95% confidence) = 0.717 +/- 0.017 == [0.700, 0.734]
+
+2024-12-06 17:21:38
+15196.9 seconds elapsed.
+Circuit template: <function Circuits.zzfeaturemap at 0x7aa8b243e200>
+Entangling layer: True
+Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+Measure procedure: StateVectorEstimator
+CKernel function used: rbf
+Best parameter: {'C': 512.0, 'gamma': 1e-09}
+Clear cache: False
+N job param = -1
+GridSearch Dict: {'C': array([5.00e-01, 2.00e+00, 8.00e+00, 3.20e+01, 1.28e+02, 5.12e+02]), 'gamma': array([1.e-09, 1.e-08, 1.e-07, 1.e-06])}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 24 candidates, totalling 240 fits

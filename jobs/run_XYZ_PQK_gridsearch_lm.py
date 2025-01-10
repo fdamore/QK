@@ -7,6 +7,14 @@ from sklearn.model_selection import GridSearchCV, train_test_split
 import numpy as np
 from qiskit_algorithms.utils import algorithm_globals
 
+# forces values in an interval by cutting excesses, to solve float precision issues with sqrt, arccos: sqrt(-0.00001)-->0
+def trim_data(array, min, max): 
+    return np.minimum(np.maximum(array, min), max)
+
+def sigmoid(x):
+  return 1 / (1 + np.exp(-x))
+
+
 #define working directory and package for QK
 current_wd = os.getcwd()
 sys.path.append(current_wd)
@@ -23,13 +31,16 @@ np.random.seed(123)
 algorithm_globals.random_seed = 123
 
 
-my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
-#my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
+# my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY','ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
+my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']
 #my_obs = ['ZIIIII', 'IZIIII','IIZIII', 'IIIZII','IIIIZI','IIIIIZ']
 
 clear_cache = True
-pqk = PQK_SVC(circuit_template=Circuits.xyz_encoded, fit_clear=clear_cache, full_ent=False, nwire=6, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+
+q_c = Circuits.xyz_encoded(full_ent=False, n_wire=6)
+
+pqk = PQK_SVC(fit_clear=clear_cache, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf, circuit=q_c)
 
 #print metadata
 pqk.metadata()
@@ -37,8 +48,9 @@ pqk.metadata()
 
 #load dataset with panda
 #data are scaled outside the notebook
-f_rate = 1 #rate of data sampling fot testing pourpose
+f_rate = 0.02 #rate of data sampling fot testing pourpose
 data_file_csv = 'data/env.sel3.scaled.csv'
+# data_file_csv = 'data/env.sel3.2pi_minmax.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 #DEFINE design matrix
@@ -52,6 +64,12 @@ X_train_np = X_train.to_numpy()
 y_train_np = y_train.to_numpy()
 X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
+# X_train_np = sigmoid(trim_data(X_train.to_numpy()/2/np.pi, 0, 1))
+# y_train_np = y_train.to_numpy()
+# X_test_np = sigmoid(trim_data(X_test.to_numpy()/2/np.pi, 0, 1))
+# y_test_np = y_test.to_numpy()
+
+print(X_train_np)
 
 #check the shape of test and training dataset
 print(f'Shape of dataset: {env.shape}')
@@ -72,7 +90,7 @@ params_grid = {'C': [0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512,
 
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-nj = -1
+nj = 1 
 grid = GridSearchCV(pqk, params_grid, verbose=2, n_jobs=nj)
 
 print('***INFO RUN***')

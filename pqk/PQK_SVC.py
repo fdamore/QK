@@ -1,61 +1,57 @@
-from re import template
-from debugpy import configure
 import numpy as np
-
 import os
 import time
 import datetime
 
+from qiskit import QuantumCircuit
 from pqk.QMeasures import QMeasures
 from pqk.Circuits import Circuits
 from pqk.CKernels import CKernels
 from sklearn.svm import SVC
+
+import pandas as pd
 
 
 class PQK_SVC(SVC):
 
 
     #dict for latent space
-    _fm_dict = {}          
+    _fm_dict = {}
+
+    def ciao(c : int, f : float):
+        pass          
     
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, nwire = 1, obs = ['Z'], full_ent = True, circuit_template = Circuits.xyz_encoded, measure_fn = QMeasures.Aer, c_kernel = CKernels.linear):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = CKernels.rbf,*,  circuit : QuantumCircuit):
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
 
         """         
-        nwire are the number of qubits
         obs are the observation used to project state vector back to classical space
-        qtemplate is the circuit template used to  encode data in quantum space
+        circuit is the quantum circuit used for encode classical data
         measure_fn is the measure procedure used to get evs to encoded states
-        c_kernel is the used classical kernel
-        template is the function used to create the quantum circuits
+        c_kernel is the used classical kernel        
         """
 
         #clear the cache before fit
         self.fit_clear = fit_clear       
 
         #define PQK_SVM arameters 
-        self.obs = obs
-        self.nwire = nwire 
-        
-        self.full_ent =full_ent
+        self.obs = obs       
         self.measure_fn = measure_fn
-        self.c_kernel = c_kernel  
-
-        #create a tamplate of the encoding circuit based on tamplate 
-        self.circuit_template = circuit_template       
-        self.circuit = self.circuit_template(self.nwire,  self.full_ent)     
+        self.c_kernel = c_kernel         
+        self.circuit = circuit
                 
 
 
     def metadata(self):
-        print(f'*** Quantum template for feature map using {str(self.nwire)} qubit ***')                
+        print(f'*** CIRCUITS qubit ***')                
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
         print(f'*** Measure procedure: {self.measure_fn.__name__}')
         print(f'*** CKernel function used: {self.c_kernel.__name__}')
         print(f'Param: {self.get_params}')
+        print(f'Qubits: {self.circuit.num_qubits}')
         return ""
 
     #encode data in parameter    
@@ -105,9 +101,13 @@ class PQK_SVC(SVC):
         """        
         return np.array([[self._qfKernel(a, b) for b in B] for a in A])
     
-    #save my feature map
+    
     def save_feature_map(self, prefix = ''):
-        #create a csv file with feature maps
+        
+        '''
+        create a csv file with feature maps
+        '''
+        
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
@@ -128,6 +128,27 @@ class PQK_SVC(SVC):
         #print the related time stamp. 
         print(f'Timestamp of the file storing data: {formatted_datetime}')
     
+
+    def save_latent_space(self, prefix = '', *, y):
+        '''
+        Save latent space
+        '''
+        #create a csv file with feature maps
+        current_timestamp = time.time()
+        datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
+        formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
+        csv_file = '../qfm/lt_space/' + prefix + str(formatted_datetime) + '.csv' 
+
+        main_path = os.path.dirname(__file__)
+        file_path = os.path.join(main_path, csv_file)               
+        
+        df = pd.DataFrame(self._fm_dict.values())         
+        df['label'] = y
+
+        df.to_csv(file_path, encoding='utf-8', index=False)
+            
+        #print the related time stamp. 
+        print(f'Timestamp of the file storing data: {formatted_datetime}')
     
     
     def fit(self, X, y):
@@ -143,7 +164,7 @@ class PQK_SVC(SVC):
         if self.fit_clear:
             self._fm_dict.clear()      
 
-        super().fit(X=X, y=y)
+        super().fit(X=X, y=y)       
                 
         return self
 

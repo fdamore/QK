@@ -3,9 +3,13 @@ pqk/__pycache__/*
 qfm/*csv
 qfm/callback/*json
 qfm/tkfm/*csv
+qfm/lt_space/*csv
 .venv
 nohup.out
 *run.txt
 .vscode/launch.json
 /myscratch/
 /.idea/
+server_QK/*
+notebooks/*log
+logs/*out
