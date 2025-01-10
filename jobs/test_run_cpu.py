@@ -19,13 +19,12 @@ if __name__ == '__main__':
 
     obs=SparsePauliOp(["ZZ"])
     ##without noise
-    res=QMeasures.GPUAerStateVectorEstimator(qc,obs)
+    res=QMeasures.CPUAerStateVectorEstimator(qc,obs)
     print(res)
 
     ##with simulated noise
-    res = QMeasures.GPUAerBrisbaneNoiseStateVectorEstimator(qc, obs,seed_simulator=123)
+    res = QMeasures.CPUAerBrisbaneNoiseStateVectorEstimator(qc, obs,seed_simulator=123)
     print(res)
 
-    ##with simulated noise
-    res = QMeasures.GPUAerVigoNoiseStateVectorEstimator(qc, obs, seed_simulator=123)
+    res = QMeasures.CPUAerVigoNoiseStateVectorEstimator(qc, obs, seed_simulator=123)
     print(res)
