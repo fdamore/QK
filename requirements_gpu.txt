@@ -62,7 +62,7 @@ python-dateutil==2.9.0.post0
 pytz==2024.1
 pyzmq==25.1.2
 qiskit==1.2.4
-qiskit-aer==0.14.0.1
+qiskit-aer==0.15.1
 qiskit-aer-gpu==0.15.1
 qiskit-algorithms==0.3.0
 qiskit-ibm-runtime==0.22.0
