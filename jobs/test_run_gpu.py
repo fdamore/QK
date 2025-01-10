@@ -26,6 +26,5 @@ if __name__ == '__main__':
     res = QMeasures.GPUAerBrisbaneNoiseStateVectorEstimator(qc, obs,seed_simulator=123)
     print(res)
 
-    ##with simulated noise
     res = QMeasures.GPUAerVigoNoiseStateVectorEstimator(qc, obs, seed_simulator=123)
     print(res)
