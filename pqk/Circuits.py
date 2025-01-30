@@ -1,7 +1,6 @@
-from textwrap import wrap
 from qiskit.circuit import Parameter
-from qiskit.circuit.library import ZZFeatureMap
-from qiskit.circuit.library import IQP
+from qiskit.circuit.library import ZZFeatureMap, iqp
+from qiskit.quantum_info import random_hermitian
 from qiskit import QuantumCircuit
 import numpy as np
 
@@ -13,7 +12,19 @@ class Circuits:
     def zzfeaturemap(n_wire, full_ent = True, param_prefix = 'phi'):
         zfm = ZZFeatureMap(feature_dimension=n_wire, parameter_prefix=param_prefix)
 
-        return zfm   
+        return zfm
+
+    @staticmethod
+    def IQPfeaturemap(W):
+        iqp_qc = iqp(interactions=W)     
+
+        return iqp_qc      
+    
+    @staticmethod
+    def IQPfeaturemapRH(n_wire, seed_ = 1234):
+        mat_param = np.real(random_hermitian(n_wire,seed=seed_))
+        circuit = iqp(mat_param)
+        return circuit 
 
 
     #cascade embedding
