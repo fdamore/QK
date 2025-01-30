@@ -24,6 +24,7 @@ class Circuits:
     def IQPfeaturemapRH(n_wire, seed_ = 1234):
         mat_param = np.real(random_hermitian(n_wire,seed=seed_))
         circuit = iqp(mat_param)
+        circuit.name = 'IQP'
         return circuit 
 
 
