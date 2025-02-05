@@ -66,7 +66,7 @@ measure_fn_dict = {
 
 clear_cache = False
 my_obs = pauli_meas_dict[my_obs_key]
-print(my_obs)
+
 
 
 # defining a unique label for the simulation 
