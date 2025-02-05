@@ -23,11 +23,11 @@ algorithm_globals.random_seed = seed
 
 #circuit paramenters
 full_ent=False
-encoding_key = 'xyz'
+encoding_key = 'IQP'
 my_obs_key = 'ADJAC_2QUB'
-measure_fn_key = 'GPUfakenoise'
+measure_fn_key = 'CPU'
 #cv parameters
-nfolds = 3 #set number of folds in CV
+nfolds = 10 #set number of folds in CV
 f_rate = .02 #rate of data sampling fot testing pourpose
 nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
@@ -39,6 +39,7 @@ encoding_dict = {
     'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=6),
     'corrxyz': Circuits.corr3_encoded(n_wire=6),
     'anticorrxyz': Circuits.anticorr3_encoded(n_wire=6),
+    'IQP': Circuits.IQP_HuangE2(n_wire=6),
     }   
 
 pauli_meas_dict = {

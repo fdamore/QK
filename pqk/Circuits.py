@@ -289,8 +289,31 @@ class Circuits:
         return qc 
 
 
+    def IQP_HuangE2(n_wire, full_ent=True, param_prefix='phi'):
+        """
+        E2 encoding in Huang's 'Power of Data in QML', Appendix 12.A
+        """
+        qc = QuantumCircuit(n_wire)
+        qc.name = 'IQP_Huang'
 
-  
+
+        phi_params = [Parameter(f"{param_prefix}_{i}") for i in range(n_wire)]
+
+        for _ in range(2):
+            qc.h(range(n_wire))
+            for i in range(n_wire):            
+                qc.rz(phi_params[i], i)   
+
+                for j in range(i):
+                    qc.rzz(phi_params[i] * phi_params[j], i, j)
+
+        return qc
 
 
+    # def Trotter_HuangE3(n_wire, full_ent=True, param_prefix='phi'):
+    #     qc = QuantumCircuit(n_wire)
+    #     qc.name = 'Trotter_Huang'
 
+    #     phi_params = [Parameter(f"{param_prefix}_{i}") for i in range(n_wire)]
+
+    #     for 
