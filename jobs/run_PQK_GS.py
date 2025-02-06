@@ -40,6 +40,7 @@ encoding_dict = {
     'corrxyz': Circuits.corr3_encoded(n_wire=6),
     'anticorrxyz': Circuits.anticorr3_encoded(n_wire=6),
     'IQP': Circuits.IQP_HuangE2(n_wire=6),
+    'Trotter': Circuits.Trotter_HuangE3(n_wire=6),
     }   
 
 pauli_meas_dict = {

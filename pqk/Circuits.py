@@ -1,6 +1,6 @@
 from qiskit.circuit import Parameter
 from qiskit.circuit.library import ZZFeatureMap, iqp
-from qiskit.quantum_info import random_hermitian
+from qiskit.quantum_info import random_hermitian, random_statevector
 from qiskit import QuantumCircuit
 import numpy as np
 
@@ -240,34 +240,62 @@ class Circuits:
         
         return qc 
 
-    @staticmethod
-    def uniform_bloch_encoding(n_wire, full_ent = True, param_prefix = 'phi'):   
+    # @staticmethod
+    # def uniform_bloch_encoding(n_wire, full_ent = True, param_prefix = 'phi'):   
         
-        '''
-        requires half as much qubits like dense encoding! - L
+    #     '''
+    #     requires half as much qubits like dense encoding! - L
 
-        '''
+    #     '''
+
+    #     # Create a new circuit with two qubits
+    #     qc = QuantumCircuit(n_wire)
+    #     qc.name = 'UniformBloch'        
+        
+    #     # assuming phis, thetas normalized bw 0 and 1
+    #     for i in range(n_wire):            
+    #         theta_name = param_prefix + '_'+str(2*i)
+    #         theta = Parameter(theta_name)            
+    #         phi_name = param_prefix + '_'+str(2*i+1)
+    #         phi = Parameter(phi_name)
+    #         #qc.ry(2*np.arccos(np.sqrt(theta)), i)             
+    #         qc.ry(2*np.arccos(theta**(1/2)), i)            
+    #         qc.rz(phi*np.pi, i)
+
+    #     if(full_ent):
+    #         for i in range(n_wire):
+    #             qc.cx(i%n_wire, (i+1)%n_wire)
+        
+    #     return qc 
+    
+
+    @staticmethod
+    def uniform_bloch_encoding(n_wire, full_ent = False, param_prefix = 'phi', margin=.001):
 
         # Create a new circuit with two qubits
         qc = QuantumCircuit(n_wire)
-        qc.name = 'UniformBloch'        
-        
-        # assuming phis, thetas normalized bw 0 and 1
+        qc.name = 'UniformBloch'  
+
+        phis = [Parameter(f"{param_prefix}_{i}") for i in range(2*n_wire)]
+        # normalization: even index: 0<phi<1 ; odd index --> 0<phi<pi. original normalization is bw 0 and 2pi
+        for i, phi in enumerate(phis):
+            phi /= 2*np.pi     # normalize bw 0 and 1
+            phi = margin + phi * (1 - 2*margin)    # slightly shrinks the interval to avoid 0 and 1
+            if i%2 == 0:
+                phi *= np.pi
+            phis[i] = phi      # updating the phis
+
         for i in range(n_wire):            
-            theta_name = param_prefix + '_'+str(2*i)
-            theta = Parameter(theta_name)            
-            phi_name = param_prefix + '_'+str(2*i+1)
-            phi = Parameter(phi_name)
-            #qc.ry(2*np.arccos(np.sqrt(theta)), i)             
-            qc.ry(2*np.arccos(theta**(1/2)), i)            
-            qc.rz(phi*np.pi, i)
+            qc.ry(2 * (phis[2*i+1] ** (1/2.)).arccos(), i)
+            qc.rz(phis[2*i] * np.pi, i)
 
         if(full_ent):
             for i in range(n_wire):
                 qc.cx(i%n_wire, (i+1)%n_wire)
         
         return qc 
-    
+
+
     @staticmethod
     def x_encoded(n_wire, full_ent = True, param_prefix = 'phi'):
 
@@ -302,18 +330,30 @@ class Circuits:
         for _ in range(2):
             qc.h(range(n_wire))
             for i in range(n_wire):            
-                qc.rz(phi_params[i], i)   
+                qc.rz(2 * phi_params[i], i)   
 
                 for j in range(i):
-                    qc.rzz(phi_params[i] * phi_params[j], i, j)
+                    qc.rzz(2 * phi_params[i] * phi_params[j], i, j)
 
         return qc
 
 
-    # def Trotter_HuangE3(n_wire, full_ent=True, param_prefix='phi'):
-    #     qc = QuantumCircuit(n_wire)
-    #     qc.name = 'Trotter_Huang'
+    def Trotter_HuangE3(n_wire, full_ent=True, T = 20, param_prefix='phi'):
+        qc = QuantumCircuit(n_wire)
+        qc.name = 'Trotter_Huang'
 
-    #     phi_params = [Parameter(f"{param_prefix}_{i}") for i in range(n_wire)]
+        t = n_wire/3.
+        # initialization to Haar random state
+        for i in range(n_wire):
+            state = random_statevector(2)  # random qubit state, assigned to qubit i
+            qc.initialize(state, i)
 
-    #     for 
+        phi_params = [Parameter(f"{param_prefix}_{i}") for i in range(n_wire)]
+
+        for _ in range(T):
+            for i in range(n_wire):
+                qc.rzz(2 * t / T * phi_params[i], i, (i+1)%n_wire)
+                qc.ryy(2 * t / T * phi_params[i], i, (i+1)%n_wire)
+                qc.rxx(2 * t / T * phi_params[i], i, (i+1)%n_wire)
+
+        return qc
