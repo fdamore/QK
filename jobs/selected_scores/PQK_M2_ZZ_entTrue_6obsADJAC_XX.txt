@@ -1,0 +1,29 @@
+Accuracy (95% confidence) = 0.587441 +/- 0.010699 == [0.576742, 0.598139]
+
+2024-12-19 13:41:59
+78215.6 seconds elapsed.
+Feature map: ZZFeatureMap
+Entangling layer: True
+Required observables: ['XXIIII', 'IXXIII', 'IIXXII', 'IIIXXI', 'IIIIXX', 'XIIIIX']
+Measure procedure: StateVectorEstimator
+CKernel function used: rbf
+Best parameter: {'C': 2048.0, 'gamma': 1e-07}
+Clear cache: False
+N job param = 10
+GridSearch Dict: {'C': array([2.000e+00, 8.000e+00, 3.200e+01, 1.280e+02, 5.120e+02, 2.048e+03]), 'gamma': array([1.e-07, 1.e-05, 1.e-03, 1.e-01])}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 24 candidates, totalling 240 fits
+Fold 1: 0.6167247386759582
+Fold 2: 0.5853658536585366
+Fold 3: 0.5749128919860628
+Fold 4: 0.5818815331010453
+Fold 5: 0.5609756097560976
+Fold 6: 0.6013986013986014
+Fold 7: 0.6013986013986014
+Fold 8: 0.5909090909090909
+Fold 9: 0.5629370629370629
+Fold 10: 0.5979020979020979

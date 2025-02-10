@@ -1,0 +1,15 @@
+Accuracy (95% confidence) = 0.803148 +/- 0.015277 == [0.787871, 0.818425]
+
+2024-12-12 23:10:30
+41717.4 seconds elapsed.
+Circuit template: zz
+Entangling layer: True
+Best parameter: {'C': 2.0, 'gamma': 1e-07}
+N job param = 1
+GridSearch Dict: {'C': array([2.000e+00, 8.000e+00, 3.200e+01, 1.280e+02, 5.120e+02, 2.048e+03]), 'gamma': array([1.e-07, 1.e-05, 1.e-03, 1.e-01])}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 24 candidates, totalling 240 fits
