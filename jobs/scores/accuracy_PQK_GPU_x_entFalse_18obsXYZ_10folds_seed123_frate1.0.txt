@@ -1,0 +1,29 @@
+Accuracy (95% confidence) = 0.888317 +/- 0.008563 == [0.879754, 0.896879]
+
+2025-02-11 15:22:08
+19018.8 seconds elapsed.
+Feature map: XEncoded
+Entangling layer: False
+Required observables: ['XIIIII', 'IXIIII', 'IIXIII', 'IIIXII', 'IIIIXI', 'IIIIIX', 'YIIIII', 'IYIIII', 'IIYIII', 'IIIYII', 'IIIIYI', 'IIIIIY', 'ZIIIII', 'IZIIII', 'IIZIII', 'IIIZII', 'IIIIZI', 'IIIIIZ']
+Measure procedure: GPUAerStateVectorEstimator
+CKernel function used: rbf
+Best parameter: {'C': 128.0, 'gamma': 1e-07}
+Clear cache: False
+N job param = 10
+GridSearch Dict: {'C': array([2.000e+00, 8.000e+00, 3.200e+01, 1.280e+02, 5.120e+02, 2.048e+03]), 'gamma': array([1.e-07, 1.e-05])}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 12 candidates, totalling 240 fits
+Fold 1: 0.867595818815331
+Fold 2: 0.8850174216027874
+Fold 3: 0.8815331010452961
+Fold 4: 0.8954703832752613
+Fold 5: 0.8850174216027874
+Fold 6: 0.8741258741258742
+Fold 7: 0.9125874125874126
+Fold 8: 0.8916083916083916
+Fold 9: 0.8811188811188811
+Fold 10: 0.9090909090909091

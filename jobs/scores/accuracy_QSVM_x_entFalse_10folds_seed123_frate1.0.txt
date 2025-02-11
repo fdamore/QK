@@ -1,0 +1,25 @@
+Accuracy (95% confidence) = 0.866319 +/- 0.007709 == [0.858610, 0.874028]
+
+2025-02-11 15:18:37
+17968.9 seconds elapsed.
+Feature map: XEncoded
+Entangling layer: False
+Best parameter: {'C': 2048.0, 'gamma': 1e-07}
+N job param = 1
+GridSearch Dict: {'C': array([2.000e+00, 8.000e+00, 3.200e+01, 1.280e+02, 5.120e+02, 2.048e+03]), 'gamma': array([1.e-07, 1.e-05, 1.e-03, 1.e-01])}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 24 candidates, totalling 240 fits
+Fold 1: 0.8571428571428571
+Fold 2: 0.8606271777003485
+Fold 3: 0.867595818815331
+Fold 4: 0.8815331010452961
+Fold 5: 0.8606271777003485
+Fold 6: 0.8461538461538461
+Fold 7: 0.8916083916083916
+Fold 8: 0.8601398601398601
+Fold 9: 0.8671328671328671
+Fold 10: 0.8706293706293706
