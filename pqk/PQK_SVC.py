@@ -5,7 +5,6 @@ import datetime
 
 from qiskit import QuantumCircuit
 from pqk.QMeasures import QMeasures
-from pqk.Circuits import Circuits
 from pqk.CKernels import CKernels
 from sklearn.svm import SVC
 
@@ -18,10 +17,7 @@ class PQK_SVC(SVC):
     #dict for latent space
     _fm_dict = {}
 
-    def ciao(c : int, f : float):
-        pass          
-    
-    
+      
     def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = CKernels.rbf,*,  circuit : QuantumCircuit):
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
