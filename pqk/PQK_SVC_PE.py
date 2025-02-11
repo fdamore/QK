@@ -1,5 +1,3 @@
-from typing import override
-
 from qiskit import QuantumCircuit
 from pqk.PQK_SVC import PQK_SVC
 from pqk.QMeasures import QMeasures
@@ -22,7 +20,7 @@ class PQK_SVC_PE(PQK_SVC):
 
         self.nshots = nshots 
 
-    @override
+    
     def metadata(self):
         print(f'*** CIRCUITS qubit ***')                
         print(self.circuit.draw())

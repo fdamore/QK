@@ -37,7 +37,9 @@ class QMeasures:
         #get the number of shots
         nshots = kargs.get('nshots')
         if nshots is None or type(nshots) is not int:
-            nshots = 100              
+            nshots = 100    
+        
+        #TODO test seed: options={"seed":123}
         
         estimator = PrimitiveEstimator(options={'shots':nshots})         
 
