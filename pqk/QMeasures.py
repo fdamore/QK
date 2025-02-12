@@ -34,14 +34,23 @@ class QMeasures:
     @staticmethod
     def PrimitiveEstimator(qc, observables, **kargs):
 
+        #option for primitive
+        my_options=None
+
         #get the number of shots
         nshots = kargs.get('nshots')
-        if nshots is None or type(nshots) is not int:
-            nshots = 100    
+        if nshots is None or type(nshots) is not int:            
+            nshots = 100
         
-        #TODO test seed: options={"seed":123}
+        #get the number of shots
+        seed = kargs.get('seed')
+        if seed is None or type(seed) is not int:
+            my_options={'shots':nshots}
+        else:             
+            my_options={'shots':nshots, 'seed':seed}                    
+
         
-        estimator = PrimitiveEstimator(options={'shots':nshots})         
+        estimator = PrimitiveEstimator(options=my_options)         
 
         l = []         
 
