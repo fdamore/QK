@@ -7,7 +7,7 @@ from pqk.CKernels import CKernels
 
 class PQK_SVC_PE(PQK_SVC):  
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], c_kernel = CKernels.rbf,*,nshots =100,  circuit : QuantumCircuit):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], c_kernel = CKernels.rbf, shots_seed = None, *,nshots =100,  circuit : QuantumCircuit):
 
         super().__init__(C=C, gamma=gamma, fit_clear=fit_clear, obs=obs, c_kernel=c_kernel,circuit=circuit)
        
@@ -50,7 +50,7 @@ class PQK_SVC_PE(PQK_SVC):
             x1_fm = self._fm_dict[k_x1]
         else:
             x1_qc = self._qEncoding(x1)
-            x1_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x1_qc, nshots = self.nshots)
+            x1_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x1_qc, nshots = self.nshots, seed=shots_seed)
             
             self._fm_dict[k_x1] = x1_fm
 
@@ -60,7 +60,7 @@ class PQK_SVC_PE(PQK_SVC):
             x2_fm = self._fm_dict[k_x2]
         else:
             x2_qc = self._qEncoding(x2)
-            x2_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x2_qc, nshots = self.nshots)  
+            x2_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x2_qc, nshots = self.nshots, seed=shots_seed) 
             self._fm_dict[k_x2] = x2_fm    
 
         #compute kernel
