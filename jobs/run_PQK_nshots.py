@@ -1,4 +1,3 @@
-import datetime
 import sys
 import os
 import time
@@ -17,12 +16,9 @@ from pqk.Circuits import Circuits
 from pqk.QMeasures import QMeasures
 from pqk.CKernels import CKernels
 
-
-
 #set the seed
 np.random.seed(123)
 algorithm_globals.random_seed = 123
-
 
 #quantum stuff: observable, circuit to encoding and number type of function used to measure that uses shots
 my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX',
@@ -33,7 +29,7 @@ q_c = Circuits.xyz_encoded(full_ent=False, n_wire=6)
 #load dataset with panda
 #data are scaled outside the notebook
 f_rate = 0.01 #rate of data sampling fot testing pourpose
-data_file_csv = 'data/env.sel3.sk_sc.csv'
+data_file_csv = '../data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
 
 #DEFINE design matrix
@@ -61,7 +57,7 @@ print(f'Label for test {y_test_np.shape}')
 
 
 #deinf the number of the shots
-n_shots_list = range(10,50,10)
+n_shots_list = range(1,10,1)
 
 #get time
 t_start = time.time()
@@ -70,8 +66,8 @@ list_score = []
 
 for n_shot_ in n_shots_list:
     # Best paramenter: {'C': 32.0, 'gamma': 0.01}
-    pqk = PQK_SVC_PE(C=32, gamma=0.01, circuit=q_c, obs=my_obs, c_kernel=CKernels.rbf, nshots=n_shot_)
-    
+    pqk = PQK_SVC_PE(C=32, gamma=0.01, circuit=q_c, obs=my_obs, c_kernel=CKernels.rbf, nshots=n_shot_, shots_seed=123)
+        
     svm_quantum = pqk.fit(X_train_np, y_train_np)
     #result...
     predictions = svm_quantum.predict(X_test_np)
@@ -89,7 +85,6 @@ t_final = time.time()
 
 
 print(f'Final time {t_final - t_start} seconds')
-
 
 #save info.
 np.savetxt("nhsots.txt", np.array(n_shots_list))

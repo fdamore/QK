@@ -18,8 +18,8 @@ class PQK_SVC_PE(PQK_SVC):
         nshost is the number of shots the Primitive estimation are using
         """ 
 
-        self.nshots = nshots 
-
+        self.nshots = nshots
+        self.shots_seed = shots_seed 
     
     def metadata(self):
         print(f'*** CIRCUITS qubit ***')                
@@ -50,7 +50,7 @@ class PQK_SVC_PE(PQK_SVC):
             x1_fm = self._fm_dict[k_x1]
         else:
             x1_qc = self._qEncoding(x1)
-            x1_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x1_qc, nshots = self.nshots, seed=shots_seed)
+            x1_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x1_qc, nshots = self.nshots, seed=self.shots_seed)
             
             self._fm_dict[k_x1] = x1_fm
 
@@ -60,7 +60,7 @@ class PQK_SVC_PE(PQK_SVC):
             x2_fm = self._fm_dict[k_x2]
         else:
             x2_qc = self._qEncoding(x2)
-            x2_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x2_qc, nshots = self.nshots, seed=shots_seed) 
+            x2_fm = QMeasures.PrimitiveEstimator(observables=obs, qc=x2_qc, nshots = self.nshots, seed=self.shots_seed) 
             self._fm_dict[k_x2] = x2_fm    
 
         #compute kernel
