@@ -37,8 +37,8 @@ Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 
-#split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
+#split design matrix using similar 
+X_train, X_test, y_train, y_test = train_test_split(X, Y, train_size=2580, test_size=280,random_state=123)
 #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
 X_train_np = X_train.to_numpy()
 y_train_np = y_train.to_numpy()
@@ -57,7 +57,7 @@ print(f'Label for test {y_test_np.shape}')
 
 
 #deinf the number of the shots
-n_shots_list = range(1,200,1)
+n_shots_list = range(200,250,1)#run_1
 
 #get time
 t_start = time.time()
@@ -91,5 +91,5 @@ t_final = time.time()
 print(f'Final time {t_final - t_start} seconds')
 
 #save info.
-np.savetxt("nhsots.txt", np.array(n_shots_list))
-np.savetxt("scores.txt", np.array(list_score))
+np.savetxt("nhsots_5.txt", np.array(n_shots_list))
+np.savetxt("scores_5.txt", np.array(list_score))
