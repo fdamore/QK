@@ -65,11 +65,11 @@ C_ = 512
 gamma_ = 1e-7
 
 #deinf the number of the shots
-n_shots_list = range(1,50,1)#run_1
+n_shots_list = range(150,200,1)#run_1
 
 for n_shot_ in n_shots_list:       
 
-    q_kernel = FidelityStatevectorKernel(feature_map=fm, shots= n_shot_)
+    q_kernel = FidelityStatevectorKernel(feature_map=fm, shots=n_shot_) 
     svm_quantum = QSVC(quantum_kernel=q_kernel)
 
     svm_quantum.fit(X_train, y_train)
@@ -92,5 +92,5 @@ t_final = time.time()
 print(f'Final time {t_final - t_start} seconds')
 
 #save info.
-np.savetxt("nhsots_1.txt", np.array(n_shots_list))
-np.savetxt("scores_1.txt", np.array(list_score))
+np.savetxt("nhsots_4.txt", np.array(n_shots_list))
+np.savetxt("scores_4.txt", np.array(list_score))
