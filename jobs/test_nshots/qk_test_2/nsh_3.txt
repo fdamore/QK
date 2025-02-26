@@ -1,0 +1,7 @@
+Using dataset in datafile: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Training shape dataset (2580, 6)
+Label for traing (2580,)
+Test shape dataset (280, 6)
+Label for test (280,)
+Final time 8215.918659687042 seconds
