@@ -97,7 +97,7 @@ y_train_np = Y.to_numpy()
 params_grid = {'C': 2.**np.arange(1,12,2),
         'gamma': 10**np.arange(-7,0.,2)}
 
-pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel=CKernels.rbf)
+pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel='rbf')
 #print metadata
 pqk.metadata()
 
@@ -156,7 +156,7 @@ with open(f'jobs/scores/accuracy' + id_string + '.txt', "w+") as file:
     file.write(f'Entangling layer: {full_ent}\n')    
     file.write(f'Required observables: {pqk.obs}\n')
     file.write(f'Measure procedure: {pqk.measure_fn.__name__}\n')
-    file.write(f'CKernel function used: {pqk.c_kernel.__name__}\n')
+    file.write(f'CKernel function used: {pqk.c_kernel}\n')
     file.write(f'Best parameter: {grid.best_params_}\n')
     file.write(f'Clear cache: {clear_cache}\n')
     file.write(f'N job param = {nj}\n')

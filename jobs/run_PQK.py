@@ -28,7 +28,7 @@ my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX','YIIIII', 'IYI
 
 q_c = Circuits.xyz_encoded(full_ent=False, n_wire=6)
 
-pqk = PQK_SVC(C=32, gamma=0.01, circuit=q_c, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel=CKernels.rbf)
+pqk = PQK_SVC(C=32, gamma=0.01, circuit=q_c, obs=my_obs, measure_fn=QMeasures.StateVectorEstimator, c_kernel='linear')
 
 #my_obs = ['XIIIII', 'IXIIII','IIXIII', 'IIIXII','IIIIXI','IIIIIX']
 #my_obs = ['YIIIII', 'IYIIII','IIYIII', 'IIIYII','IIIIYI','IIIIIY']

@@ -18,7 +18,7 @@ class PQK_SVC(SVC):
     _fm_dict = {}
 
       
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = CKernels.rbf,*,  circuit : QuantumCircuit):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',*,  circuit : QuantumCircuit):
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
 
@@ -26,7 +26,7 @@ class PQK_SVC(SVC):
         obs are the observation used to project state vector back to classical space
         circuit is the quantum circuit used for encode classical data
         measure_fn is the measure procedure used to get evs to encoded states
-        c_kernel is the used classical kernel        
+        pqk_kernel is the used classical kernel        
         """
 
         #clear the cache before fit
@@ -36,7 +36,17 @@ class PQK_SVC(SVC):
         self.obs = obs       
         self.measure_fn = measure_fn
         self.c_kernel = c_kernel         
-        self.circuit = circuit
+        self.circuit = circuit       
+
+    def _pqk_compute_kernel(self, x1, x2):
+        '''
+        Compute the required kernel
+        '''
+        if self.c_kernel not in ['rbf', 'linear'] or self.c_kernel == 'rbf':
+            return CKernels.rbf(x1, x2, self.gamma)
+        
+        if self.c_kernel == 'linear':
+            return CKernels.linear(x1, x2)    
                 
 
 
@@ -45,7 +55,7 @@ class PQK_SVC(SVC):
         print(self.circuit.draw())
         print(f'*** Required observables: {self.obs}')
         print(f'*** Measure procedure: {self.measure_fn.__name__}')
-        print(f'*** CKernel function used: {self.c_kernel.__name__}')
+        print(f'*** CKernel function used: {self.c_kernel}')
         print(f'Param: {self.get_params}')
         print(f'Qubits: {self.circuit.num_qubits}')
         return ""
@@ -87,7 +97,7 @@ class PQK_SVC(SVC):
 
         #compute kernel
         #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
-        k_computed = self.c_kernel(x1_fm, x2_fm)
+        k_computed = self._pqk_compute_kernel(x1_fm, x2_fm)
         return k_computed
     
     
