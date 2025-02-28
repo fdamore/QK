@@ -7,7 +7,7 @@ from pqk.CKernels import CKernels
 
 class PQK_SVC_PE(PQK_SVC):  
     
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], c_kernel = CKernels.rbf, shots_seed = None, *,nshots =100,  circuit : QuantumCircuit):
+    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], c_kernel = 'rbf', shots_seed = None, *,nshots =100,  circuit : QuantumCircuit):
 
         super().__init__(C=C, gamma=gamma, fit_clear=fit_clear, obs=obs, c_kernel=c_kernel,circuit=circuit)
        
@@ -27,7 +27,7 @@ class PQK_SVC_PE(PQK_SVC):
         print(f'*** Required observables: {self.obs}')     
         print(f'*** Measure procedure: {QMeasures.PrimitiveEstimator.__name__}')
         print(f'*** Measure function used: { self.measure_fn.__name__}')   
-        print(f'*** CKernel function used: {self.c_kernel.__name__}')
+        print(f'*** CKernel function used: {self.c_kernel}')
         print(f'Param: {self.get_params}')
         print(f'Qubits: {self.circuit.num_qubits}')        
         return ""
@@ -65,7 +65,7 @@ class PQK_SVC_PE(PQK_SVC):
 
         #compute kernel
         #k_computed = np.dot(x1_fm, x1_fm) #uise this for linear kernel
-        k_computed = self.c_kernel(x1_fm, x2_fm)
+        k_computed = self._pqk_compute_kernel(x1_fm, x2_fm)
         return k_computed
     
     
