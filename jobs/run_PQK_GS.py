@@ -167,7 +167,7 @@ with open(f'jobs/scores/accuracy' + id_string + '.txt', "w+") as file:
     file.write(f'Shape of training dataset {X_train_np.shape}\n')
     file.write(f'Shape of training labels {y_train_np.shape}\n')
     file.write(f'Seed: {seed}\n')
-    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates, totalling 240 fits\n')
+    file.write(f'Fitting {nfolds} folds for each of {len(ParameterGrid(grid.param_grid))} candidates\n')
     for i in range(nfolds):
         file.write(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}\n")
 
