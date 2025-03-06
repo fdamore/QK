@@ -94,12 +94,8 @@ X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 X_train_np = X.to_numpy()
 y_train_np = Y.to_numpy()
 
-params_grid = {'C': 2.**np.arange(1,12,2),
-         'gamma': 10**np.arange(-7,0.,2)}
-
-
-
-
+params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 
+               'gamma': [0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 5.0, 7.0, 8.0]}
 
 pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel='rbf')
 #print metadata

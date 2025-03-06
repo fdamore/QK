@@ -35,9 +35,8 @@ class PQK_SVC(SVC):
 
 
         #set the initial enconding
-        self._fm_dict = _fm_dict 
-
-        print(len(self._fm_dict))      
+        self._fm_dict = _fm_dict
+                    
 
     def _pqk_compute_kernel(self, x1, x2):
         '''
