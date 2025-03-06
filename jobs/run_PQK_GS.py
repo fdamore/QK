@@ -105,8 +105,6 @@ pqk.metadata()
 pqk.fit(X_train_np, y_train_np)
 
 
-
-
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
 grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=nfolds)
 
