@@ -15,19 +15,14 @@ class PQK_SVC(SVC):
 
 
     #dict for latent space
-    _fm_dict = {}
+    _fm_dict = {}   
 
       
-    def __init__(self,C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',*,  circuit : QuantumCircuit):
+    def __init__(self, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
+                 _fm_dict = {}, *,  circuit : QuantumCircuit):
         
-        super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)
-
-        """         
-        obs are the observation used to project state vector back to classical space
-        circuit is the quantum circuit used for encode classical data
-        measure_fn is the measure procedure used to get evs to encoded states
-        pqk_kernel is the used classical kernel        
-        """
+        
+        super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)               
 
         #clear the cache before fit
         self.fit_clear = fit_clear       
@@ -36,7 +31,13 @@ class PQK_SVC(SVC):
         self.obs = obs       
         self.measure_fn = measure_fn
         self.c_kernel = c_kernel         
-        self.circuit = circuit       
+        self.circuit = circuit
+
+
+        #set the initial enconding
+        self._fm_dict = _fm_dict 
+
+        print(len(self._fm_dict))      
 
     def _pqk_compute_kernel(self, x1, x2):
         '''
@@ -156,7 +157,15 @@ class PQK_SVC(SVC):
         #print the related time stamp. 
         print(f'Timestamp of the file storing data: {formatted_datetime}')
     
+
+    def get_q_encoding(self):
+        '''
+        get latent space
+        '''
+        return self._fm_dict
     
+
+
     def fit(self, X, y):
         
         """
