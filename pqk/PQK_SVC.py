@@ -19,7 +19,7 @@ class PQK_SVC(SVC):
 
       
     def __init__(self, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
-                 _fm_dict = {}, init_stamp = True, *,  circuit : QuantumCircuit):
+                 _fm_dict = {}, pqk_verbose = True, *,  circuit : QuantumCircuit):
         
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)               
@@ -34,12 +34,14 @@ class PQK_SVC(SVC):
         self.circuit = circuit
 
         #set the initial enconding
-        self._fm_dict = _fm_dict
+        self._fm_dict = _fm_dict        
 
-        self.init_stamp = init_stamp
+        self.pqk_verbose = pqk_verbose
 
-        if init_stamp:
-            print(f'Create PQK with encoding lenght: {len(self._fm_dict)}')
+        if self.pqk_verbose:
+            print(f'Init with encoding lenght: {len(self._fm_dict)}')
+
+        
 
         
 
@@ -174,7 +176,10 @@ class PQK_SVC(SVC):
         
         """
         need to reimplements fit in order to manage the latent cache
-        """        
+        """
+
+        if self.pqk_verbose:
+            print(f'Fit PQK with encoding lenght: {len(self._fm_dict)}')        
 
         if len(self.obs) == 0:
             print('WARNING: provide observables')
