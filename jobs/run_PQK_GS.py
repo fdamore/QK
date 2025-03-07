@@ -29,7 +29,7 @@ measure_fn_key = 'CPU'
 #cv parameters
 nfolds = 3 #set number of folds in CV
 f_rate = .02 #rate of data sampling fot testing pourpose
-nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
+nj = 3     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 encoding_dict = {
     'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6),   # change to 3d ? 
@@ -101,7 +101,7 @@ pqk = PQK_SVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my
 #print metadata
 pqk.metadata()
  
-#run pqk to get the enconding
+#run pqk to pre compute the enconding
 pqk.fit(X_train_np, y_train_np)
 
 

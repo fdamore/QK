@@ -19,7 +19,7 @@ class PQK_SVC(SVC):
 
       
     def __init__(self, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
-                 _fm_dict = {}, pqk_verbose = True, *,  circuit : QuantumCircuit):
+                 pqk_verbose = True, *,  circuit : QuantumCircuit):
         
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)               
@@ -31,19 +31,10 @@ class PQK_SVC(SVC):
         self.obs = obs       
         self.measure_fn = measure_fn
         self.c_kernel = c_kernel         
-        self.circuit = circuit
+        self.circuit = circuit           
 
-        #set the initial enconding
-        self._fm_dict = _fm_dict        
-
-        self.pqk_verbose = pqk_verbose
-
-        if self.pqk_verbose:
-            print(f'Init with encoding lenght: {len(self._fm_dict)}')
-
-        
-
-        
+        self.pqk_verbose = pqk_verbose      
+      
 
     def _pqk_compute_kernel(self, x1, x2):
         '''
