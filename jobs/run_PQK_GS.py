@@ -23,11 +23,11 @@ algorithm_globals.random_seed = seed
 
 #circuit paramenters
 full_ent=False
-encoding_key = 'IQP'
+encoding_key = 'zz'
 my_obs_key = 'ADJAC_2QUB'
 measure_fn_key = 'CPU'
 #cv parameters
-nfolds = 10 #set number of folds in CV
+nfolds = 3 #set number of folds in CV
 f_rate = .02 #rate of data sampling fot testing pourpose
 nj = -1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
