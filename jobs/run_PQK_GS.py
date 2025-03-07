@@ -104,9 +104,13 @@ pqk.metadata()
 #run pqk to pre compute the enconding
 pqk.fit(X_train_np, y_train_np)
 
+pqk_g = PQK_SVC(_fm_dict=pqk._fm_dict,
+                 circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel='rbf')
+
+
 
 #Create the GridSearchCV object (be carefull... it uses all processors on the host machine if you use n_jopbs = -1)
-grid = GridSearchCV(pqk, params_grid, verbose=1, n_jobs=nj, cv=nfolds)
+grid = GridSearchCV(pqk_g, params_grid, verbose=1, n_jobs=nj, cv=nfolds)
 
 
 print('***INFO RUN***')
@@ -157,9 +161,9 @@ with open(f'jobs/scores/accuracy' + id_string + '.txt', "w+") as file:
     file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
     file.write(f'Feature map: {encoding_dict[encoding_key].name}\n')
     file.write(f'Entangling layer: {full_ent}\n')    
-    file.write(f'Required observables: {pqk.obs}\n')
-    file.write(f'Measure procedure: {pqk.measure_fn.__name__}\n')
-    file.write(f'CKernel function used: {pqk.c_kernel}\n')
+    file.write(f'Required observables: {pqk_g.obs}\n')
+    file.write(f'Measure procedure: {pqk_g.measure_fn.__name__}\n')
+    file.write(f'CKernel function used: {pqk_g.c_kernel}\n')
     file.write(f'Best parameter: {grid.best_params_}\n')
     file.write(f'Clear cache: {clear_cache}\n')
     file.write(f'N job param = {nj}\n')

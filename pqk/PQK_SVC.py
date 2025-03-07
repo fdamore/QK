@@ -18,7 +18,7 @@ class PQK_SVC(SVC):
     _fm_dict = {}   
 
       
-    def __init__(self, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
+    def __init__(self,_fm_dict = {}, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
                  pqk_verbose = True, *,  circuit : QuantumCircuit):
         
         
@@ -33,7 +33,9 @@ class PQK_SVC(SVC):
         self.c_kernel = c_kernel         
         self.circuit = circuit           
 
-        self.pqk_verbose = pqk_verbose      
+        self.pqk_verbose = pqk_verbose
+        self._fm_dict = _fm_dict
+        
       
 
     def _pqk_compute_kernel(self, x1, x2):
