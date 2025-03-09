@@ -1,3 +1,0 @@
-Quantum feature Map - Container
-
-The folder contains data encoded using quantum circuits provided in  qke/qproc

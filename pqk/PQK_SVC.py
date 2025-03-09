@@ -117,7 +117,7 @@ class PQK_SVC(SVC):
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
-        csv_file = '../qfm/' + prefix + str(formatted_datetime) + '.csv'        
+        csv_file = '../qfm/fm/' + prefix + str(formatted_datetime) + '.csv'        
         
         main_path = os.path.dirname(__file__)
         file_path = os.path.join(main_path, csv_file)
@@ -135,7 +135,7 @@ class PQK_SVC(SVC):
         print(f'Timestamp of the file storing data: {formatted_datetime}')
     
 
-    def save_latent_space(self, prefix = '', *, y):
+    def save_latent_space(self, prefix = '',suffix = 'csv', *, y):
         '''
         Save latent space
         '''
@@ -143,7 +143,7 @@ class PQK_SVC(SVC):
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
-        csv_file = '../qfm/lt_space/' + prefix + str(formatted_datetime) + '.csv' 
+        csv_file = '../qfm/fm/qencoding/' + prefix + str(formatted_datetime) + '.' + suffix 
 
         main_path = os.path.dirname(__file__)
         file_path = os.path.join(main_path, csv_file)               
