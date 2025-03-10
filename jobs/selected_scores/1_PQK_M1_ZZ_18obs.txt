@@ -1,0 +1,23 @@
+Accuracy (95% confidence) = 0.750121 +/- 0.021474 == [0.728646, 0.771595]
+
+2025-03-10 10:00:25
+295.5 seconds elapsed.
+Best parameter: {'C': 2.0, 'gamma': 20.0, 'kernel': 'rbf'}
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': [0.25, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 20.0], 'kernel': ['rbf']}
+Source file: qfm/fm/qencoding/QC_ZZ_OBS_XYZ.csv
+Shape of dataset: (2865, 19)
+Shape of training dataset (2865, 18)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 144 candidates.
+Fold 1: 0.7317073170731707
+Fold 2: 0.7421602787456446
+Fold 3: 0.7177700348432056
+Fold 4: 0.7491289198606271
+Fold 5: 0.7142857142857143
+Fold 6: 0.7762237762237763
+Fold 7: 0.7902097902097902
+Fold 8: 0.6958041958041958
+Fold 9: 0.7972027972027972
+Fold 10: 0.7867132867132867

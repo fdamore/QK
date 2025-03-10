@@ -19,11 +19,20 @@ np.random.seed(seed)
 nfolds = 10 #set number of folds in CV
 f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
+
 #source_file = 'data/env.sel3.sk_sc.csv'
-source_file = 'qfm/fm/qencoding/QC_xyz_OBS_XYZ_ENT_FALSE.csv'
-
-
-
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_XYZ_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_XYZ_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_XYZ_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_M2_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M2.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
 
 def get_origin_data(f_rate, source_file) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
 
