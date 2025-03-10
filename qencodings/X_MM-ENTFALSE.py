@@ -6,7 +6,7 @@ sys.path.append(current_wd)
 
 from pqk.Circuits import Circuits
 import pandas as pd
-from pqk.aux_funcs import generate_my_obs
+from pqk.aux_funcs import adjacent_qub_obs, generate_my_obs
 from pqk.QEncoding import QEncoding
 
 source_file = 'data/env.sel3.sk_sc.csv'
@@ -25,16 +25,20 @@ print(f'Data: {X__np.shape}')
 print(f'Label: {y_np.shape}')
 
 #generate obs
-obs = generate_my_obs(['X','Y','Z'], n_qub=6)
-print(f'Observations: used to project quantum states: {obs}')
+obs_m1 = generate_my_obs(['X','Y','Z'], n_qub=6)
+obs_m2 = adjacent_qub_obs(['X','Y','Z'], n_qub=6, n_measured_qub=2)
+obs_m1_m2 = obs_m1 + obs_m2
+
+print(f'Observations: used to project quantum states: {obs_m1_m2}')
+print(f'Number of observations: {len(obs_m1_m2)}')
 
 #used circuits
-qc =  Circuits.Trotter_HuangE3(n_wire=6)
+qc =  Circuits.xyz_encoded(n_wire=6, full_ent=True)
 print(qc.draw('text'))
 
-q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
+q_enc = QEncoding(data=X__np, obs=obs_m1_m2, qcircuit=qc)
 en = q_enc.encode()
 
-q_enc.save_encoding(file_name='QC_TROTTER_OBS_XYZ.csv',y_label= y_np)
+q_enc.save_encoding(file_name='QC_X_OBS_MM_ENT_FALSE.csv',y_label= y_np)
 
 

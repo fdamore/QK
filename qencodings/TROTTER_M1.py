@@ -29,12 +29,12 @@ obs = generate_my_obs(['X','Y','Z'], n_qub=6)
 print(f'Observations: used to project quantum states: {obs}')
 
 #used circuits
-qc =  Circuits.xyz_encoded(n_wire=6, full_ent=False)
+qc =  Circuits.Trotter_HuangE3(n_wire=6)
 print(qc.draw('text'))
 
 q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
 en = q_enc.encode()
 
-q_enc.save_encoding(file_name='QC_xyz_OBS_XYZ_ENT_FALSE.csv',y_label= y_np)
+q_enc.save_encoding(file_name='QC_TROTTER_OBS_M1.csv',y_label= y_np)
 
 

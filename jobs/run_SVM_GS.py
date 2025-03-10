@@ -21,9 +21,9 @@ f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 #source_file = 'data/env.sel3.sk_sc.csv'
-#source_file = 'qfm/fm/qencoding/QC_3D_OBS_XYZ_ENT_FALSE.csv'
-#source_file = 'qfm/fm/qencoding/QC_X_OBS_XYZ_ENT_FALSE.csv'
-#source_file = 'qfm/fm/qencoding/QC_3D_OBS_XYZ_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_TRUE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_XYZ.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_XYZ.csv'
 #source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_XYZ.csv'
@@ -32,7 +32,17 @@ nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROC
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M2.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M2.csv'
-source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_MM_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_MM.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_MM.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
+
+
+
+
 
 def get_origin_data(f_rate, source_file) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
 
@@ -78,6 +88,8 @@ id_string = f'_SVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_r
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
+print(f'File with data: {source_file}')
+
 
 # define grid search strategy
 #Create a dictionary of possible parameters

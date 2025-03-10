@@ -29,12 +29,12 @@ obs = generate_my_obs(['X','Y','Z'], n_qub=6)
 print(f'Observations: used to project quantum states: {obs}')
 
 #used circuits
-qc =  Circuits.xyz_encoded(n_wire=6, full_ent=True)
+qc =  Circuits.zzfeaturemap(n_wire=6, full_ent=False)
 print(qc.draw('text'))
 
 q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
 en = q_enc.encode()
 
-q_enc.save_encoding(file_name='QC_3D_OBS_XYZ_ENT_TRUE.csv',y_label= y_np)
+q_enc.save_encoding(file_name='QC_ZZ_OBS_M1.csv',y_label= y_np)
 
 
