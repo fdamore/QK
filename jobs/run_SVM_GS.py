@@ -2,8 +2,7 @@
 import pandas as pd
 import time
 from sklearn.svm import SVC
-from sklearn.model_selection import GridSearchCV, train_test_split, ParameterGrid
-from sklearn.metrics import accuracy_score, classification_report
+from sklearn.model_selection import GridSearchCV, ParameterGrid
 import numpy as np
 from datetime import datetime
 import sys
@@ -21,21 +20,65 @@ nfolds = 10 #set number of folds in CV
 f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
-#load dataset with panda
-#data are scaled outside the notebook
-#sclaled_data_file = 'data/env.sel3.scaled.csv'
-#data_file_csv = 'data/env.sel3.scaled.csv' 
-data_file_csv = 'data/env.sel3.sk_sc.csv'
-env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)  
+#source_file = 'data/env.sel3.sk_sc.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_M2_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_MM_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_TRUE.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_MM.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_MM.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
 
 
-#DEFINE design matrix
-Y = env['occupancy']
-X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
-#WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
-X_train_np = X.to_numpy()
-y_train_np = Y.to_numpy()
+
+
+def get_origin_data(f_rate, source_file) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
+
+    #load dataset with panda    
+    data_file_csv = source_file
+    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)      
+
+    #DEFINE design matrix
+    Y = env['occupancy']
+    X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
+
+    #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
+    X_train_np = X.to_numpy()
+    y_train_np = Y.to_numpy()
+
+    return (X_train_np,y_train_np,env)
+
+def get_qencoded_data(f_rate, source_file) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
+
+    #load dataset with panda
+    data_file_csv = source_file
+    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=123)      
+
+    #DEFINE design matrix
+    Y = env['label']
+    X = env[env.columns.difference(['label'])]
+    
+    #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
+    X_train_np = X.to_numpy()
+    y_train_np = Y.to_numpy()
+
+    return (X_train_np,y_train_np,env)
+
+#get origin data
+#X_train_np,y_train_np,env = get_origin_data(f_rate, source_file)
+X_train_np,y_train_np,env = get_qencoded_data(f_rate, source_file)
 
 # defining a unique label for the simulation 
 id_string = f'_SVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_rate}'
@@ -45,6 +88,8 @@ id_string = f'_SVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_r
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
+print(f'File with data: {source_file}')
+
 
 # define grid search strategy
 #Create a dictionary of possible parameters
@@ -98,7 +143,7 @@ with open(f'jobs/scores/accuracy' + id_string + '.txt', "w") as file:
     file.write(f'N job param = {nj}\n')
     file.write(f'GridSearch Dict: {params_grid}\n')
     #check the shape of test and training dataset
-    file.write(f'Source file: {data_file_csv}\n')
+    file.write(f'Source file: {source_file}\n')
     file.write(f'Shape of dataset: {env.shape}\n')
     file.write(f'Shape of training dataset {X_train_np.shape}\n')
     file.write(f'Shape of training labels {y_train_np.shape}\n')

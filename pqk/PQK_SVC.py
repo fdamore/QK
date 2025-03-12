@@ -18,8 +18,8 @@ class PQK_SVC(SVC):
     _fm_dict = {}   
 
       
-    def __init__(self, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
-                 _fm_dict = {}, pqk_verbose = True, *,  circuit : QuantumCircuit):
+    def __init__(self,_fm_dict = {}, C = 1, gamma = 0.5, fit_clear = True, obs = ['Z'], measure_fn = QMeasures.StateVectorEstimator, c_kernel = 'rbf',
+                 pqk_verbose = True, *,  circuit : QuantumCircuit):
         
         
         super().__init__(C=C, gamma=gamma, kernel=self._kernel_matrix)               
@@ -31,19 +31,12 @@ class PQK_SVC(SVC):
         self.obs = obs       
         self.measure_fn = measure_fn
         self.c_kernel = c_kernel         
-        self.circuit = circuit
-
-        #set the initial enconding
-        self._fm_dict = _fm_dict        
+        self.circuit = circuit           
 
         self.pqk_verbose = pqk_verbose
-
-        if self.pqk_verbose:
-            print(f'Init with encoding lenght: {len(self._fm_dict)}')
-
+        self._fm_dict = _fm_dict
         
-
-        
+      
 
     def _pqk_compute_kernel(self, x1, x2):
         '''
@@ -124,7 +117,7 @@ class PQK_SVC(SVC):
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
-        csv_file = '../qfm/' + prefix + str(formatted_datetime) + '.csv'        
+        csv_file = '../qfm/fm/' + prefix + str(formatted_datetime) + '.csv'        
         
         main_path = os.path.dirname(__file__)
         file_path = os.path.join(main_path, csv_file)
@@ -142,7 +135,7 @@ class PQK_SVC(SVC):
         print(f'Timestamp of the file storing data: {formatted_datetime}')
     
 
-    def save_latent_space(self, prefix = '', *, y):
+    def save_latent_space(self, prefix = '',suffix = 'csv', *, y):
         '''
         Save latent space
         '''
@@ -150,7 +143,7 @@ class PQK_SVC(SVC):
         current_timestamp = time.time()
         datetime_object = datetime.datetime.fromtimestamp(current_timestamp)
         formatted_datetime = datetime_object.strftime("%Y%m%d%H%M%S")
-        csv_file = '../qfm/lt_space/' + prefix + str(formatted_datetime) + '.csv' 
+        csv_file = '../qfm/fm/qencoding/' + prefix + str(formatted_datetime) + '.' + suffix 
 
         main_path = os.path.dirname(__file__)
         file_path = os.path.join(main_path, csv_file)               
