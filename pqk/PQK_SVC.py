@@ -171,15 +171,17 @@ class PQK_SVC(SVC):
         need to reimplements fit in order to manage the latent cache
         """
 
-        if self.pqk_verbose:
-            print(f'Fit PQK with encoding lenght: {len(self._fm_dict)}')        
+               
 
         if len(self.obs) == 0:
             print('WARNING: provide observables')
         
         #clear the cache
         if self.fit_clear:
-            self._fm_dict.clear()      
+            self._fm_dict.clear()  
+
+        if self.pqk_verbose:
+            print(f'Fit PQK with encoding lenght: {len(self._fm_dict)}')     
 
         super().fit(X=X, y=y)       
                 
