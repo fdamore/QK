@@ -1,0 +1,64 @@
+/home/damore/git/QK
+File used for this run: ./data/env.sel3.sk_sc.csv
+Fraction rate used for this run: 100%
+Shape of dataset: (2865, 7)
+Training shape dataset (2580, 6)
+Label for traing (2580,)
+Test shape dataset (280, 6)
+Label for test (280,)
+Clear cache? True
+C: 8
+Gamma: 5
+OBS: ['XXIIII', 'IXXIII', 'IIXXII', 'IIIXXI', 'IIIIXI', 'XIIIIX', 'YYIIII', 'IYYIII', 'IIYYII', 'IIIYYI', 'IIIIYY', 'YIIIIY', 'ZZIIII', 'IZZIII', 'IIZZII', 'IIIZZI', 'IIIIZZ', 'ZIIIIZ']
+Quantum C: ZZFeatureMap
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Fit PQK with encoding lenght: 0
+Final time 53879.789912223816 seconds
