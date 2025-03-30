@@ -8,7 +8,7 @@ class QEncoding:
 
 
     
-    def __init__(self, *,qcircuit: QuantumCircuit, obs = 'Z', data: np.ndarray):
+    def __init__(self, *,qcircuit: QuantumCircuit, obs = 'Z', data: np.ndarray, use_pe = False):
         """
         Initializes the QEncoding object.
 
@@ -20,18 +20,25 @@ class QEncoding:
         self.qcircuit = qcircuit
         self.obs = obs  # Store the observable.
         self.data = data
-
+        self.use_pe = use_pe
         # Dictionary to store the encoded data
         self.encoded_data = []    
 
 
     
-    def encode(self):
+    def encode(self, nshots = 100, shots_seed = 123):
         """
         Encodes the data using the quantum circuit.
 
         Iterates over each data point in self.data, assigns it as parameters to the 
         quantum circuit, and stores the bound circuit and the associated key in a dictionary.
+        
+        nshots: Number of shots for PrivateEstimator. ignored if self.use_pe is False. 
+        shots_seed: Seed for PrivateEstimator. ignored if self.use_pe is False        
+
+        Returns:
+            None
+        
         """
         if self.data is None or len(self.data) == 0:
             print("Warning: No data provided for encoding.")
@@ -46,7 +53,10 @@ class QEncoding:
                 bound_circuit = self.qcircuit.assign_parameters(data_point, inplace=False)
 
                 #measure
-                res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
+                if self.use_pe:
+                    res =  QMeasures.PrimitiveEstimator(bound_circuit, self.obs, nshots = nshots, seed= shots_seed)
+                else:
+                    res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
 
                 # Store the bound circuit in the dictionary.
                 self.encoded_data.append(res)
@@ -59,12 +69,18 @@ class QEncoding:
         return self.encoded_data
     
 
-    def save_encoding(self, y_label: np.ndarray, file_name: str) -> pd.DataFrame:
+    def save_encoding(self, y_label: np.ndarray, file_name: str = 'enc.csv', save_on_disk: bool = True) -> pd.DataFrame:
         #recreate data frame from encoding 
         df = pd.DataFrame(self.encoded_data)
         df['label'] = y_label.tolist()
-        df.to_csv(file_name, index=False)
+
+        if save_on_disk:
+            df.to_csv(file_name, index=False)
 
         return df
+    
+    def get_encoding(self, y_label: np.ndarray):
+        return self.save_encoding(y_label=y_label, save_on_disk=False)
+
 
 
