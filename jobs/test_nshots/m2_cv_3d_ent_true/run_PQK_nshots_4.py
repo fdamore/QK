@@ -34,10 +34,10 @@ env = pd.read_csv(source_file).sample(frac=f_rate, random_state=123)
 #env = pd.read_csv(source_file)
 
 #DEFINE design matrix
-Y = env['occupancy']
-X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
-X_np = X.to_numpy()
-y_np = Y.to_numpy()
+Y_env = env['occupancy']
+X_env = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
+X_np = X_env.to_numpy()
+y_np = Y_env.to_numpy()
 
 #Best parameter: {'C': 2, 'gamma': 4.0, 'kernel': 'rbf'}
 #define hyperparamenter PQK_M2_ENT_TRUE_18obs
@@ -80,8 +80,7 @@ for n_shot_ in n_shots_list:
     X = env_encoded.loc[:,0:17]     
     
     clf = SVC(C=C_, gamma=gamma_, kernel='rbf')
-    scores = cross_val_score(clf, X, Y, cv=nfolds)
-
+    scores = cross_val_score(clf, X=X, y=Y, cv=nfolds)
     score = scores.mean()     
 
     list_score.append(score)

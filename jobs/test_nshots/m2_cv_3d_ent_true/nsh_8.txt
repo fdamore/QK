@@ -1,0 +1,126 @@
+/home/damore/git/QK
+Shape of data to encode:
+Data: (2865, 6)
+Label: (2865,)
+Observations: used to project quantum states: ['XXIIII', 'IXXIII', 'IIXXII', 'IIIXXI', 'IIIIXI', 'XIIIIX', 'YYIIII', 'IYYIII', 'IIYYII', 'IIIYYI', 'IIIIYY', 'YIIIIY', 'ZZIIII', 'IZZIII', 'IIZZII', 'IIIZZI', 'IIIIZZ', 'ZIIIIZ']
+     ┌───────────┐┌───────────┐┌───────────┐                         ┌───┐
+q_0: ┤ Rx(phi_0) ├┤ Ry(phi_0) ├┤ Rz(phi_0) ├──■──────────────────────┤ X ├
+     ├───────────┤├───────────┤├───────────┤┌─┴─┐                    └─┬─┘
+q_1: ┤ Rx(phi_1) ├┤ Ry(phi_1) ├┤ Rz(phi_1) ├┤ X ├──■───────────────────┼──
+     ├───────────┤├───────────┤├───────────┤└───┘┌─┴─┐                 │  
+q_2: ┤ Rx(phi_2) ├┤ Ry(phi_2) ├┤ Rz(phi_2) ├─────┤ X ├──■──────────────┼──
+     ├───────────┤├───────────┤├───────────┤     └───┘┌─┴─┐            │  
+q_3: ┤ Rx(phi_3) ├┤ Ry(phi_3) ├┤ Rz(phi_3) ├──────────┤ X ├──■─────────┼──
+     ├───────────┤├───────────┤├───────────┤          └───┘┌─┴─┐       │  
+q_4: ┤ Rx(phi_4) ├┤ Ry(phi_4) ├┤ Rz(phi_4) ├───────────────┤ X ├──■────┼──
+     ├───────────┤├───────────┤├───────────┤               └───┘┌─┴─┐  │  
+q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├────────────────────┤ X ├──■──
+     └───────────┘└───────────┘└───────────┘                    └───┘     
+File used for this run: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Number of folds of the CV 10
+C: 2
+Gamma: 4
+OBS: ['XXIIII', 'IXXIII', 'IIXXII', 'IIIXXI', 'IIIIXI', 'XIIIIX', 'YYIIII', 'IYYIII', 'IIYYII', 'IIIYYI', 'IIIIYY', 'YIIIIY', 'ZZIIII', 'IZZIII', 'IIZZII', 'IIIZZI', 'IIIIZZ', 'ZIIIIZ']
+Quantum C: XYZ
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Encoding 2865 data point
+End data encoding
+Final time 4681.347819805145 seconds
