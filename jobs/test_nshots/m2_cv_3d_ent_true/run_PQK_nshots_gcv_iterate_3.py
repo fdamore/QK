@@ -48,7 +48,7 @@ params_grid = {
     'kernel':['rbf'] 
     }
 nfolds = 10 #set number of folds in CV
-n_shot_ = 250 #number of shots
+
 
 #print some info about runs and simulation
 print('Shape of data to encode:')
@@ -61,54 +61,58 @@ print(f'Shape of dataset: {env.shape}')
 print(f'Number of folds of the CV {nfolds}')
 print(f'OBS: {my_obs}')
 print(f'Quantum C: {q_c.name}')
-print(f'Number of shots: {n_shot_}')
+
+
+#deinf the number of the shots
+n_shots_list = range(100,150,1)#run_1
 
 #get time
 t_start = time.time()
 
+list_score = []
+
+for n_shot_ in n_shots_list:
+
+    q_enc = QEncoding(data=X_np, obs=my_obs, qcircuit=q_c, use_pe=True)
+    q_enc.encode(nshots=n_shot_, shots_seed=123)
+    env_encoded = q_enc.get_encoding(y_label=y_np)    
+
+    #DEFINE design matrix
+    Y = env_encoded['label']
+    X = env_encoded.loc[:,0:17]     
+
+    grid = GridSearchCV(SVC(), params_grid, verbose=1, cv=nfolds)
+
+    #get time
+    t_start = time.time()
+
+    #Fit the data with the best possible parameters
+    grid_clf = grid.fit(X=X, y=Y)
+
+    #get time training
+    t_training = time.time()
+        
+    #get time training
+    t_training = time.time()
 
 
-q_enc = QEncoding(data=X_np, obs=my_obs, qcircuit=q_c, use_pe=True)
-q_enc.encode(nshots=n_shot_, shots_seed=123)
-env_encoded = q_enc.get_encoding(y_label=y_np)    
 
-#DEFINE design matrix
-Y = env_encoded['label']
-X = env_encoded.loc[:,0:17]     
+    # taking the largest average accuracy of the grid search and the corresponding standard dev.
+    cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
+    cv_std = grid.cv_results_['std_test_score'][grid.best_index_]
 
-grid = GridSearchCV(SVC(), params_grid, verbose=1, cv=nfolds)
+    list_score.append(cv_mean)
 
-#get time
-t_start = time.time()
+#final time (trainign + predict)
+t_final = time.time()
 
-#Fit the data with the best possible parameters
-grid_clf = grid.fit(X=X, y=Y)
 
-#get time training
-t_training = time.time()
-    
-#get time training
-t_training = time.time()
+print(f'Final time {t_final - t_start} seconds')
 
-#Print the best estimator with it's parameters
-print(f'Best paramenter: {grid.best_params_}')
-print(f'Time training: {t_training - t_start} seconds')
-print(f'Best score {grid.best_score_}')
-print(f'Results: {grid.cv_results_.keys()}')
+#save info.
+np.savetxt("nhsots_3.txt", np.array(n_shots_list))
+np.savetxt("scores_3.txt", np.array(list_score))
 
-# taking the largest average accuracy of the grid search and the corresponding standard dev.
-cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
-cv_std = grid.cv_results_['std_test_score'][grid.best_index_]
 
-results = grid.cv_results_
-for i in range(nfolds):
-    print(f"Fold {i+1}: {results[f'split{i}_test_score'][grid.best_index_]}")
 
-print(f'\nAverage accuracy, best score: {cv_mean:.6f}')
-print(f'Standard deviation, best score: {cv_std:.6f}')
 
-print(f'{t_training-t_start} seconds elapsed.')
-
-# the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
-final_msg = f'Accuracy (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.6f}]'
-print(final_msg)
