@@ -87,7 +87,7 @@ class Circuits:
         return qc
     
     @staticmethod
-    def xyz_encoded(n_wire, full_ent = True, param_prefix = 'phi'):
+    def xyz_encoded(n_wire, full_ent = True, param_prefix = 'phi', dr_layers = 1, dr_sep = 'cnot'):
         
         '''
         XYZ encoded
@@ -96,17 +96,48 @@ class Circuits:
         qc = QuantumCircuit(n_wire) 
         qc.name = 'XYZ'       
         
-
+        param_dict = {}
         for i in range(n_wire):            
             phi_name = param_prefix + '_' + str(i)
             phi = Parameter(phi_name)
             qc.rx(phi, i) 
             qc.ry(phi, i)
-            qc.rz(phi, i)     
+            qc.rz(phi, i)
+            if dr_layers > 1:
+                param_dict[phi_name] = phi
 
-        if(full_ent):
+
+        if dr_layers <= 1 and full_ent:
             for i in range(n_wire):
-                qc.cx(i%n_wire, (i+1)%n_wire)    
+                qc.cx(i % n_wire, (i + 1) % n_wire)
+
+        if dr_layers > 1:
+            #qc.barrier()
+
+            for layer in range(dr_layers-1):
+                qc.barrier()  
+
+
+                if dr_sep == 'cnot':
+                    for i in range(n_wire):
+                        qc.cx(i%n_wire, (i+1)%n_wire)
+                elif dr_sep == 'h':
+                    for i in range(n_wire):
+                        qc.h(i)
+                else:
+                    raise ValueError("dr_sep must be either 'cnot' or 'swap'")
+
+                qc.barrier()               
+
+
+                for i in range(n_wire):
+                    phi_name = param_prefix + '_' + str(i)
+                    phi = param_dict[phi_name]
+                    qc.rx(phi, i) 
+                    qc.ry(phi, i)
+                    qc.rz(phi, i)
+
+
       
         
         return qc
@@ -239,34 +270,6 @@ class Circuits:
     
         
         return qc 
-
-    # @staticmethod
-    # def uniform_bloch_encoding(n_wire, full_ent = True, param_prefix = 'phi'):   
-        
-    #     '''
-    #     requires half as much qubits like dense encoding! - L
-
-    #     '''
-
-    #     # Create a new circuit with two qubits
-    #     qc = QuantumCircuit(n_wire)
-    #     qc.name = 'UniformBloch'        
-        
-    #     # assuming phis, thetas normalized bw 0 and 1
-    #     for i in range(n_wire):            
-    #         theta_name = param_prefix + '_'+str(2*i)
-    #         theta = Parameter(theta_name)            
-    #         phi_name = param_prefix + '_'+str(2*i+1)
-    #         phi = Parameter(phi_name)
-    #         #qc.ry(2*np.arccos(np.sqrt(theta)), i)             
-    #         qc.ry(2*np.arccos(theta**(1/2)), i)            
-    #         qc.rz(phi*np.pi, i)
-
-    #     if(full_ent):
-    #         for i in range(n_wire):
-    #             qc.cx(i%n_wire, (i+1)%n_wire)
-        
-    #     return qc 
     
 
     @staticmethod
