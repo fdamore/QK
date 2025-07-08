@@ -38,7 +38,7 @@ nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROC
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_MM.csv'
-source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
+source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_L2.csv'
 
 
 
@@ -100,7 +100,7 @@ params_grid = {
     }
 
 #Create the GridSearchCV object
-grid = GridSearchCV(SVC(), params_grid, verbose=1, cv=nfolds)
+grid = GridSearchCV(SVC(), params_grid, verbose=1, cv=nfolds, n_jobs=nj)
 
 #get time
 t_start = time.time()
@@ -135,7 +135,7 @@ final_msg = f'Accuracy (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nf
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'jobs/scores/accuracy' + id_string + '.txt', "w") as file:
+with open(f'accuracy' + id_string + '.txt', "w+") as file:
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
