@@ -1,0 +1,25 @@
+Score (95% confidence) = 0.888677 +/- 0.011988 == [0.876689, 0.900665]
+
+2025-08-29 17:15:16
+116.9 seconds elapsed.
+Used score: accuracy
+Best parameter: {'C': 4.0, 'gamma': 1.0, 'kernel': 'rbf'}
+Number of SV of the best model: 1176. ([553 623])
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': [0.25, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 20.0], 'kernel': ['rbf']}
+Source file: qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv
+Shape of dataset: (2865, 37)
+Shape of training dataset (2865, 36)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 144 candidates.
+Fold 1: 0.8606271777003485
+Fold 2: 0.9024390243902439
+Fold 3: 0.8641114982578397
+Fold 4: 0.8885017421602788
+Fold 5: 0.867595818815331
+Fold 6: 0.8846153846153846
+Fold 7: 0.9195804195804196
+Fold 8: 0.8881118881118881
+Fold 9: 0.9090909090909091
+Fold 10: 0.9020979020979021
