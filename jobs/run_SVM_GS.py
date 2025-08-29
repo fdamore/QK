@@ -51,17 +51,17 @@ seed=123              # the seed
 np.random.seed(seed)
 
 nfolds = 10 #set number of folds in CV
-f_rate = 0.2 #rate of data sampling fot testing pourpose
+f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 eval_score = 'accuracy'  #evaluation score for the grid search
 
-source_file = 'data/env.sel3.sk_sc.csv'
+#source_file = 'data/env.sel3.sk_sc.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_TRUE.csv'
-#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_XYZ.csv'
-#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_XYZ.csv'
-#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_XYZ.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M1.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M1.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M1.csv'
 #source_file = 'qfm/fm/qencoding/QC_X_OBS_M2_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_FALSE.csv'
@@ -78,8 +78,8 @@ source_file = 'data/env.sel3.sk_sc.csv'
 
 
 #get origin data
-X_train_np,y_train_np,env = get_origin_data(f_rate, source_file)
-#X_train_np,y_train_np,env = get_qencoded_data(f_rate, source_file)
+#X_train_np,y_train_np,env = get_origin_data(f_rate, source_file)
+X_train_np,y_train_np,env = get_qencoded_data(f_rate, source_file)
 
 # defining a unique label for the simulation 
 id_string = f'_SVM_{X_train_np.shape[1]}feats_{nfolds}folds_seed{seed}_frate{f_rate}'
@@ -121,7 +121,7 @@ print(f'Best paramenter: {grid.best_params_}')
 print(f'Time training: {t_training - t_start} seconds')
 print(f'Best score {grid.best_score_}')
 print(f'Results: {grid.cv_results_.keys()}')
-print(f'Number of SV of the best model: {num_support_vectors}')
+print(f'Number of SV of the best model: {num_support_vectors.sum()}. ({num_support_vectors})')
 
 # taking the largest average accuracy of the grid search and the corresponding standard dev.
 cv_mean = grid.cv_results_['mean_test_score'][grid.best_index_]
@@ -146,8 +146,8 @@ with open(f'accuracy' + id_string + '.txt', "w+") as file:
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
     file.write(f'Used score: {grid.scoring}\n')
-    file.write(f'Best parameter: {grid.best_params_}\n')
-    file.write(f'Number of SV of the best model: {num_support_vectors}\n')
+    file.write(f'Best parameter: {grid.best_params_}\n') 
+    file.write(f'Number of SV of the best model: {num_support_vectors.sum()}. ({num_support_vectors})\n')
     file.write(f'N job param = {nj}\n')
     file.write(f'GridSearch Dict: {params_grid}\n')
     #check the shape of test and training dataset
