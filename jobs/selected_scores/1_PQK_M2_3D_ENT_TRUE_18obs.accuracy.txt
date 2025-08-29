@@ -1,8 +1,10 @@
-Accuracy (95% confidence) = 0.900528 +/- 0.007837 == [0.892690, 0.908365]
+Score (95% confidence) = 0.900528 +/- 0.007837 == [0.892690, 0.908365]
 
-2025-03-10 11:42:07
-143.4 seconds elapsed.
+2025-08-29 16:00:34
+98.4 seconds elapsed.
+Used score: accuracy
 Best parameter: {'C': 2.0, 'gamma': 4.0, 'kernel': 'rbf'}
+Number of SV of the best model: 1085. ([529 556])
 N job param = 1
 GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': [0.25, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 20.0], 'kernel': ['rbf']}
 Source file: qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv
