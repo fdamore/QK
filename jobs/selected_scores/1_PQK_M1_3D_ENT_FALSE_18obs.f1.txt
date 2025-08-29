@@ -1,0 +1,25 @@
+Score (95% confidence) = 0.882866 +/- 0.009006 == [0.873859, 0.891872]
+
+2025-08-29 17:55:32
+99.2 seconds elapsed.
+Used score: f1
+Best parameter: {'C': 8.0, 'gamma': 2.0, 'kernel': 'rbf'}
+Number of SV of the best model: 970. ([485 485])
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 'gamma': [0.25, 0.5, 1.0, 2.0, 3.0, 4.0, 5.0, 20.0], 'kernel': ['rbf']}
+Source file: qfm/fm/qencoding/QC_3D_OBS_M1_ENT_FALSE.csv
+Shape of dataset: (2865, 19)
+Shape of training dataset (2865, 18)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 144 candidates.
+Fold 1: 0.8560606060606061
+Fold 2: 0.8931297709923665
+Fold 3: 0.8661417322834646
+Fold 4: 0.889763779527559
+Fold 5: 0.8973384030418251
+Fold 6: 0.8692307692307693
+Fold 7: 0.896551724137931
+Fold 8: 0.8740157480314961
+Fold 9: 0.8941176470588236
+Fold 10: 0.8923076923076924
