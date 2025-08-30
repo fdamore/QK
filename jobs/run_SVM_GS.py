@@ -67,13 +67,13 @@ eval_score = 'f1'  #evaluation score for the grid search
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M2.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M2.csv'
-source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M2.csv'
 #source_file = 'qfm/fm/qencoding/QC_X_OBS_MM_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_TRUE.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_MM.csv'
-#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_L2.csv'
 
 
