@@ -141,8 +141,8 @@ print(f'{t_training-t_start} seconds elapsed.')
 final_msg = f'Score (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.6f}]'
 print(final_msg)
 
-# INFORMATION SAVED IN THE 'accuracy*.txt' OUTPUT FILES
-with open(f'accuracy' + id_string + '.txt', "w+") as file:    
+# INFORMATION SAVED IN THE 'run*.txt' OUTPUT FILES
+with open(f'run' + id_string + '.txt', "w+") as file:    
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
