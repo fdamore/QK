@@ -1,0 +1,27 @@
+Score (95% confidence) = 0.870698 +/- 0.011339 == [0.859359, 0.882037]
+
+2025-09-03 20:35:21
+11077.9 seconds elapsed.
+Future map: Trotter_Huang
+Entanglement: False
+Used score: f1
+Best parameter: {'C': 16.0}
+Number of SV of the best model: 956. ([459 497])
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024]}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 18 candidates.
+Fold 1: 0.8549618320610687
+Fold 2: 0.8754716981132076
+Fold 3: 0.8625954198473282
+Fold 4: 0.875968992248062
+Fold 5: 0.8712121212121212
+Fold 6: 0.842911877394636
+Fold 7: 0.9125475285171103
+Fold 8: 0.856
+Fold 9: 0.875
+Fold 10: 0.8803088803088803

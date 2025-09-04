@@ -1,0 +1,27 @@
+Score (95% confidence) = 0.805587 +/- 0.012483 == [0.793104, 0.818070]
+
+2025-09-03 17:39:47
+5508.1 seconds elapsed.
+Future map: ZZFeatureMap
+Entanglement: False
+Used score: accuracy
+Best parameter: {'C': 1.0}
+Number of SV of the best model: 2000. ([1033  967])
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024]}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 18 candidates.
+Fold 1: 0.8118466898954704
+Fold 2: 0.8048780487804879
+Fold 3: 0.7770034843205574
+Fold 4: 0.8153310104529616
+Fold 5: 0.8118466898954704
+Fold 6: 0.7832167832167832
+Fold 7: 0.8531468531468531
+Fold 8: 0.7972027972027972
+Fold 9: 0.7972027972027972
+Fold 10: 0.8041958041958042

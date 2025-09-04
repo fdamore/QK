@@ -24,29 +24,25 @@ seed=123              # the seed
 np.random.seed(seed)
 algorithm_globals.random_seed = seed
 
-# choosing the encoding (see dict)
-encoding_key = 'x'
-full_ent = False
-
+# dictionary of available encodings
 encoding_dict = {
     'xyz': Circuits.xyz_encoded, 
     'zz': Circuits.zzfeaturemap, 
-    'x': Circuits.x_encoded, 
-    'spiral': Circuits.spiral_encoding,
-    'uniform': Circuits.uniform_bloch_encoding
+    'x': Circuits.x_encoded,
+    'iqp': Circuits.IQP_HuangE2,
+    'trotter': Circuits.Trotter_HuangE3
     }   
 
+# select parameters for the run
+encoding_key = 'trotter' # choosing the encoding (see dict)
+full_ent = False  #True or False for full entanglement in the feature map
 nfolds = 10 #set number of folds in CV
-f_rate = 0.1 #rate of data sampling fot testing pourpose
+f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
-eval_score = 'accuracy'  #evaluation score for the grid search
+eval_score = 'f1'  #evaluation score for the grid search
 
 #load dataset with panda
 #data are scaled outside the notebook
-
-# defining a unique label for the simulation 
-id_string = f'_QSVM_{encoding_key}_ent{full_ent}_{nfolds}folds_seed{seed}_frate{f_rate}'
-
 
 if encoding_key == 'uniform':
     data_file_csv = 'data/env.sel3.2pi_minmax.csv'
@@ -64,13 +60,11 @@ X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 X_train_np = X.to_numpy()
 y_train_np = Y.to_numpy()
 
-# params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024], 
-#                'gamma': [0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 5.0, 7.0, 8.0]}
+params_grid = {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024]}
 
-params_grid = {
-    'C': [2.0, 8.0, 32.0, 128.0, 512.0, 2048.0],
-    'gamma': [1e-7, 1e-5, 1e-3, 1e-1]
-}
+# params_grid = {
+#     'C': [2.0, 8.0, 32.0, 128.0, 512.0, 2048.0]    
+# }
 
 #take a feature map and setting QSVC
 NUM_QBIT = 6 #commonly, this is the number of the features
@@ -95,7 +89,7 @@ print(f'Source file: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train_np.shape}')
 print(f'Label for traing {y_train_np.shape}')
-
+print(f'Used score: {grid.scoring}')
 
 
 #get time
@@ -111,7 +105,6 @@ t_training = time.time()
 num_support_vectors = grid.best_estimator_.n_support_
 
 #Print the best estimator with it's parameters
-print(f'Used score: {grid.scoring}')
 print(f'Best paramenter: {grid.best_params_}')
 print(f'Time training: {t_training - t_start} seconds')
 print(f'Best score {grid.best_score_}')
@@ -135,12 +128,16 @@ print(f'{t_training-t_start} seconds elapsed.')
 final_msg = f'Score (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.6f}]'
 print(final_msg)
 
+# defining a unique label for the simulation 
+id_string = f'_QSVM_{encoding_key}_ent{full_ent}_{nfolds}folds_seed{seed}_frate{f_rate}_{eval_score}_fm_{fm.name}'
 
 # INFORMATION SAVED IN THE 'run*.txt' OUTPUT FILES
 with open(f'run' + id_string + '.txt', "w+") as file:    
     file.write(final_msg + '\n\n')
     file.write(datetime.today().strftime('%Y-%m-%d %H:%M:%S') + '\n')
     file.write(f'{t_training-t_start:.1f} seconds elapsed.\n')
+    file.write(f'Future map: {fm.name}\n')
+    file.write(f'Entanglement: {full_ent}\n')
     file.write(f'Used score: {grid.scoring}\n')
     file.write(f'Best parameter: {grid.best_params_}\n') 
     file.write(f'Number of SV of the best model: {num_support_vectors.sum()}. ({num_support_vectors})\n')
