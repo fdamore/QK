@@ -8,14 +8,18 @@ class QEncoding:
 
 
     
-    def __init__(self, *,qcircuit: QuantumCircuit, obs = 'Z', data: np.ndarray, use_pe = False):
+    def __init__(self, *,qcircuit: QuantumCircuit, obs = 'Z', data: np.ndarray, use_pe = 'sv'):
         """
         Initializes the QEncoding object.
 
         Args:
             qcircuit (QuantumCircuit): The quantum circuit used for encoding.
             obs (str, optional): The observable to measure. Defaults to 'Z'.
-            data (np.ndarray): The data to be encoded.
+            data (np.ndarray): The data to be encoded. 
+            use_pe (str, optional): Type of estimator to use. Options are 'pe' for PrimitiveEstimator,
+                                    'sv' for StateVectorEstimator, 'gpu_sv' for GPUAerStateVectorEstimator,
+                                    and 'gpu_aer_sv' for GPUAerVigoNoiseStateVectorEstimator. Defaults to 'sv'. 
+
         """
         self.qcircuit = qcircuit
         self.obs = obs  # Store the observable.
@@ -52,11 +56,18 @@ class QEncoding:
                 # 'inplace=False' means we get a new circuit with parameters bound.                
                 bound_circuit = self.qcircuit.assign_parameters(data_point, inplace=False)
 
+                # use StateVectorEstimator as default
+                res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
+
                 #measure
-                if self.use_pe:
+                if self.use_pe == 'pe':
                     res =  QMeasures.PrimitiveEstimator(bound_circuit, self.obs, nshots = nshots, seed= shots_seed)
-                else:
+                elif self.use_pe == 'sv':
                     res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
+                elif self.use_pe == 'gpu_sv':
+                    res = QMeasures.GPUAerStateVectorEstimator(qc=bound_circuit, observables=self.obs)
+                elif self.use_pe == 'gpu_aer_sv':
+                    res = QMeasures.GPUAerVigoNoiseStateVectorEstimator(qc=bound_circuit, observables=self.obs)
 
                 # Store the bound circuit in the dictionary.
                 self.encoded_data.append(res)
