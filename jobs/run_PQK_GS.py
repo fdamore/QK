@@ -28,8 +28,8 @@ my_obs_key = 'XYZ'
 measure_fn_key = 'CPU'
 #cv parameters
 nfolds = 3 #set number of folds in CV
-f_rate = .02 #rate of data sampling fot testing pourpose
-nj = 3     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
+f_rate = .05 #rate of data sampling fot testing pourpose
+nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
 encoding_dict = {
     'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6),   # change to 3d ? 
@@ -41,8 +41,10 @@ encoding_dict = {
     'anticorrxyz': Circuits.anticorr3_encoded(n_wire=6),
     'IQP': Circuits.IQP_HuangE2(n_wire=6),
     'Trotter': Circuits.Trotter_HuangE3(n_wire=6),
+    #'q_data': Circuits.quantum_data_encoding(n_wire=2),
+    'q_porco': Circuits.quantum_data_encoding_porco(n_wire=2),
     }   
-
+ 
 pauli_meas_dict = {
     'XYZ' : generate_my_obs(['X','Y','Z'], n_qub=6),
     'XY' : generate_my_obs(['X','Y'], n_qub=6),
@@ -81,6 +83,9 @@ id_string = f'_PQK_{measure_fn_key}_{encoding_key}_ent{full_ent}_{len(my_obs)}ob
 if encoding_key == 'uniform':
     data_file_csv = 'data/env.sel3.2pi_minmax.csv'
     env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  
+elif encoding_key == 'q_data' or encoding_key == 'q_porco':
+    data_file_csv = 'data/quantum_states_dataset.csv'
+    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)
 else:
     data_file_csv = 'data/env.sel3.sk_sc.csv'
     env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  

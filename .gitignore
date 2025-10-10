@@ -14,5 +14,6 @@ nohup.out
 server_QK/*
 notebooks/*log
 logs/*out
-rf.ipynb
+rf_and_friends.ipynb
 run_PQK_GS_lm.py
+run_PQK_GS_QDATA.py

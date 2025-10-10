@@ -1,8 +1,10 @@
+import types
 from qiskit.circuit import Parameter
 from qiskit.circuit.library import ZZFeatureMap, iqp
 from qiskit.quantum_info import random_hermitian, random_statevector
 from qiskit import QuantumCircuit
 import numpy as np
+from qiskit.circuit.library import Initialize
 
 
 class Circuits:
@@ -357,3 +359,59 @@ class Circuits:
                 qc.rxx(2 * t / T * phi_params[i], i, (i+1)%n_wire)
 
         return qc
+
+
+    @staticmethod
+    def quantum_data_encoding(n_wire, param_prefix = 'phi'):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire) 
+        qc.name = 'QDataEncoding'       
+        
+        # Crea i Parameters per parte reale e immaginaria
+        phis = []
+        dim = 2 ** n_wire
+        for i in range(dim):
+            re = Parameter(f"{param_prefix}_re_{i}")
+            im = Parameter(f"{param_prefix}_im_{i}")
+            phis.append(re + 1j * im)
+
+        init = Initialize(phis)
+        qc.append(init, qc.qubits)
+
+        
+        return qc 
+
+
+    @staticmethod
+    def quantum_data_encoding_porco(n_wire, param_prefix = 'phi'):
+
+        # Create a new circuit with two qubits
+        qc = QuantumCircuit(n_wire) 
+        qc.name = 'QDataEncoding'       
+
+        def new_assign_parameters(self, parameter, inplace=False):
+            if inplace==True:
+                raise ValueError("Inplace assignment is not supported for quantum data encoding.")
+            
+            new_qc=self.copy()
+            #parameters: [re0,im0,re1,im1,re2,im2,...]
+            phis = []
+            for i in range(len(parameter)//2):
+                phis.append(parameter[2*i] + 1j * parameter[2*i+1])
+            print('ciao')
+            print(parameter)
+            new_qc.append(Initialize(phis, normalize=True), new_qc.qubits)
+            return new_qc
+
+        qc.assign_parameters = types.MethodType(new_assign_parameters, qc)
+
+        
+        return qc 
+
+
+# if __name__ == "__main__":
+#     parameters= [0.22226192455728644,0.09171210987903596,-0.21428265731790627,0.30627230884868956,-0.4311590563634583,0.2212699656851485,-0.19004741036514197,-0.7290351113724666]
+#     prova = Circuits.quantum_data_encoding_porco(2)
+#     prova2=prova.assign_parameters(parameters, inplace=False)
+#     print(prova2)
