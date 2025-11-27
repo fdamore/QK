@@ -342,7 +342,7 @@ class PQK_OCSVC(OneClassSVM):
     
 
 
-    def fit(self, X, y=None):
+    def fit(self, X):
         
         """
         need to reimplements fit in order to manage the latent cache
