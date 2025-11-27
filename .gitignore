@@ -17,3 +17,4 @@ logs/*out
 rf_and_friends.ipynb
 run_PQK_GS_lm.py
 run_PQK_GS_QDATA.py
+q_phase_classifier.py
