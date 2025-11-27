@@ -23,41 +23,56 @@ seed=123              # the seed
 np.random.seed(seed)
 algorithm_globals.random_seed = seed
 
-full_ent=False
+full_ent=True
 encoding_key = 'xyz'
-my_obs_key = 'XYZ'
+my_obs_key = 'ADJAC_2QUB'
 measure_fn_key = 'CPU'
 
 nfolds = 3 
 f_rate = .2 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
 
+np.random.seed(42)
+
+n_norm = 1000
+n_anom = 50
+cvfolds = 5
+sample_frac = 0.1   # fraction of data to use for quicker testing
+n_features = 4
+
+X_norm = 0.5 * np.random.randn(n_norm, n_features)
+X_anom = np.random.uniform(low=-4, high=4, size=(n_anom, n_features))
+
+scaler = StandardScaler()
+X_norm = scaler.fit_transform(X_norm)[:int(sample_frac*X_norm.shape[0])]
+X_anom = scaler.transform(X_anom)[:int(sample_frac*X_anom.shape[0])]
+print(X_norm, X_anom)
+
+
 encoding_dict = {
-    'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=6),   # change to 3d ? 
-    'zz': Circuits.zzfeaturemap(full_ent=full_ent, n_wire=6), 
-    'x': Circuits.x_encoded(full_ent=full_ent, n_wire=6), 
-    'spiral': Circuits.spiral_encoding(full_ent=full_ent, n_wire=6, n_windings=1),
-    'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=6),
-    'corrxyz': Circuits.corr3_encoded(n_wire=6),
-    'anticorrxyz': Circuits.anticorr3_encoded(n_wire=6),
-    'IQP': Circuits.IQP_HuangE2(n_wire=6),
-    'Trotter': Circuits.Trotter_HuangE3(n_wire=6),
+    'xyz': Circuits.xyz_encoded(full_ent=full_ent, n_wire=n_features),   # change to 3d ? 
+    'zz': Circuits.zzfeaturemap(full_ent=full_ent, n_wire=n_features), 
+    'x': Circuits.x_encoded(full_ent=full_ent, n_wire=n_features), 
+    'spiral': Circuits.spiral_encoding(full_ent=full_ent, n_wire=n_features, n_windings=1),
+    'uniform': Circuits.uniform_bloch_encoding(full_ent=full_ent, n_wire=n_features),
+    'IQP': Circuits.IQP_HuangE2(n_wire=n_features),
+    'Trotter': Circuits.Trotter_HuangE3(n_wire=n_features),
     #'q_data': Circuits.quantum_data_encoding(n_wire=2),
-    'q_porco': Circuits.quantum_data_encoding_porco(n_wire=2),
+    # 'q_porco': Circuits.quantum_data_encoding_porco(n_wire=2),
     }   
- 
+
 pauli_meas_dict = {
-    'XYZ' : generate_my_obs(['X','Y','Z'], n_qub=6),
-    'XY' : generate_my_obs(['X','Y'], n_qub=6),
-    'X' : generate_my_obs(['X'], n_qub=6),
-    'Y' : generate_my_obs(['Y'], n_qub=6),
-    'Z' : generate_my_obs(['Z'], n_qub=6),
-    'BLOCH_XYZ' : generate_my_obs(['X','Y','Z'], n_qub=3), #for the uniform bloch:   (couldnt make it work yet - Luca)
-    'NON_LOCAL_XX' : generate_my_obs(['X','Y','Z','XX'], n_qub=6),
-    'ADJAC_2QUB' : adjacent_qub_obs(['X','Y','Z'], n_qub=6, n_measured_qub=2),
-    'ADJAC_XX' : adjacent_qub_obs(['X'], n_qub=6, n_measured_qub=2),
-    'ADJAC_YY' : adjacent_qub_obs(['Y'], n_qub=6, n_measured_qub=2),
-    'ADJAC_ZZ' : adjacent_qub_obs(['Z'], n_qub=6, n_measured_qub=2),
+    'XYZ' : generate_my_obs(['X','Y','Z'], n_qub=n_features),
+    'XY' : generate_my_obs(['X','Y'], n_qub=n_features),
+    'X' : generate_my_obs(['X'], n_qub=n_features),
+    'Y' : generate_my_obs(['Y'], n_qub=n_features),
+    'Z' : generate_my_obs(['Z'], n_qub=n_features),
+    'BLOCH_XYZ' : generate_my_obs(['X','Y','Z'], n_qub=n_features/2), #for the uniform bloch:   (couldnt make it work yet - Luca)
+    'NON_LOCAL_XX' : generate_my_obs(['X','Y','Z','XX'], n_qub=n_features),
+    'ADJAC_2QUB' : adjacent_qub_obs(['X','Y','Z'], n_qub=n_features, n_measured_qub=2),
+    'ADJAC_XX' : adjacent_qub_obs(['X'], n_qub=n_features, n_measured_qub=2),
+    'ADJAC_YY' : adjacent_qub_obs(['Y'], n_qub=n_features, n_measured_qub=2),
+    'ADJAC_ZZ' : adjacent_qub_obs(['Z'], n_qub=n_features, n_measured_qub=2),
 }
 pauli_meas_dict['ADJAC_2QUB_EXTRA'] = pauli_meas_dict['XYZ'] + pauli_meas_dict['ADJAC_2QUB']
 
@@ -74,50 +89,15 @@ my_obs = pauli_meas_dict[my_obs_key]
 # defining a unique label for the simulation 
 id_string = f'_PQK_{measure_fn_key}_{encoding_key}_ent{full_ent}_{len(my_obs)}obs{my_obs_key}_{nfolds}folds_seed{seed}_frate{f_rate}'
 
-if encoding_key == 'uniform':
-    data_file_csv = 'data/env.sel3.2pi_minmax.csv'
-    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  
-elif encoding_key == 'q_data' or encoding_key == 'q_porco':
-    data_file_csv = 'data/quantum_states_dataset.csv'
-    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)
-else:
-    data_file_csv = 'data/env.sel3.sk_sc.csv'
-    env = pd.read_csv(data_file_csv).sample(frac=f_rate, random_state=seed)  
 
-
-
-# ===============================
-# 1. CREAZIONE DATASET
-# ===============================
-np.random.seed(42)
-
-n_norm = 1000
-n_anom = 100
-
-X_norm = 0.5 * np.random.randn(n_norm, 2)
-X_anom = np.random.uniform(low=-4, high=4, size=(n_anom, 2))
-
-scaler = StandardScaler()
-X_norm = scaler.fit_transform(X_norm)
-X_anom = scaler.transform(X_anom)
-
-# ===============================
-# 2. DEFINIZIONE GRIGLIA
-# ===============================
 nus = [0.01, 0.05, 0.1]
 gammas = [0.01, 0.1, 1.0]
 param_grid = [(nu, gamma) for nu in nus for gamma in gammas]
 
-# ===============================
-# 3. KFold su normali e anomalie
-# ===============================
-kf_norm = KFold(n_splits=5, shuffle=True, random_state=42)
-kf_anom = KFold(n_splits=5, shuffle=True, random_state=43)
+kf_norm = KFold(n_splits=cvfolds, shuffle=True, random_state=42)
+kf_anom = KFold(n_splits=cvfolds, shuffle=True, random_state=43)
 anom_splits = list(kf_anom.split(X_anom))
 
-# ===============================
-# 4. GRID SEARCH ESTERNA
-# ===============================
 results = []
 
 for nu, gamma in param_grid:
@@ -130,9 +110,8 @@ for nu, gamma in param_grid:
         X_test = np.vstack([X_norm[test_norm_idx], X_anom[test_anom_idx_rel]])
         y_test = np.hstack([np.ones(len(test_norm_idx)), -np.ones(len(test_anom_idx_rel))])
 
-        # Modello (sostituisci con il tuo PQK_OCSVC se vuoi)
         model = PQK_OCSVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel='rbf')
-        model.fit(X_train, np.ones(len(X_train)))  # Addestra solo sui normali
+        model.fit(X_train)  # Addestra solo sui normali
         y_pred = model.predict(X_test)
 
         f1 = f1_score(y_test, y_pred, pos_label=-1)
