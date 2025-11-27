@@ -1,3 +1,8 @@
+#################################################################
+# IL PROBLEMA CON QUESTO SCRIPT E' CHE GRIDSEARCHCV NON E' BEN DEFINITO PER IL NOSTRO OCPQK_SVC
+#################################################################
+
+
 import sys
 import os
 import time
