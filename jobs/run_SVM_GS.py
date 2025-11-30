@@ -53,7 +53,7 @@ np.random.seed(seed)
 nfolds = 10 #set number of folds in CV
 f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
-eval_score = 'f1'  #evaluation score for the grid search
+eval_score = 'accuracy'  #evaluation score for the grid search
 
 #source_file = 'data/env.sel3.sk_sc.csv'
 #source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE.csv'
@@ -73,9 +73,10 @@ eval_score = 'f1'  #evaluation score for the grid search
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_MM_ENT_FALSE.csv'
 #source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_IQP_OBS_MM.csv'
-source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
+#source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_L2.csv'
 
+source_file = 'qfm/fm/qencoding/QC_UB_OBS_M1_ENT_FALSE.csv'
 
 
 #get origin data
