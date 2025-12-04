@@ -34,3 +34,10 @@ if p_value < alpha:
 else:
     print("The p-value is above 0.05, so we cannot reject the null hypothesis.")
     print("The two groups are compatible with having been drawn from the same distribution.")
+
+
+# Scores between top pqk and classical svm:
+# t-statistic: -2.0670
+# p-value:     0.053608
+
+
