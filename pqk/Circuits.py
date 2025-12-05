@@ -284,7 +284,7 @@ class Circuits:
         phis = [Parameter(f"{param_prefix}_{i}") for i in range(2*n_wire)]
         # normalization: even index: 0<phi<1 ; odd index --> 0<phi<pi. original normalization is bw 0 and 2pi
         for i, phi in enumerate(phis):
-            phi /= 2*np.pi     # normalize bw 0 and 1
+            phi /= 2*np.pi     
             phi = margin + phi * (1 - 2*margin)    # slightly shrinks the interval to avoid 0 and 1
             if i%2 == 0:
                 phi *= np.pi
