@@ -135,20 +135,30 @@ print(f"Effect size interpretation: {effect_interpretation}")
 # Cohen's d:  0.9272
 
 
-# PAIRED TEST
-# SVM vs best PQK
+################ PAIRED TEST ###############
+######### SVM vs best PQK
 # selected_scores/0_SVM_CLASSIC.accuracy.txt
 # selected_scores/1_PQK_M2_3D_ENT_TRUE_18obs.accuracy.txt
 # t-statistic: 1.9056
 # p-value:     0.089081
 # Cohen's d:   0.6026
 
+# selected_scores/0_SVM_CLASSIC.f1.txt.txt
+# selected_scores/1_PQK_M2_3D_ENT_TRUE_18obs.f1.txt
+# t-statistic: -2.7063
+# p-value:     0.024142
+# Cohen's d:  -0.8558
 
-# best QK vs best PQK
+
+######### best QK vs best PQK
 # selected_scores/2_QK_TROTTER_entFalse.accuracy.txt
 # selected_scores/1_PQK_M2_3D_ENT_TRUE_18obs.accuracy.txt
 # t-statistic: 4.2241
 # p-value:     0.002226
 # Cohen's d:   1.3358
 
-
+# selected_scores/1_PQK_M2_3D_ENT_TRUE_18obs.f1.txt
+# selected_scores/2_QK_TROTTER_entFalse.f1.txt
+# t-statistic: 6.4534
+# p-value:     0.000118
+# Cohen's d:  2.0407
