@@ -53,7 +53,7 @@ np.random.seed(seed)
 nfolds = 10 #set number of folds in CV
 f_rate = 1 #rate of data sampling fot testing pourpose
 nj = 1     # number of processors on the host machine. CAREFUL: it uses ALL PROCESSORS if n_jopbs = -1
-eval_score = 'accuracy'  #evaluation score for the grid search
+eval_score = 'f1'  #evaluation score for the grid search
 
 #source_file = 'data/env.sel3.sk_sc.csv'
 #source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE.csv'
@@ -76,7 +76,14 @@ eval_score = 'accuracy'  #evaluation score for the grid search
 #source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_MM.csv'
 #source_file = 'qfm/fm/qencoding/QC_3D_OBS_M2_L2.csv'
 
-source_file = 'qfm/fm/qencoding/QC_UB_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_UB_OBS_M1_ENT_FALSE.csv'
+#source_file = 'qfm/fm/qencoding/QC_X_OBS_M1_ENT_FALSE_2PI.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_TRUE_2PI.csv'
+#source_file = 'qfm/fm/qencoding/QC_3D_OBS_M1_ENT_FALSE_2PI.csv'
+#source_file = 'qfm/fm/qencoding/QC_ZZ_OBS_M1_2PI.csv'
+#source_file = 'qfm/fm/qencoding/QC_IQP_OBS_M1_2PI.csv'
+source_file = 'qfm/fm/qencoding/QC_TROTTER_OBS_M1_2PI.csv'
+
 
 
 #get origin data
@@ -138,8 +145,11 @@ print(f'Best score (Standard Deviation): {cv_std:.6f}')
 
 print(f'{t_training-t_start} seconds elapsed.')
 
+
 # the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
-final_msg = f'Score (95% confidence) = {cv_mean:.6f} +/- {2*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - 2*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + 2*cv_std/np.sqrt(nfolds):.6f}]'
+#critical_value = 2.0  # for 95% confidence
+critical_value = 2.262  # for 95% confidence and 10 folds (student t-distribution)
+final_msg = f'Score (95% confidence) = {cv_mean:.6f} +/- {critical_value*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - critical_value*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + critical_value*cv_std/np.sqrt(nfolds):.6f}]'
 print(final_msg)
 
 # INFORMATION SAVED IN THE 'run*.txt' OUTPUT FILES
