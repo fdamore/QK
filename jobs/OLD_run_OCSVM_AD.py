@@ -117,7 +117,7 @@ ocpqk = PQK_OCSVC(circuit=encoding_dict[encoding_key], fit_clear=clear_cache, ob
 ocpqk.metadata()
  
 #run ocpqk to pre compute the enconding
-ocpqk.fit(X_train_np, y_train_np)
+ocpqk.fit(X_train_np)
 
 ocpqk_g = PQK_OCSVC(_fm_dict=ocpqk._fm_dict,
                  circuit=encoding_dict[encoding_key], fit_clear=clear_cache, obs=my_obs, measure_fn=measure_fn_dict[measure_fn_key], c_kernel='rbf')
