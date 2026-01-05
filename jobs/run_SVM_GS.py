@@ -147,8 +147,7 @@ print(f'{t_training-t_start} seconds elapsed.')
 
 
 # the confidence interval is given by:   mean +/- 2 * stdev / sqrt(N)
-#critical_value = 2.0  # for 95% confidence
-critical_value = 2.262  # for 95% confidence and 10 folds (student t-distribution)
+critical_value = 2.0  # for 95% confidence
 final_msg = f'Score (95% confidence) = {cv_mean:.6f} +/- {critical_value*cv_std/np.sqrt(nfolds):.6f} == [{cv_mean - critical_value*cv_std/np.sqrt(nfolds):.6f}, {cv_mean + critical_value*cv_std/np.sqrt(nfolds):.6f}]'
 print(final_msg)
 
