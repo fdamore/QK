@@ -1,0 +1,27 @@
+Score (95% confidence) = 0.870539 +/- 0.005464 == [0.865075, 0.876002]
+
+2025-09-03 18:42:52
+4409.1 seconds elapsed.
+Future map: IQP_Huang
+Entanglement: False
+Used score: f1
+Best parameter: {'C': 4.0}
+Number of SV of the best model: 1147. ([556 591])
+N job param = 1
+GridSearch Dict: {'C': [0.006, 0.015, 0.03, 0.0625, 0.125, 0.25, 0.5, 1.0, 2.0, 4.0, 8.0, 16.0, 32.0, 64.0, 128.0, 256, 512, 1024]}
+Source file: data/env.sel3.sk_sc.csv
+Shape of dataset: (2865, 7)
+Shape of training dataset (2865, 6)
+Shape of training labels (2865,)
+Seed: 123
+Fitting 10 folds for each of 18 candidates.
+Fold 1: 0.8625954198473282
+Fold 2: 0.8778625954198473
+Fold 3: 0.8571428571428571
+Fold 4: 0.8755020080321285
+Fold 5: 0.8745247148288974
+Fold 6: 0.8725868725868726
+Fold 7: 0.8803088803088803
+Fold 8: 0.8548387096774194
+Fold 9: 0.8715953307392996
+Fold 10: 0.8784313725490196
