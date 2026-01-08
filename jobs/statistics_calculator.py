@@ -1,5 +1,5 @@
 import numpy as np
-from scipy.stats import ttest_ind, ttest_rel
+from scipy.stats import ttest_ind, ttest_rel, t
 import os
 
 def get_stats_group(group_name):
@@ -37,7 +37,7 @@ def load_fold_array(file_path):
             value = float(line.strip().split(":")[1].strip())
             arr.append(value)
         except:
-            pass  # ignora eventuali righe malformate
+            pass  # ignores malformed lines
 
     arr = np.array(arr)
     print(f"\nLoaded {len(arr)} folds from {filename}:")
@@ -53,6 +53,50 @@ def compute_cohens_d_independent(mean1, std1, n1, mean2, std2, n2):
 def compute_cohens_d_paired(diff_array):
     d = np.mean(diff_array) / np.std(diff_array, ddof=1)
     return d
+
+def compute_ci_paired_naive(diff_array, alpha=0.05):
+    """
+    Confidence interval naive (t-based) per la differenza media
+    assumendo indipendenza dei fold.
+
+    Inputs: fold-wise differences, significance level
+    Outputs: mean differences and confidence interval limits
+    """
+    k = len(diff_array)
+    mean_diff = np.mean(diff_array)
+    sd = np.std(diff_array, ddof=1)
+
+    se = sd / np.sqrt(k)
+    t_crit = t.ppf(1 - alpha / 2, df=k - 1)
+
+    ci_low = mean_diff - t_crit * se
+    ci_high = mean_diff + t_crit * se
+
+    return mean_diff, ci_low, ci_high
+
+def compute_ci_paired_cv(diff_array, alpha=0.05):
+    """
+    Confidence interval for the mean difference in k-fold CV
+    using the Nadeau–Bengio correction.
+    """
+    k = len(diff_array)
+    mean_diff = np.mean(diff_array)
+    sd = np.std(diff_array, ddof=1)
+
+    # Nadeau–Bengio's variance correction
+    var_corr = (1 / k + 1 / (k - 1)) * sd**2
+    se_corr = np.sqrt(var_corr)
+
+    t_crit = t.ppf(1 - alpha / 2, df=k - 1)
+
+    ci_low = mean_diff - t_crit * se_corr
+    ci_high = mean_diff + t_crit * se_corr
+
+    return mean_diff, ci_low, ci_high
+
+
+
+
 
 # --- Main program ---
 print("Choose test type:")
@@ -89,6 +133,9 @@ elif choice == "2":
     
     t_stat, p_value = ttest_rel(arr1, arr2)
     cohens_d = compute_cohens_d_paired(diff)
+    # mean_diff, ci_low, ci_high = compute_ci_paired_cv(diff)
+    mean_diff, ci_low, ci_high = compute_ci_paired_naive(diff)
+
     
 else:
     raise ValueError("Invalid choice. Enter 1 or 2.")
@@ -98,8 +145,12 @@ print("\n--- Results ---")
 print(f"t-statistic: {t_stat:.4f}")
 print(f"p-value:     {p_value:.6f}")
 print(f"Cohen's d:  {cohens_d:.4f}")
+# print("\n--- Confidence Interval (paired CV, Nadeau–Bengio) ---")
+print("\n--- Confidence Interval (paired CV, naive) ---")
+print(f"Mean difference: {mean_diff:.4f}")
+print(f"95% CI: [{ci_low:.4f}, {ci_high:.4f}]")
 
-# Interpretation
+# p-value interpretation
 alpha = 0.05
 print("\n--- Conclusion ---")
 if p_value < alpha:
@@ -121,12 +172,17 @@ elif abs_d < 1.2:
     effect_interpretation = "large effect"
 else:
     effect_interpretation = "very large effect"
-
 print(f"Effect size interpretation: {effect_interpretation}")
 
+# Confidence interval interpretation
+if ci_low > 0 or ci_high < 0:
+    print("The confidence interval does not include 0: consistent performance difference.")
+else:
+    print("The confidence interval includes 0: difference compatible with noise.")
 
 
-# INDEPENDENT TEST
+### INDEPENDENT TEST
+
 # SVM vs best PQK
 # SVM: Score (95% confidence) = 0.892851 +/- 0.008748 == [0.884104, 0.901599]
 # PQK: Score (95% confidence) = 0.900528 +/- 0.007837 == [0.892690, 0.908365]
@@ -135,14 +191,21 @@ print(f"Effect size interpretation: {effect_interpretation}")
 # Cohen's d:  0.9272
 
 
-# PAIRED TEST
+
+### PAIRED TEST
+
 # SVM vs best PQK
 # selected_scores/0_SVM_CLASSIC.accuracy.txt
 # selected_scores/1_PQK_M2_3D_ENT_TRUE_18obs.accuracy.txt
 # t-statistic: 1.9056
 # p-value:     0.089081
 # Cohen's d:   0.6026
-
+# --- Confidence Interval (paired CV, Nadeau–Bengio) ---
+# Mean difference: 0.0077
+# 95% CI: [-0.0056, 0.0209]
+# --- Confidence Interval (paired CV, naive) ---
+# Mean difference: -0.0077
+# 95% CI: [-0.0168, 0.0014]
 
 # QK vs best PQK
 # selected_scores/2_QK_TROTTER_entFalse.accuracy.txt
@@ -150,5 +213,7 @@ print(f"Effect size interpretation: {effect_interpretation}")
 # t-statistic: 4.2241
 # p-value:     0.002226
 # Cohen's d:   1.3358
-
+# --- Confidence Interval (paired CV, Nadeau–Bengio) ---
+# Mean difference: -0.0119
+# 95% CI: [-0.0211, -0.0026]
 
