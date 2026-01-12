@@ -16,6 +16,8 @@ import numpy as np
 current_wd = os.getcwd()
 sys.path.append(current_wd)
 
+from pqk.Circuits import Circuits
+
 #set the seed
 np.random.seed(123)
 algorithm_globals.random_seed = 123
@@ -23,7 +25,8 @@ algorithm_globals.random_seed = 123
 #load dataset with panda
 #data are scaled outside the notebook
 #sclaled_data_file = 'data/env.sel3.scaled.csv'
-data_file_csv = 'data/env.sel3.minmax.csv' 
+#data_file_csv = 'data/env.sel3.minmax.csv' 
+data_file_csv = 'data/env.sel3.sk_sc.csv'
 env = pd.read_csv(data_file_csv)  
 
 
@@ -32,7 +35,10 @@ Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 #split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123)
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123,test_size=0.1)
+
+
+C_value = 8.0
 
 
 #check the shape of test and training dataset
@@ -40,19 +46,23 @@ print(f'Using dataset in datafile: {data_file_csv}')
 print(f'Shape of dataset: {env.shape}')
 print(f'Training shape dataset {X_train.shape}')
 print(f'Label for traing {y_train.shape}')
-
 print(f'Test shape dataset {X_test.shape}')
 print(f'Label for test {y_test.shape}')
+print(f'Using C value: {C_value}.')
 
 #take a feature map and setting QSVC
 NUM_QBIT = X_train.shape[1]
-fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
+#fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
+fm = Circuits.xyz_encoded(n_wire=NUM_QBIT, full_ent=True)
 q_kernel = FidelityStatevectorKernel(feature_map=fm)
-svm_quantum = QSVC(quantum_kernel=q_kernel)
+svm_quantum = QSVC(quantum_kernel=q_kernel,C=C_value)
 
 #show feature map
 print(f'*** FEATURE MAP used in QSVC')
+print('fm.name=',fm.name)
 print(fm.draw())
+
+print(f'Number of QUBITS used: {NUM_QBIT}')
 
 #get time
 training_start = time.time()
@@ -72,49 +82,3 @@ jobs_final_time = time.time()
 print(f'*******SCORE: {score}')
 print(f'Time training: {training_end - training_start} seconds. Final time {jobs_final_time - training_start} seconds')
 
-# #RUN USING MINMAX
-# Using dataset in datafile: data/env.sel3.minmax.csv
-# Shape of dataset: (2865, 7)
-# Training shape dataset (2148, 6)
-# Label for traing (2148,)
-# Test shape dataset (717, 6)
-# Label for test (717,)
-# *** FEATURE MAP used in QSVC
-#      ┌──────────────────────────────────────────────┐
-# q_0: ┤0                                             ├
-#      │                                              │
-# q_1: ┤1                                             ├
-#      │                                              │
-# q_2: ┤2                                             ├
-#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
-# q_3: ┤3                                             ├
-#      │                                              │
-# q_4: ┤4                                             ├
-#      │                                              │
-# q_5: ┤5                                             ├
-#      └──────────────────────────────────────────────┘
-# *******SCORE: 0.8382147838214784
-# Time training: 18.973737955093384 seconds. Final time 30.72221088409424 seconds
-
-#run
-# Shape of dataset: (2865, 7)
-# Training shape dataset (2148, 6)
-# Label for traing (2148,)
-# Test shape dataset (717, 6)
-# Label for test (717,)
-# *** FEATURE MAP used in QSVC
-#      ┌──────────────────────────────────────────────┐
-# q_0: ┤0                                             ├
-#      │                                              │
-# q_1: ┤1                                             ├
-#      │                                              │
-# q_2: ┤2                                             ├
-#      │  ZZFeatureMap(x[0],x[1],x[2],x[3],x[4],x[5]) │
-# q_3: ┤3                                             ├
-#      │                                              │
-# q_4: ┤4                                             ├
-#      │                                              │
-# q_5: ┤5                                             ├
-#      └──────────────────────────────────────────────┘
-# *******SCORE: 0.8172942817294282
-# Time training: 19.143609523773193 seconds. Final time 30.912684202194214 seconds

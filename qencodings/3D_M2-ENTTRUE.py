@@ -34,11 +34,12 @@ print(f'Observations: used to project quantum states: {obs}')
 qc =  Circuits.xyz_encoded(n_wire=6, full_ent=True)
 print(qc.draw('text'))
 
+q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
+
 #get time
 t_start = time.time()
 
-q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
-en = q_enc.encode()
+en = q_enc.encode(force_default=True, append_data=False)
 
 #get time encoding
 time_encoding = time.time()

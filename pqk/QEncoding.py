@@ -29,8 +29,9 @@ class QEncoding:
         self.encoded_data = []    
 
 
-    
-    def encode(self, nshots = 100, shots_seed = 123):
+
+
+    def encode(self, nshots = 100, shots_seed = 123, append_data = True, force_default = False) -> list:
         """
         Encodes the data using the quantum circuit.
 
@@ -56,21 +57,24 @@ class QEncoding:
                 # 'inplace=False' means we get a new circuit with parameters bound.                
                 bound_circuit = self.qcircuit.assign_parameters(data_point, inplace=False)
 
+                #measure
                 # use StateVectorEstimator as default
                 res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
 
-                #measure
-                if self.use_pe == 'pe':
-                    res =  QMeasures.PrimitiveEstimator(bound_circuit, self.obs, nshots = nshots, seed= shots_seed)
-                elif self.use_pe == 'sv':
-                    res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
-                elif self.use_pe == 'gpu_sv':
-                    res = QMeasures.GPUAerStateVectorEstimator(qc=bound_circuit, observables=self.obs)
-                elif self.use_pe == 'gpu_aer_sv':
-                    res = QMeasures.GPUAerVigoNoiseStateVectorEstimator(qc=bound_circuit, observables=self.obs)
+                
+                if force_default == False:
+                    if self.use_pe == 'pe':
+                        res =  QMeasures.PrimitiveEstimator(bound_circuit, self.obs, nshots = nshots, seed= shots_seed)
+                    elif self.use_pe == 'sv':
+                        res =  QMeasures.StateVectorEstimator(bound_circuit, self.obs)
+                    elif self.use_pe == 'gpu_sv':
+                        res = QMeasures.GPUAerStateVectorEstimator(qc=bound_circuit, observables=self.obs)
+                    elif self.use_pe == 'gpu_aer_sv':
+                        res = QMeasures.GPUAerVigoNoiseStateVectorEstimator(qc=bound_circuit, observables=self.obs)
 
                 # Store the bound circuit in the dictionary.
-                self.encoded_data.append(res)
+                if(append_data):
+                    self.encoded_data.append(res)
 
             except Exception as e:
                 print(f"Error encoding data point number {i}: {e}")

@@ -18,7 +18,7 @@ q_5: ┤ Rx(phi_5) ├┤ Ry(phi_5) ├┤ Rz(phi_5) ├────────
      └───────────┘└───────────┘└───────────┘                    └───┘     
 Encoding 2865 data point
 End data encoding
-Time encoding: 61.275121212005615 seconds.
+Time encoding: 29.931997776031494 seconds.
 
 
 #SVM
