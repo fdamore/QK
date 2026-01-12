@@ -1,0 +1,10 @@
+Shape of dataset: (2865, 7)
+Training shape dataset (2578, 6)
+Label for traing (2578,)
+Test shape dataset (287, 6)
+Label for test (287,)
+Using C value: 8.0 and gamma value: 4.0
+Using kernel type: rbf
+Using dataset in datafile: data/env.sel3.sk_sc.csv
+*******SCORE: 0.8710801393728222
+Time training: 0.06210207939147949 seconds. Final time 0.06804895401000977 seconds

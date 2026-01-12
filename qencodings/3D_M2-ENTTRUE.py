@@ -1,5 +1,7 @@
+from io import text_encoding
 import os
 import sys
+from time import time
 
 current_wd = os.getcwd()
 sys.path.append(current_wd)
@@ -32,8 +34,16 @@ print(f'Observations: used to project quantum states: {obs}')
 qc =  Circuits.xyz_encoded(n_wire=6, full_ent=True)
 print(qc.draw('text'))
 
+#get time
+t_start = time.time()
+
 q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
 en = q_enc.encode()
+
+#get time training
+time_encoding = time.time()
+
+print(f'Time encoding: {time_encoding - t_start} seconds.')
 
 q_enc.save_encoding(file_name='QC_3D_OBS_M2_ENT_TRUE.csv',y_label= y_np)
 

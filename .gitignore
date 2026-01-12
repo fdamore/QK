@@ -17,3 +17,4 @@ logs/*out
 rf_and_friends.ipynb
 run_PQK_GS_lm.py
 run_PQK_GS_QDATA.py
+jobs/__pycache__/run_SVM_GS.cpython-312.pyc

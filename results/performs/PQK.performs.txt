@@ -1,0 +1,14 @@
+#QUANTUM ENCODING
+
+
+#SVM
+Shape of dataset: (2865, 19)
+Training shape dataset (2578, 18)
+Label for traing (2578,)
+Test shape dataset (287, 18)
+Label for test (287,)
+Using C value: 2.0 and gamma value: 4.0
+Using kernel type: rbf
+Using dataset in datafile: qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv
+*******SCORE: 0.867595818815331
+Time training: 0.057390689849853516 seconds. Final time 0.06645989418029785 seconds
