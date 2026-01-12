@@ -1,7 +1,7 @@
 from io import text_encoding
 import os
 import sys
-from time import time
+import time
 
 current_wd = os.getcwd()
 sys.path.append(current_wd)
@@ -40,7 +40,7 @@ t_start = time.time()
 q_enc = QEncoding(data=X__np, obs=obs, qcircuit=qc)
 en = q_enc.encode()
 
-#get time training
+#get time encoding
 time_encoding = time.time()
 
 print(f'Time encoding: {time_encoding - t_start} seconds.')
