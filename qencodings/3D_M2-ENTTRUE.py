@@ -18,8 +18,8 @@ env = pd.read_csv(source_file)
 Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
-X__np = X.to_numpy()
-y_np = Y.to_numpy()
+X__np = X.to_numpy()[:100]
+y_np = Y.to_numpy()[:100]
 
 #shape of ndarray
 print('Shape of data to encode:')

@@ -35,7 +35,8 @@ Y = env['occupancy']
 X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
 
 #split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123,test_size=0.1)
+#X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123,test_size=0.1) #90% training, 10% test
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123, test_size=1000) #n for training, n-1 for test
 
 
 C_value = 8.0
@@ -52,33 +53,37 @@ print(f'Using C value: {C_value}.')
 
 #take a feature map and setting QSVC
 NUM_QBIT = X_train.shape[1]
-#fm = ZZFeatureMap(feature_dimension=NUM_QBIT)
-fm = Circuits.xyz_encoded(n_wire=NUM_QBIT, full_ent=True)
+fm = Circuits.Trotter_HuangE3(n_wire=NUM_QBIT)
 q_kernel = FidelityStatevectorKernel(feature_map=fm)
 svm_quantum = QSVC(quantum_kernel=q_kernel,C=C_value)
 
 #show feature map
 print(f'*** FEATURE MAP used in QSVC')
 print('fm.name=',fm.name)
-print(fm.draw())
+#print(fm.draw())
 
 print(f'Number of QUBITS used: {NUM_QBIT}')
 
 #get time
-training_start = time.time()
+t_start = time.time()
 
 svm_quantum.fit(X_train, y_train)
 
 #get time training
-training_end = time.time()
+t_training = time.time()
 
 #result...
 predictions = svm_quantum.predict(X_test)
+
+t_prediction = time.time()
+
 score = accuracy_score(predictions, y_test)
 
 #final time (trainign + predict)
-jobs_final_time = time.time()
+t_final = time.time()
 
-print(f'*******SCORE: {score}')
-print(f'Time training: {training_end - training_start} seconds. Final time {jobs_final_time - training_start} seconds')
+#print(f'*******SCORE: {score}')
+print(f'Time training: {t_training - t_start} seconds.')
+print(f'Time prediction: {t_prediction - t_training} seconds.')
+print(f'Final time {t_final - t_start} seconds')
 

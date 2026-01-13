@@ -6,6 +6,7 @@ from sklearn.svm import SVC
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 import numpy as np
+from sympy import true
 
 def get_qencoded_data(f_rate, source_file) -> tuple[np.ndarray, np.ndarray, pd.DataFrame]:
 
@@ -28,20 +29,26 @@ np.random.seed(123)
 
 #load dataset with panda
 #data_file_csv = 'data/env.sel3.scaled.csv' 
-#data_file_csv = 'data/env.sel3.sk_sc.csv'
+data_file_csv_origin = 'data/env.sel3.sk_sc.csv'
 data_file_csv = 'qfm/fm/qencoding/QC_3D_OBS_M2_ENT_TRUE.csv'
 
-origin = False
+origin = True
 if origin:
     #DEFINE design matrix
-    env = pd.read_csv(data_file_csv)  
+    env = pd.read_csv(data_file_csv_origin)  
     Y = env['occupancy']
     X = env[['illuminance', 'blinds','lamps','rh', 'co2', 'temp']]
+    gamma_value = 4.0 
+    C_value = 2
 else:
-    X, Y, env = get_qencoded_data(f_rate=1, source_file=data_file_csv)    
+    X, Y, env = get_qencoded_data(f_rate=1, source_file=data_file_csv)   
+    gamma_value = 4.0 
+    C_value = 8
 
 #split design matrix (25% of the design matrix used for test)
-X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123, test_size=0.1)
+#X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123, test_size=0.1) #90% training, 10% test
+X_train, X_test, y_train, y_test = train_test_split(X, Y, random_state=123, test_size=100) #n for training, n-1 for test
+
 #WARNING: convert data to numpy. Quantum stuff (Qiskit) do not like PANDAS
 X_train_np = X_train.to_numpy()
 y_train_np = y_train.to_numpy()
@@ -52,7 +59,7 @@ X_test_np = X_test.to_numpy()
 y_test_np = y_test.to_numpy()
 
 kernel_type = 'rbf'
-C_value = 2.0
+C_value = 2
 gamma_value = 4.0
 
 #check the shape of test and training dataset
@@ -78,12 +85,17 @@ t_training = time.time()
 
 #result...
 predictions = svm.predict(X_test_np)
+
+t_prediction = time.time()
+
 score = accuracy_score(predictions, y_test)
 
 #final time (trainign + predict)
 t_final = time.time()
 
 print(f'Using kernel type: {kernel_type}')
-print(f'Using dataset in datafile: {data_file_csv}')
-print(f'*******SCORE: {score}')
-print(f'Time training: {t_training - t_start} seconds. Final time {t_final - t_start} seconds')
+#print(f'Using dataset in datafile: {data_file_csv}')
+#print(f'*******SCORE: {score}')
+print(f'Time training: {t_training - t_start} seconds.')
+print(f'Time prediction: {t_prediction - t_training} seconds.')
+print(f'Final time {t_final - t_start} seconds')
